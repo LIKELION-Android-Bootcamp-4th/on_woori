@@ -1,0 +1,74 @@
+# Miscellaneous
+*.class
+*.as
+*.jar
+*.lock
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# Flutter/Dart/Pub related
+.packages
+.pub-cache/
+.dart_tool/
+**/doc/api/
+**/ios/Flutter/.last_build_id
+
+# Build generated files
+build/
+
+# Flutter generated files
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio Code
+#
+# By default, launch configuration files are not checked in.
+# Please Goolge "vscode launch json" for more details.
+.vscode/
+
+# Android
+#
+# Ignore generated files for Android.
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+
+# iOS
+#
+# Ignore generated files for iOS.
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/app.flx
+**/ios/Runner/Assets.xcassets/AppIcon.appiconset/
+**/ios/Runner.xcodeproj/project.xcworkspace/
+**/ios/Runner.xcodeproj/xcshareddata/
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/.symlinks/
+**/ios/Pods/
+
+# Packages
+#
+# Except for pubspec.lock, which is checked in.
+# .packages
+
+# Symbolication files.
+app.*.symbols
+
+# Obfuscation map files.
+app.*.map.json

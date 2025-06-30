@@ -15,6 +15,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get mainSlogan => '나를 위한 오늘의 한복';
 
   @override
+  String get bottomNavigationBarHome => '홈';
+
+  @override
+  String get bottomNavigationBarCategory => '카테고리';
+
+  @override
+  String get bottomNavigationBarWish => '위시리스트';
+
+  @override
+  String get bottomNavigationBarMyPage => '마이페이지';
+
+  @override
   String get loginTitle => '로그인';
 
   @override

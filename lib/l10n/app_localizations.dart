@@ -106,6 +106,30 @@ abstract class AppLocalizations {
   /// **'나를 위한 오늘의 한복'**
   String get mainSlogan;
 
+  /// No description provided for @bottomNavigationBarHome.
+  ///
+  /// In ko, this message translates to:
+  /// **'홈'**
+  String get bottomNavigationBarHome;
+
+  /// No description provided for @bottomNavigationBarCategory.
+  ///
+  /// In ko, this message translates to:
+  /// **'카테고리'**
+  String get bottomNavigationBarCategory;
+
+  /// No description provided for @bottomNavigationBarWish.
+  ///
+  /// In ko, this message translates to:
+  /// **'위시리스트'**
+  String get bottomNavigationBarWish;
+
+  /// No description provided for @bottomNavigationBarMyPage.
+  ///
+  /// In ko, this message translates to:
+  /// **'마이페이지'**
+  String get bottomNavigationBarMyPage;
+
   /// No description provided for @loginTitle.
   ///
   /// In ko, this message translates to:

@@ -3,6 +3,11 @@
     "appTitle": "온우리",
     "mainSlogan": "나를 위한 오늘의 한복",
 
+    "bottomNavigationBarHome" : "홈",
+    "bottomNavigationBarCategory" : "카테고리",
+    "bottomNavigationBarWish" : "위시리스트",
+    "bottomNavigationBarMyPage" : "마이페이지",
+
     "loginTitle": "로그인",
     "loginEmailTitle": "이메일",
     "loginEmailInputHint": "이메일 주소를 입력하세요",

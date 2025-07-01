@@ -47,7 +47,7 @@ class CategoryScreenState extends State<CategoryScreen> { //세부카테고리
     List<Widget> screenItem = [];
     screenItem.add(CategoryListSection(setIndex));
     screenItem.add(SizedBox(width: 15,));
-    switch (_selectedIndex) { //카테고리 선택된 것에 따라서 다르게 넣어줍니다
+    switch (_selectedIndex) { //카테고리 선택된 것에 따라서 다르게 넣어줍니다 - 현재 스토어 ID가 없어서 Api 사용 불가
       case 0: {
         screenItem.add(CategoryDetailSection([
           li0n!.categoryOuter_coat,
@@ -129,7 +129,7 @@ class CategoryListSectionState extends State<CategoryListSection> {
   @override
   Widget build(BuildContext context) {
     final li0n = AppLocalizations.of(context);
-    final List<String> categories = [li0n!.categoryOuter, li0n.categoryTop, li0n.categoryBottom, li0n.categoryGoods];
+    final List<String> categories = [li0n!.categoryOuter, li0n.categoryTop, li0n.categoryBottom, li0n.categoryGoods]; //Api 사용 불가로 명시중
     return Container(
       width: 120,
       color: AppColors.categoryContainer,

@@ -23,6 +23,18 @@ class MyPage extends StatelessWidget {
           ),
         ),
         centerTitle: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              // TODO: 장바구니 페이지 이동
+            },
+            icon: Image.asset(
+              "images/icon/cart.png",
+              width: 24,
+              height: 24,
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -53,7 +65,7 @@ class MyPage extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 13,
-                        color: Color(0xFF7D7D7D),
+                        color: AppColors.grey,
                       ),
                     ),
                   ],
@@ -68,7 +80,7 @@ class MyPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.zero,
                       side: const BorderSide(
-                        color: Color(0xFF7D7D7D),
+                        color: AppColors.grey,
                       ),
                     ),
                   ),
@@ -95,7 +107,7 @@ class MyPage extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 13,
-                color: Color(0xFF7D7D7D),
+                color: AppColors.grey,
               ),
             ),
 
@@ -135,7 +147,7 @@ class MyPage extends StatelessWidget {
 
             // Divider between 위시리스트 and 내 정보
             const Divider(
-              color: AppColors.grey,
+              color: AppColors.DividerTextBoxLineDivider,
               thickness: 1,
               height: 16,
             ),
@@ -146,7 +158,7 @@ class MyPage extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 13,
-                color: Color(0xFF7D7D7D),
+                color: AppColors.grey,
               ),
             ),
 
@@ -170,7 +182,7 @@ class MyPage extends StatelessWidget {
 
             // Divider under 비밀번호 변경
             const Divider(
-              color: AppColors.grey,
+              color: AppColors.DividerTextBoxLineDivider,
               thickness: 1,
               height: 16,
             ),

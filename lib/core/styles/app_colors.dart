@@ -52,11 +52,11 @@ class AppColors {
      * Divider/TextBox Line Divider
      * 화면에 따라 Black 일 수 있음
      */
-    static const Color DividerTextBoxLineDivider = Color(0xFFE0E0E0);
+    static const Color DividerTextBoxLineDivider = Color(0xFFC9C9C9);
 
     /**
      * 회색
      */
-    static const Color grey = Color(0xFFE0E0E0);
+    static const Color grey = Color(0xFF7D7D7D);
 
 }

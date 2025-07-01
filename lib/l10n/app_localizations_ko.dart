@@ -58,4 +58,94 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get signInUserTypeSeller => '판매자';
+
+  @override
+  String get categoryOuter => '아우터';
+
+  @override
+  String get categoryOuter_coat => '코트';
+
+  @override
+  String get categoryOuter_jacket => '재킷';
+
+  @override
+  String get categoryOuter_vest => '조끼';
+
+  @override
+  String get categoryOuter_etc => '가디건 외';
+
+  @override
+  String get categoryTop => '상의';
+
+  @override
+  String get categoryTop_sleeveless => '민소매';
+
+  @override
+  String get categoryTop_shortSleeve => '반소매';
+
+  @override
+  String get categoryTop_longSleeve => '긴소매';
+
+  @override
+  String get categoryTop_shirt => '셔츠';
+
+  @override
+  String get categoryTop_etc => '티셔츠 외';
+
+  @override
+  String get categoryBottom => '하의';
+
+  @override
+  String get categoryBottom_skirt => '치마';
+
+  @override
+  String get categoryBottom_underSkirt => '속치마';
+
+  @override
+  String get categoryBottom_longSkirt => '허리치마';
+
+  @override
+  String get categoryBottom_miniSkirt => '미니스커트';
+
+  @override
+  String get categoryBottom_etcSkirt => '기타 치마';
+
+  @override
+  String get categoryBottom_pants => '바지';
+
+  @override
+  String get categoryBottom_underPants => '속바지';
+
+  @override
+  String get categoryBottom_shortPants => '반바지';
+
+  @override
+  String get categoryBottom_longPants => '긴바지';
+
+  @override
+  String get categoryBottom_etcPants => '기타 바지';
+
+  @override
+  String get categoryGoods => '잡화';
+
+  @override
+  String get categoryGoods_head => '머리장식';
+
+  @override
+  String get categoryGoods_norigae => '노리개';
+
+  @override
+  String get categoryGoods_bag => '가방';
+
+  @override
+  String get categoryGoods_neck => '목걸이';
+
+  @override
+  String get categoryGoods_ear => '귀걸이';
+
+  @override
+  String get categoryGoods_ring => '반지';
+
+  @override
+  String get categoryGoods_etc => '기타 잡화';
 }

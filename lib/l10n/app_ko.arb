@@ -19,5 +19,39 @@
     "signInTitle": "회원가입",
     "signInSubtitle": "어떤 사용자인가요?",
     "signInUserTypeConsumer": "구매자",
-    "signInUserTypeSeller": "판매자"
+    "signInUserTypeSeller": "판매자",
+
+    "categoryOuter": "아우터",
+    "categoryOuter_coat": "코트",
+    "categoryOuter_jacket": "재킷",
+    "categoryOuter_vest": "조끼",
+    "categoryOuter_etc": "가디건 외",
+
+    "categoryTop": "상의",
+    "categoryTop_sleeveless": "민소매",
+    "categoryTop_shortSleeve": "반소매",
+    "categoryTop_longSleeve": "긴소매",
+    "categoryTop_shirt": "셔츠",
+    "categoryTop_etc": "티셔츠 외",
+
+    "categoryBottom": "하의",
+    "categoryBottom_skirt": "치마",
+    "categoryBottom_underSkirt": "속치마",
+    "categoryBottom_longSkirt": "허리치마",
+    "categoryBottom_miniSkirt": "미니스커트",
+    "categoryBottom_etcSkirt": "기타 치마",
+    "categoryBottom_pants": "바지",
+    "categoryBottom_underPants": "속바지",
+    "categoryBottom_shortPants": "반바지",
+    "categoryBottom_longPants": "긴바지",
+    "categoryBottom_etcPants": "기타 바지",
+
+    "categoryGoods": "잡화",
+    "categoryGoods_head": "머리장식",
+    "categoryGoods_norigae": "노리개",
+    "categoryGoods_bag": "가방",
+    "categoryGoods_neck": "목걸이",
+    "categoryGoods_ear": "귀걸이",
+    "categoryGoods_ring": "반지",
+    "categoryGoods_etc": "기타 잡화"
 }

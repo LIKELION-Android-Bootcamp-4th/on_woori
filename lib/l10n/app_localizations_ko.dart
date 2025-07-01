@@ -27,6 +27,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get bottomNavigationBarMyPage => '마이페이지';
 
   @override
+  String get home_RecommendedProducts => '추천 상품';
+
+  @override
   String get loginTitle => '로그인';
 
   @override

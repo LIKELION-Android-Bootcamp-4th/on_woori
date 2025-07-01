@@ -13,6 +13,12 @@ class CategoryPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(l10n.bottomNavigationBarCategory, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: Image.asset("images/icon/cart.png")
+          )
+        ],
       ),
       body: CategoryScreen(),
     );
@@ -93,13 +99,11 @@ class CategoryScreenState extends State<CategoryScreen> { //세부카테고리
         break;
       }
     }
-    screenItem.add(SizedBox(width: 24,));
+    screenItem.add(SizedBox(width: 24,)); //padding
     
     return SafeArea(
-      child: Container(
-        child: Row(
-          children: screenItem,
-        ),
+      child: Row(
+        children: screenItem,
       ),
     );
   }
@@ -158,13 +162,13 @@ class CategoryListSectionState extends State<CategoryListSection> {
 
 class CategoryDetailSection extends StatelessWidget { //카테고리 버튼 모음집 섹션
   String? title;
-  List<String> _itemList;
-  CategoryDetailSection(this._itemList, {this.title = null});
+  final List<String> _itemList;
+  CategoryDetailSection(this._itemList, {this.title});
 
   List<Widget> _getCategoryWidget() {
     List<Widget> children = [];
     children.add(SizedBox(height: 16,));
-    if (this.title != null) {
+    if (title != null) {
       children.add(
         Text(title!, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
       );
@@ -186,25 +190,37 @@ class CategoryDetailSection extends StatelessWidget { //카테고리 버튼 모�
     return children;
   }
 
-  Widget _getCategoryButton(int index) {
+  Widget _getCategoryButton(int index) { //버튼 하나 생성
     return Stack(
       children: [
-        SizedBox(height: 32, width: 100,),
-        Text(_itemList[index], style: TextStyle(fontSize: 16, color: AppColors.grey),),
         Positioned(
+          top: 10,
           right: 0,
-          top: 5,
-          child: Container(
+          child: SizedBox(
             width: 10,
             height: 16,
             child: Image.asset("images/icon/arrow_gray.png"),
           ),
         ),
         Positioned(
-          bottom: 0,
+          bottom: 3,
           left: 0,
-          child: Container(height: 1.0, width: 114, color: AppColors.DividerTextBoxLineDivider,),
-        )
+          child: Container(height: 1.0, width: 100, color: AppColors.DividerTextBoxLineDivider,),
+        ),
+        TextButton(
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(0))
+            )
+          ),
+          onPressed: (){},
+          child: SizedBox(
+            height: 32,
+            width: 100,
+            child: Text(_itemList[index], style: TextStyle(fontSize: 16, color: AppColors.grey),),
+          ),
+        ),
       ],
     );
   }

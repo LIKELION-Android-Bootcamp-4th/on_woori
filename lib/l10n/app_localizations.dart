@@ -195,6 +195,186 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'판매자'**
   String get signInUserTypeSeller;
+
+  /// No description provided for @categoryOuter.
+  ///
+  /// In ko, this message translates to:
+  /// **'아우터'**
+  String get categoryOuter;
+
+  /// No description provided for @categoryOuter_coat.
+  ///
+  /// In ko, this message translates to:
+  /// **'코트'**
+  String get categoryOuter_coat;
+
+  /// No description provided for @categoryOuter_jacket.
+  ///
+  /// In ko, this message translates to:
+  /// **'재킷'**
+  String get categoryOuter_jacket;
+
+  /// No description provided for @categoryOuter_vest.
+  ///
+  /// In ko, this message translates to:
+  /// **'조끼'**
+  String get categoryOuter_vest;
+
+  /// No description provided for @categoryOuter_etc.
+  ///
+  /// In ko, this message translates to:
+  /// **'가디건 외'**
+  String get categoryOuter_etc;
+
+  /// No description provided for @categoryTop.
+  ///
+  /// In ko, this message translates to:
+  /// **'상의'**
+  String get categoryTop;
+
+  /// No description provided for @categoryTop_sleeveless.
+  ///
+  /// In ko, this message translates to:
+  /// **'민소매'**
+  String get categoryTop_sleeveless;
+
+  /// No description provided for @categoryTop_shortSleeve.
+  ///
+  /// In ko, this message translates to:
+  /// **'반소매'**
+  String get categoryTop_shortSleeve;
+
+  /// No description provided for @categoryTop_longSleeve.
+  ///
+  /// In ko, this message translates to:
+  /// **'긴소매'**
+  String get categoryTop_longSleeve;
+
+  /// No description provided for @categoryTop_shirt.
+  ///
+  /// In ko, this message translates to:
+  /// **'셔츠'**
+  String get categoryTop_shirt;
+
+  /// No description provided for @categoryTop_etc.
+  ///
+  /// In ko, this message translates to:
+  /// **'티셔츠 외'**
+  String get categoryTop_etc;
+
+  /// No description provided for @categoryBottom.
+  ///
+  /// In ko, this message translates to:
+  /// **'하의'**
+  String get categoryBottom;
+
+  /// No description provided for @categoryBottom_skirt.
+  ///
+  /// In ko, this message translates to:
+  /// **'치마'**
+  String get categoryBottom_skirt;
+
+  /// No description provided for @categoryBottom_underSkirt.
+  ///
+  /// In ko, this message translates to:
+  /// **'속치마'**
+  String get categoryBottom_underSkirt;
+
+  /// No description provided for @categoryBottom_longSkirt.
+  ///
+  /// In ko, this message translates to:
+  /// **'허리치마'**
+  String get categoryBottom_longSkirt;
+
+  /// No description provided for @categoryBottom_miniSkirt.
+  ///
+  /// In ko, this message translates to:
+  /// **'미니스커트'**
+  String get categoryBottom_miniSkirt;
+
+  /// No description provided for @categoryBottom_etcSkirt.
+  ///
+  /// In ko, this message translates to:
+  /// **'기타 치마'**
+  String get categoryBottom_etcSkirt;
+
+  /// No description provided for @categoryBottom_pants.
+  ///
+  /// In ko, this message translates to:
+  /// **'바지'**
+  String get categoryBottom_pants;
+
+  /// No description provided for @categoryBottom_underPants.
+  ///
+  /// In ko, this message translates to:
+  /// **'속바지'**
+  String get categoryBottom_underPants;
+
+  /// No description provided for @categoryBottom_shortPants.
+  ///
+  /// In ko, this message translates to:
+  /// **'반바지'**
+  String get categoryBottom_shortPants;
+
+  /// No description provided for @categoryBottom_longPants.
+  ///
+  /// In ko, this message translates to:
+  /// **'긴바지'**
+  String get categoryBottom_longPants;
+
+  /// No description provided for @categoryBottom_etcPants.
+  ///
+  /// In ko, this message translates to:
+  /// **'기타 바지'**
+  String get categoryBottom_etcPants;
+
+  /// No description provided for @categoryGoods.
+  ///
+  /// In ko, this message translates to:
+  /// **'잡화'**
+  String get categoryGoods;
+
+  /// No description provided for @categoryGoods_head.
+  ///
+  /// In ko, this message translates to:
+  /// **'머리장식'**
+  String get categoryGoods_head;
+
+  /// No description provided for @categoryGoods_norigae.
+  ///
+  /// In ko, this message translates to:
+  /// **'노리개'**
+  String get categoryGoods_norigae;
+
+  /// No description provided for @categoryGoods_bag.
+  ///
+  /// In ko, this message translates to:
+  /// **'가방'**
+  String get categoryGoods_bag;
+
+  /// No description provided for @categoryGoods_neck.
+  ///
+  /// In ko, this message translates to:
+  /// **'목걸이'**
+  String get categoryGoods_neck;
+
+  /// No description provided for @categoryGoods_ear.
+  ///
+  /// In ko, this message translates to:
+  /// **'귀걸이'**
+  String get categoryGoods_ear;
+
+  /// No description provided for @categoryGoods_ring.
+  ///
+  /// In ko, this message translates to:
+  /// **'반지'**
+  String get categoryGoods_ring;
+
+  /// No description provided for @categoryGoods_etc.
+  ///
+  /// In ko, this message translates to:
+  /// **'기타 잡화'**
+  String get categoryGoods_etc;
 }
 
 class _AppLocalizationsDelegate

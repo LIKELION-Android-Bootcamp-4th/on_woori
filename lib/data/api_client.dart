@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:on_woori/data/token_manager.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ApiClient {
@@ -16,6 +17,7 @@ class ApiClient {
       }
     );
 
+    dio.interceptors.add(TokenManager());
     dio.interceptors.add(
       PrettyDioLogger(
         requestHeader: true,

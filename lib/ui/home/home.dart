@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:on_woori/data/entity/request/login_request.dart';
 import 'package:on_woori/data/service/auth_api_service.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
@@ -22,13 +23,11 @@ class _HomePageState extends State<HomePage> {
     print("로그인 테스트좀 해보겠습니다아아아아아아");
     final authService = AuthApiService();
 
-    const email = 'admin@git.hansul.kr';
-    const password = 'qwer1234!@#\$';
+    LoginRequest request = LoginRequest(email: 'admin@git.hansul.kr', password: 'qwer1234!@#\$');
 
     try {
       final responseData = await authService.authLogin(
-        email: email,
-        password: password,
+          request: request
       );
       print('로그인 성공했어요!!!!!! : $responseData');
     } catch (e) {

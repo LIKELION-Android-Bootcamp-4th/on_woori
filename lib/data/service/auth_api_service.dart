@@ -1,7 +1,7 @@
-
 import 'package:dio/dio.dart';
 import 'package:on_woori/config/endpoint/auth_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
+import 'package:on_woori/data/entity/request/login_request.dart';
 
 class AuthApiService {
   final Dio _dio;
@@ -11,20 +11,13 @@ class AuthApiService {
 
   // 로그인 부터 구현
   Future<Map<String, dynamic>> authLogin({
-    required String email,
-    required String password,
+    required LoginRequest request
   }) async {
     try {
-      // 1. 파라미터 준비하기
-      final requestBody = {
-        'email': email,
-        'password': password,
-      };
-
       // 2. 요청 보내기
       final response = await _dio.post(
           AuthEndpoints.postAuthLogin,
-          data: requestBody
+          data: request
       );
 
       // 3. 응답 코드 확인하기

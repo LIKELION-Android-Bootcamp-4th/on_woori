@@ -194,12 +194,12 @@ class CategoryDetailSection extends StatelessWidget { //카테고리 버튼 모�
     return Stack(
       children: [
         Positioned(
-          top: 10,
-          right: 0,
+          top: 8,
+          right: 10,
           child: SizedBox(
             width: 10,
             height: 16,
-            child: Image.asset("images/icon/arrow_gray.png"),
+            child: Icon(Icons.chevron_right, color: AppColors.grey,),
           ),
         ),
         Positioned(

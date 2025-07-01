@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:on_woori/data/client/auth_api_client.dart';
 import 'package:on_woori/data/entity/request/login_request.dart';
-import 'package:on_woori/data/service/auth_api_service.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,22 +19,22 @@ class _HomePageState extends State<HomePage> {
     _testLoginOnStart();
   }
 
-  Future<void> _testLoginOnStart() async {
-    print("로그인 테스트좀 해보겠습니다아아아아아아");
-    final authService = AuthApiService();
+  Future<void> _testLoginOnStart() {
+    print("로그인 테스트 코드");
+    final apiClient = AuthApiClient();
 
-    LoginRequest request = LoginRequest(email: 'admin@git.hansul.kr', password: 'qwer1234!@#\$');
+    final request = LoginRequest(
+        email: 'admin@git.hansul.kr',
+        password: 'qwer1234!@#\$'
+    );
 
-    try {
-      final responseData = await authService.authLogin(
-          request: request
-      );
-      print('로그인 성공했어요!!!!!! : $responseData');
-    } catch (e) {
-      print('로그인 실패했어요!!!!!! : $e');
-    } finally {
-      print('테스트 종료 싱글톤 ApiClient 테스트 종료');
-    }
+    apiClient.authLogin(request: request)
+        .then((response){
+          print(response.data.accessToken);
+        }).catchError((e) => print('로그인 실패: $e'))
+        .whenComplete(() => print('테스트 종료'));
+
+    return Future.value();
   }
 
   void _incrementCounter() {

@@ -1,0 +1,55 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'fundings_response.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+FundingsResponse _$FundingsResponseFromJson(Map<String, dynamic> json) =>
+    FundingsResponse(
+      success: json['success'] as bool,
+      message: json['message'] as String,
+      data: json['data'] == null
+          ? null
+          : FundingsData.fromJson(json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$FundingsResponseToJson(FundingsResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'message': instance.message,
+      'data': instance.data,
+    };
+
+FundingsData _$FundingsDataFromJson(Map<String, dynamic> json) => FundingsData(
+  items: (json['items'] as List<dynamic>?)
+      ?.map((e) => FundingsItem.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
+
+Map<String, dynamic> _$FundingsDataToJson(FundingsData instance) =>
+    <String, dynamic>{'items': instance.items?.map((e) => e.toJson()).toList()};
+
+FundingsItem _$FundingsItemFromJson(Map<String, dynamic> json) => FundingsItem(
+  id: json['_id'] as String,
+  title: json['title'] as String,
+  imageUrl: json['imageUrl'] as String,
+  linkUrl: json['linkUrl'] as String,
+  stock: (json['stock'] as num).toInt(),
+);
+
+Map<String, dynamic> _$FundingsItemToJson(FundingsItem instance) =>
+    <String, dynamic>{
+      '_id': instance.id,
+      'title': instance.title,
+      'imageUrl': instance.imageUrl,
+      'linkUrl': instance.linkUrl,
+      'stock': instance.stock,
+    };
+
+CompanyItem _$CompanyItemFromJson(Map<String, dynamic> json) =>
+    CompanyItem(name: json['name'] as String);
+
+Map<String, dynamic> _$CompanyItemToJson(CompanyItem instance) =>
+    <String, dynamic>{'name': instance.name};

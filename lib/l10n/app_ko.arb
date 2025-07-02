@@ -8,6 +8,8 @@
     "bottomNavigationBarWish" : "위시리스트",
     "bottomNavigationBarMyPage" : "마이페이지",
 
+    "home_RecommendedProducts": "추천 상품",
+
     "loginTitle": "로그인",
     "loginEmailTitle": "이메일",
     "loginEmailInputHint": "이메일 주소를 입력하세요",

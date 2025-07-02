@@ -6,13 +6,13 @@ part 'products_response.g.dart';
 class ProductsResponse {
   final bool success;
   final String message;
-  final ProductsData data;
+  final ProductsData? data;
   final DateTime timestamp;
 
   const ProductsResponse({
     required this.success,
     required this.message,
-    required this.data,
+    this.data,
     required this.timestamp,
   });
 
@@ -23,8 +23,8 @@ class ProductsResponse {
 
 @JsonSerializable(explicitToJson: true)
 class ProductsData {
-  final List<ProductItem> items;
-  const ProductsData({required this.items});
+  final List<ProductItem>? items;
+  const ProductsData({this.items});
 
   factory ProductsData.fromJson(Map<String, dynamic> json) =>
       _$ProductsDataFromJson(json);
@@ -36,32 +36,30 @@ class ProductItem {
   @JsonKey(name: '_id')
   final String id;
   final String name;
-  final String description;
   final int price;
   final String stockType;
   final int stock;
-  final ProductImages images;
-  final ProductOptions options;
+
+  final ProductImages? images;
+  final ProductOptions? options;
+
   final int? discount;
   final String status;
   final StoreData? store;
   final bool isFavorite;
-  final String? storeOwnerId;
 
   const ProductItem({
     required this.id,
     required this.name,
-    required this.description,
     required this.price,
     required this.stockType,
     required this.stock,
-    required this.images,
-    required this.options,
+    this.images,
+    this.options,
     this.discount,
     required this.status,
     this.store,
     required this.isFavorite,
-    this.storeOwnerId,
   });
 
   factory ProductItem.fromJson(Map<String, dynamic> json) =>
@@ -79,7 +77,6 @@ class ProductImages {
       _$ProductImagesFromJson(json);
   Map<String, dynamic> toJson() => _$ProductImagesToJson(this);
 }
-
 @JsonSerializable()
 class ProductOptions {
   final List<String> color;
@@ -88,7 +85,6 @@ class ProductOptions {
       _$ProductOptionsFromJson(json);
   Map<String, dynamic> toJson() => _$ProductOptionsToJson(this);
 }
-
 @JsonSerializable()
 class StoreData {
   @JsonKey(name: 'id', includeIfNull: false)
@@ -97,15 +93,7 @@ class StoreData {
   final String owner;
   final String companyId;
   final String? status;
-
-  const StoreData({
-    this.id,
-    required this.name,
-    required this.owner,
-    required this.companyId,
-    this.status,
-  });
-
+  const StoreData({this.id, required this.name, required this.owner, required this.companyId, this.status});
   factory StoreData.fromJson(Map<String, dynamic> json) =>
       _$StoreDataFromJson(json);
   Map<String, dynamic> toJson() => _$StoreDataToJson(this);

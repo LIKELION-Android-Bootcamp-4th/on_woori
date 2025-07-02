@@ -63,6 +63,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get signInUserTypeSeller => '판매자';
 
   @override
+  String get productDetailTitle => '상품 상세 정보';
+
+  @override
+  String get productPrice => '총 합산액';
+
+  @override
+  String get cart => '장바구니';
+
+  @override
+  String get order => '주문하기';
+
+  @override
   String get categoryOuter => '아우터';
 
   @override

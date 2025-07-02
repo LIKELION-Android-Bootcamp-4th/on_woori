@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
@@ -15,9 +18,11 @@ class CategoryPage extends StatelessWidget {
         title: Text(l10n.bottomNavigationBarCategory, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
         actions: [
           IconButton(
-              onPressed: () {},
-              icon: Image.asset("images/icon/cart.png")
-          )
+            onPressed: () {
+              context.push('/wish/cart');
+            },
+            icon: Icon(Icons.shopping_bag_outlined),
+          ),
         ],
       ),
       body: CategoryScreen(),
@@ -43,6 +48,7 @@ class CategoryScreenState extends State<CategoryScreen> { //세부카테고리
 
   @override
   Widget build(BuildContext context) {
+    
     final li0n = AppLocalizations.of(context);
     List<Widget> screenItem = [];
     screenItem.add(CategoryListSection(setIndex));
@@ -54,7 +60,7 @@ class CategoryScreenState extends State<CategoryScreen> { //세부카테고리
           li0n.categoryOuter_jacket,
           li0n.categoryOuter_vest,
           li0n.categoryOuter_etc
-        ]));
+        ], context));
         break;
       }
       case 1: {
@@ -64,7 +70,7 @@ class CategoryScreenState extends State<CategoryScreen> { //세부카테고리
           li0n.categoryTop_longSleeve,
           li0n.categoryTop_shirt,
           li0n.categoryTop_etc
-        ]));
+        ], context));
         break;
       }
       case 2: {
@@ -75,13 +81,13 @@ class CategoryScreenState extends State<CategoryScreen> { //세부카테고리
               li0n.categoryBottom_longSkirt,
               li0n.categoryBottom_miniSkirt,
               li0n.categoryBottom_etcSkirt
-            ]),
+            ], context),
             CategoryDetailSection(title: li0n.categoryBottom_pants, [
               li0n.categoryBottom_underPants,
               li0n.categoryBottom_shortPants,
               li0n.categoryBottom_longPants,
               li0n.categoryBottom_etcPants
-            ])
+            ], context)
           ],
         ));
         break;
@@ -95,7 +101,7 @@ class CategoryScreenState extends State<CategoryScreen> { //세부카테고리
           li0n.categoryGoods_ring,
           li0n.categoryGoods_bag,
           li0n.categoryGoods_etc
-        ]));
+        ], context));
         break;
       }
     }
@@ -148,9 +154,9 @@ class CategoryListSectionState extends State<CategoryListSection> {
             onTap: (){
               setState(() {
                 onCategorySelected(index);
-                setState(() {
-                  _selectedIndex = index;
-                });
+              });
+              setState(() {
+                _selectedIndex = index;
               });
             },
           );
@@ -163,7 +169,8 @@ class CategoryListSectionState extends State<CategoryListSection> {
 class CategoryDetailSection extends StatelessWidget { //카테고리 버튼 모음집 섹션
   String? title;
   final List<String> _itemList;
-  CategoryDetailSection(this._itemList, {this.title});
+  BuildContext context;
+  CategoryDetailSection(this._itemList, this.context, {this.title});
 
   List<Widget> _getCategoryWidget() {
     List<Widget> children = [];
@@ -214,7 +221,9 @@ class CategoryDetailSection extends StatelessWidget { //카테고리 버튼 모�
               borderRadius: BorderRadius.all(Radius.circular(0))
             )
           ),
-          onPressed: (){},
+          onPressed: () {
+            context.push("/productslist/${_itemList[index]}");
+          },
           child: SizedBox(
             height: 32,
             width: 100,

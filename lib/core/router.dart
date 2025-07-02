@@ -1,7 +1,6 @@
 import 'package:go_router/go_router.dart';
 
 import 'package:on_woori/main.dart';
-import 'package:on_woori/ui/cart/cart.dart';
 import 'package:on_woori/ui/category/category.dart';
 import 'package:on_woori/ui/home/home.dart';
 import 'package:on_woori/ui/mypage/mypage.dart';
@@ -39,12 +38,6 @@ final GoRouter router = GoRouter(
           path: '/mypage',
           builder: (context, state) {
             return const MyPage();
-          },
-        ),
-        GoRoute(
-          path: '/wish/cart',
-          builder: (context, state) {
-            return const CartPage();
           },
         ),
       ],

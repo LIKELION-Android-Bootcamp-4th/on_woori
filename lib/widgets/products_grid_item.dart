@@ -48,7 +48,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
           children: [
             SizedBox(
               width: 170,
-              height: 220,
+              height: 215,
               child: Image(image: NetworkImage(imageUrl), fit: BoxFit.cover),
             ),
             Positioned(

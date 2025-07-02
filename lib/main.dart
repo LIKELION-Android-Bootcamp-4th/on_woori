@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:on_woori/core/router.dart';
+import 'package:on_woori/l10n/app_localizations.dart';
+import 'package:on_woori/widgets/app_bottom_navigation_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,59 +12,64 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '안동찜닭 - 온-우리',
+    return MaterialApp.router(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('ko'),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
-      home: const MyHomePage(title: '온-우리'),
+      routerConfig: router,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+class MainPage extends StatelessWidget {
+  final Widget child;
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+  const MainPage({
+    super.key,
+    required this.child,
+  });
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  // 현재 경로(location)를 기반으로 BottomNavigationBar의 인덱스를 계산하는 함수
+  int _locationToTabIndex(String location) {
+    if (location.startsWith('/category')) {
+      return 1;
+    } else if (location.startsWith('/wish')) {
+      return 2;
+    } else if (location.startsWith('/mypage')) {
+      return 3;
+    } else {
+      return 0; // 그 외 모든 경로는 홈(0번 탭)으로 간주
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('온-우리 한복 쇼핑 플랫폼 진입점입니다.'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      body: child,
+      bottomNavigationBar: AppBottomNavigationBar(
+        selectedIndex: _locationToTabIndex(GoRouterState.of(context).uri.toString()),
+        onItemTapped: (index) {
+          switch (index) {
+            case 0:
+              context.go('/');
+              break;
+            case 1:
+              context.go('/category');
+              break;
+            case 2:
+              context.go('/wish');
+              break;
+            case 3:
+              context.go('/mypage');
+              break;
+          }
+        },
       ),
     );
   }

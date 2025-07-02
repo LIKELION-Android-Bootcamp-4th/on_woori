@@ -42,11 +42,15 @@ class FundingListItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text(
-                fundingName,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  fundingName,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
               const SizedBox(width: 8),
@@ -57,7 +61,7 @@ class FundingListItem extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
-            ],
+            ]
           ),
           const SizedBox(height: 4),
           Text(

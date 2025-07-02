@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
@@ -14,25 +15,15 @@ class MyPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        centerTitle: true,
         title: Text(
-          l10n.bottomNavigationBarMyPage,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-            color: Colors.black,
-          ),
-        ),
-        centerTitle: false,
+          l10n.bottomNavigationBarMyPage, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
         actions: [
           IconButton(
             onPressed: () {
-              // TODO: 장바구니 페이지 이동
+              context.go('/wish/cart');
             },
-            icon: Image.asset(
-              "images/icon/cart.png",
-              width: 24,
-              height: 24,
-            ),
+            icon: Icon(Icons.shopping_bag_outlined),
           ),
         ],
       ),

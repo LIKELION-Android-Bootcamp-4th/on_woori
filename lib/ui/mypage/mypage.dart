@@ -21,7 +21,7 @@ class MyPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              context.go('/wish/cart');
+              context.push('/wish/cart');
             },
             icon: Icon(Icons.shopping_bag_outlined),
           ),

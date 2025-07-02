@@ -21,7 +21,9 @@ class ProductsListPage extends StatelessWidget {
           ),
           actions: [
             IconButton(
-                onPressed: (){},
+                onPressed: (){
+                  context.push('/wish/cart');
+                },
                 icon: Icon(Icons.shopping_bag_outlined)
             )
           ],

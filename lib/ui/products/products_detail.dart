@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
@@ -11,7 +12,9 @@ class ProductsDetailPage extends StatelessWidget {
         centerTitle: true,
         title: Text(li0n!.productDetailTitle, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.shopping_bag_outlined))
+          IconButton(onPressed: (){
+            context.push('/wish/cart');
+          }, icon: Icon(Icons.shopping_bag_outlined))
         ],
       ),
       body: Row(

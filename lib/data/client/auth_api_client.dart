@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:on_woori/config/endpoint/auth_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
-import 'package:on_woori/data/entity/request/login_request.dart';
-import 'package:on_woori/data/entity/request/register_buyer_request.dart';
-import 'package:on_woori/data/entity/request/register_seller_request.dart';
-import 'package:on_woori/data/entity/request/verify_email_request.dart';
-import 'package:on_woori/data/entity/response/login_response.dart';
-import 'package:on_woori/data/entity/response/register_response.dart';
-import 'package:on_woori/data/entity/response/verify_email_response.dart';
+import 'package:on_woori/data/entity/request/auth/login_request.dart';
+import 'package:on_woori/data/entity/request/auth/register_buyer_request.dart';
+import 'package:on_woori/data/entity/request/auth/register_seller_request.dart';
+import 'package:on_woori/data/entity/request/auth/verify_email_request.dart';
+import 'package:on_woori/data/entity/response/auth/login_response.dart';
+import 'package:on_woori/data/entity/response/auth/register_response.dart';
+import 'package:on_woori/data/entity/response/auth/verify_email_response.dart';
 
 class AuthApiClient {
   final Dio _dio;
@@ -41,7 +41,7 @@ class AuthApiClient {
     required RegisterBuyerRequest request,
   }) async {
     final response = await _dio.post(
-      AuthEndpoints.postAuthRegisterSeller,
+      AuthEndpoints.postAuthRegisterBuyer,
       data: request.toJson(),
     );
     return RegisterResponse.fromJson(response.data);

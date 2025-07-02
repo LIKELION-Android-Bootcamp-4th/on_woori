@@ -2,7 +2,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:on_woori/main.dart';
 import 'package:on_woori/ui/category/category.dart';
-import 'package:on_woori/ui/goods/products_list.dart';
+import 'package:on_woori/ui/products/products_list.dart';
 import 'package:on_woori/ui/home/home.dart';
 import 'package:on_woori/ui/mypage/mypage.dart';
 import 'package:on_woori/ui/wish/wish.dart';

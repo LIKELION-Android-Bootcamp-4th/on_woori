@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/products_double_grid.dart';
 
@@ -10,22 +11,22 @@ class ProductsListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          categoryId ?? l10n!.appTitle,
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            categoryId ?? l10n!.appTitle,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24),
+          ),
+          actions: [
+            IconButton(
+                onPressed: (){},
+                icon: Image.asset("images/icon/cart.png")
+            )
+          ],
         ),
-        actions: [
-          IconButton(
-              onPressed: (){},
-              icon: Image.asset("images/icon/cart.png")
-          )
-        ],
-      ),
-      body: ProductsListScreen()
+        body: ProductsListScreen()
     );
   }
 }

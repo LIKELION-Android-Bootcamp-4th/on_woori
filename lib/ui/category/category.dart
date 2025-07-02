@@ -220,7 +220,7 @@ class CategoryDetailSection extends StatelessWidget { //카테고리 버튼 모�
             )
           ),
           onPressed: () {
-            context.go("/productslist/${_itemList[index]}");
+            context.push("/productslist/${_itemList[index]}");
           },
           child: SizedBox(
             height: 32,

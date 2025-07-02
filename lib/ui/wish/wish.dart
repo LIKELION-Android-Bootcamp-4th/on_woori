@@ -41,7 +41,7 @@ class WishPage extends StatelessWidget {
               alignment: Alignment.topCenter,
               child: Container(
                 width: 360,
-                child: ProductsDoubleGrid(itemCount)
+                //child: ProductsDoubleGrid(itemCount)
               ),
             ),
           ),

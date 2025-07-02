@@ -52,9 +52,10 @@ final GoRouter router = GoRouter(
         ),
 
         GoRoute(
-            path: '/productdetail',
+            path: '/productdetail/:productId',
             builder: (context, state) {
-              return ProductsDetailPage();
+              final String productId = state.pathParameters['productId'] ?? "";
+              return ProductsDetailPage(productId);
             },
         ),
         GoRoute(

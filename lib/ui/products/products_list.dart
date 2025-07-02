@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:on_woori/data/api_client.dart';
+import 'package:on_woori/data/client/products_api_client.dart';
+import 'package:on_woori/data/entity/response/products/products_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/products_double_grid.dart';
 
@@ -34,15 +37,24 @@ class ProductsListPage extends StatelessWidget {
 }
 
 class ProductsListScreen extends StatelessWidget {
-  //TODO: API 사용하여 상품리스트 받아오고, 카테고리 필터링하기
+  final apiClient = ProductsApiClient();
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(width: 24,),
-        Expanded(child: ProductsDoubleGrid(10),),
-        SizedBox(width: 24,)
-      ],
+    final response = apiClient.products();
+
+    return FutureBuilder(
+      future: response,
+      builder: (context, snapshot) {
+        final data = snapshot.data?.data?.items ?? [];
+        return Row(
+          children: [
+            SizedBox(width: 24,),
+            Expanded(child: ProductsDoubleGrid(data),),
+            SizedBox(width: 24,)
+          ],
+        );
+      },
     );
   }
 }

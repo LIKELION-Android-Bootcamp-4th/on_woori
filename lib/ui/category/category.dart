@@ -18,9 +18,11 @@ class CategoryPage extends StatelessWidget {
         title: Text(l10n.bottomNavigationBarCategory, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
         actions: [
           IconButton(
-              onPressed: () {},
-              icon: Image.asset("images/icon/cart.png")
-          )
+            onPressed: () {
+              context.go('/wish/cart');
+            },
+            icon: Icon(Icons.shopping_bag_outlined),
+          ),
         ],
       ),
       body: CategoryScreen(),

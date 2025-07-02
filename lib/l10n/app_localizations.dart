@@ -202,6 +202,30 @@ abstract class AppLocalizations {
   /// **'판매자'**
   String get signInUserTypeSeller;
 
+  /// No description provided for @productDetailTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'상품 상세 정보'**
+  String get productDetailTitle;
+
+  /// No description provided for @productPrice.
+  ///
+  /// In ko, this message translates to:
+  /// **'총 합산액'**
+  String get productPrice;
+
+  /// No description provided for @cart.
+  ///
+  /// In ko, this message translates to:
+  /// **'장바구니'**
+  String get cart;
+
+  /// No description provided for @order.
+  ///
+  /// In ko, this message translates to:
+  /// **'주문하기'**
+  String get order;
+
   /// No description provided for @categoryOuter.
   ///
   /// In ko, this message translates to:

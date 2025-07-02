@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/category_horizontal_scroll.dart';
 import 'package:on_woori/widgets/category_horizontal_scroll_item.dart';
@@ -14,7 +15,21 @@ class WishPage extends StatelessWidget {
     int itemCount = 10;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.bottomNavigationBarWish)),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          l10n.bottomNavigationBarWish,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.go('/wish/cart');
+            },
+            icon: Icon(Icons.shopping_bag_outlined),
+          ),
+        ],
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

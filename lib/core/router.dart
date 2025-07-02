@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import 'package:on_woori/main.dart';
+import 'package:on_woori/ui/cart/cart.dart';
 import 'package:on_woori/ui/category/category.dart';
 import 'package:on_woori/ui/products/products_list.dart';
 import 'package:on_woori/ui/home/home.dart';
@@ -47,6 +48,12 @@ final GoRouter router = GoRouter(
             final String categoryId = state.pathParameters['categoryId'] ?? "";
             return ProductsListPage(categoryId: categoryId,);
           }
+        ),
+        GoRoute(
+          path: '/wish/cart',
+          builder: (context, state) {
+            return const CartPage();
+          },
         ),
       ],
     ),

@@ -130,6 +130,12 @@ abstract class AppLocalizations {
   /// **'마이페이지'**
   String get bottomNavigationBarMyPage;
 
+  /// No description provided for @home_RecommendedProducts.
+  ///
+  /// In ko, this message translates to:
+  /// **'추천 상품'**
+  String get home_RecommendedProducts;
+
   /// No description provided for @loginTitle.
   ///
   /// In ko, this message translates to:

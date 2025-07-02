@@ -69,6 +69,7 @@ class CartListItemState extends State<CartListItem> {
         // 상품 이미지 + 옵션/수량/가격
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
+          // mainAxisSize: MainAxisSize.max,
           children: [
             // 상품 이미지
             ClipRRect(
@@ -84,72 +85,74 @@ class CartListItemState extends State<CartListItem> {
             const SizedBox(width: 10),
 
             // 옵션 + 수량 컨트롤 + 가격
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "옵션",
-                  style: TextStyle(
-                    color: AppColors.grey,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "옵션",
+                    style: TextStyle(
+                      color: AppColors.grey,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 25),
-                SizedBox(
-                  width: 270,
-                  child: Row(
-                    children: [
-                      // 수량 컨트롤
-                      Container(
-                        width: 100,
-                        padding: const EdgeInsets.symmetric(vertical: 6),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xFFD9D9D9)),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            InkWell(
-                              child: Icon(Icons.remove, size: 20),
-                              onTap: () {
-                                if (productCount > 1) {
+                  const SizedBox(height: 25),
+                  SizedBox(
+                    width: 270,
+                    child: Row(
+                      children: [
+                        // 수량 컨트롤
+                        Container(
+                          width: 100,
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Color(0xFFD9D9D9)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              InkWell(
+                                child: Icon(Icons.remove, size: 20),
+                                onTap: () {
+                                  if (productCount > 1) {
+                                    setState(() {
+                                      productCount--;
+                                    });
+                                  }
+                                },
+                              ),
+                              Text("$productCount"),
+                              InkWell(
+                                child: Icon(Icons.add, size: 20),
+                                onTap: () {
                                   setState(() {
-                                    productCount--;
+                                    productCount++;
                                   });
-                                }
-                              },
-                            ),
-                            Text("$productCount"),
-                            InkWell(
-                              child: Icon(Icons.add, size: 20),
-                              onTap: () {
-                                setState(() {
-                                  productCount++;
-                                });
-                              },
-                            ),
-                          ],
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
 
-                      const Spacer(),
+                        const Spacer(),
 
-                      // 가격
-                      Text(
-                        "${price*productCount}",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                        // 가격
+                        Text(
+                          "${price * productCount}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-              ],
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
           ],
         ),

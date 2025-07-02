@@ -18,16 +18,16 @@ class ProductsDetailPage extends StatelessWidget {
         children: [
           SizedBox(width: 24,),
           Expanded(child: ProductsDetailScreen( //TODO: API 적용하여 정보 받아오기 - 이미지, 텍스트 등
-            0,
+            1000,
             "상품 이름",
             "브랜드 이름",
             "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg",
-            ["https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg"],
-            false,
+            ["https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg", "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg"],
+            true,
             "카테고리",
             ["빨", "주", "노"],
             ["S", "M", "L", "XL"],
-            discountRate: 0,
+            discountRate: 10,
           )),
           SizedBox(width: 24,)
         ],
@@ -99,7 +99,7 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
     discountPrice = widget.price;
     if (widget.discountRate != 0) {
       isDiscount = true;
-      discountPrice = (price - (price * (discountRate / 100))) as int;
+      discountPrice = (price - (price * (discountRate / 100))).toInt();
     }
     sizeOptions = widget.sizeOptions;
     colorOptions = widget.colorOptions;
@@ -335,14 +335,15 @@ class ProductsNameSection extends StatelessWidget { //상품 이름 위젯 할�
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(category, style: TextStyle(fontSize: 10),),
-          SizedBox(height: 5,),
+          SizedBox(height: 2,),
           Text(productName, style: TextStyle(fontSize: 16),),
-          SizedBox(height: 5,),
+          SizedBox(height: 2,),
           Text(originalPrice, style: TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough),),
           SizedBox(height: 2,),
           Row(
             children: [
               Text(discountRate, style: TextStyle(fontSize: 13, color: Colors.red),),
+              SizedBox(width: 5,),
               Text(discountPrice, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)
             ],
           ),
@@ -354,10 +355,10 @@ class ProductsNameSection extends StatelessWidget { //상품 이름 위젯 할�
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(category, style: TextStyle(fontSize: 10),),
-        SizedBox(height: 5,),
+        SizedBox(height: 2,),
         Text(productName, style: TextStyle(fontSize: 16),),
-        SizedBox(height: 5,),
-        Text(originalPrice, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)
+        SizedBox(height: 2,),
+        Text(originalPrice, style: TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough),),
       ],
     );
   }

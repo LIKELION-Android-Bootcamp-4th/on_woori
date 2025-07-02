@@ -21,6 +21,11 @@
     "signInUserTypeConsumer": "구매자",
     "signInUserTypeSeller": "판매자",
 
+    "productDetailTitle": "상품 상세 정보",
+    "productPrice": "총 합산액",
+    "cart": "장바구니",
+    "order": "주문하기",
+
     "categoryOuter": "아우터",
     "categoryOuter_coat": "코트",
     "categoryOuter_jacket": "재킷",

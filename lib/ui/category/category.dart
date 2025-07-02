@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
@@ -15,7 +16,7 @@ class CategoryPage extends StatelessWidget {
         title: Text(l10n.bottomNavigationBarCategory, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {context.go("/productdetail");}, //TODO: 상세정보 페이지 테스트용입니다. 올바른 진입점으로 연동되면 지워주세요.
               icon: Image.asset("images/icon/cart.png")
           )
         ],

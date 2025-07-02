@@ -22,7 +22,7 @@ class ProductsListPage extends StatelessWidget {
           actions: [
             IconButton(
                 onPressed: (){},
-                icon: Image.asset("images/icon/cart.png")
+                icon: Icon(Icons.shopping_bag_outlined)
             )
           ],
         ),

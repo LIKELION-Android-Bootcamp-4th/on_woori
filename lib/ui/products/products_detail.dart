@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/data/client/products_api_client.dart';
+import 'package:on_woori/data/entity/response/products/products_detail_response.dart';
+import 'package:on_woori/data/entity/response/products/products_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
 class ProductsDetailPage extends StatelessWidget {
+  final String productId;
+  ProductsDetailPage(this.productId);
+
   @override
   Widget build(BuildContext context) {
     final li0n = AppLocalizations.of(context);
@@ -20,19 +26,8 @@ class ProductsDetailPage extends StatelessWidget {
       body: Row(
         children: [
           SizedBox(width: 24,),
-          Expanded(child: ProductsDetailScreen( //TODO: API 적용하여 정보 받아오기 - 이미지, 텍스트 등
-            1000,
-            "상품 이름",
-            "브랜드 이름",
-            "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg",
-            ["https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg", "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg"],
-            true,
-            "카테고리",
-            ["빨", "주", "노"],
-            ["S", "M", "L", "XL"],
-            discountRate: 10,
-          )),
-          SizedBox(width: 24,)
+          Expanded(child: ProductsDetailScreen(productId)),
+          SizedBox(width: 24,),
         ],
       ),
     );
@@ -40,33 +35,9 @@ class ProductsDetailPage extends StatelessWidget {
 }
 
 class ProductsDetailScreen extends StatefulWidget {
-  //DTO 만들어서 클래스로 정보 전달하는 게 나을 듯
-  //API 적용 전까지는 테스트를 위해 하나하나 입력함
-  int price;
-  String productName;
-  String brandName;
-  String mainImageUrl;
-  List<String> detailImageUrl;
-  bool isFavorite;
+  String id;
 
-  String category;
-  int discountRate;
-
-  List<String> sizeOptions;
-  List<String> colorOptions;
-
-  ProductsDetailScreen(
-      this.price,
-      this.productName,
-      this.brandName,
-      this.mainImageUrl,
-      this.detailImageUrl,
-      this.isFavorite,
-      this.category,
-      this.sizeOptions,
-      this.colorOptions,
-      {this.discountRate = 0}
-  );
+  ProductsDetailScreen(this.id);
 
   @override
   State<StatefulWidget> createState() {
@@ -75,51 +46,56 @@ class ProductsDetailScreen extends StatefulWidget {
 }
 
 class ProductsDetailScreenState extends State<ProductsDetailScreen> {
-  late int price;
-  late String productName;
-  late String brandName;
-  late String mainImageUrl;
-  late List<String> detailImageUrl;
-  late bool isFavorite;
-  late String category;
-  late int discountRate;
-  late int discountPrice;
-  bool isDiscount = false;
-  late List<String> sizeOptions;
-  late List<String> colorOptions;
+  final apiClient = ProductsApiClient();
+  late Future<ProductsDetailResponse> _productsFuture;
 
   @override
   void initState() {
     super.initState();
-    price = widget.price;
-    productName = widget.productName;
-    brandName = widget.brandName;
-    mainImageUrl = widget.mainImageUrl;
-    detailImageUrl = widget.detailImageUrl;
-    isFavorite = widget.isFavorite;
-    category = widget.category;
-    discountRate = widget.discountRate;
-    discountPrice = widget.price;
-    if (widget.discountRate != 0) {
-      isDiscount = true;
-      discountPrice = (price - (price * (discountRate / 100))).toInt();
-    }
-    sizeOptions = widget.sizeOptions;
-    colorOptions = widget.colorOptions;
+    _productsFuture = _initializeData();
   }
 
-  var icon = Icons.circle;
+  var icon = Icons.circle_outlined;
   int quantity = 1;
+  int totalPrice = 0;
   String? color;
   String? size;
+  bool isFavorite = false;
+  List<String> sizeOptions = ["사이즈 옵션"];
+  List<String> colorOptions = ["컬러 옵션"];
+
+  Future<ProductsDetailResponse> _initializeData() async {
+    return apiClient.productDetail(widget.id);
+  }
 
   @override
   Widget build(BuildContext context) {
     var li0n = AppLocalizations.of(context);
+    return FutureBuilder(
+      future: _productsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator(),);
+        }
 
-    return ListView(
-      children: [
-        Column(
+        if (snapshot.hasError) {
+          return Center(child: Text("오류 발생: ${snapshot.error}"),);
+        }
+
+        if (!snapshot.hasData) {
+          return const Center(child: Text("데이터가 없습니다."),);
+        }
+
+        final ProductItem? data = snapshot.data?.data;
+
+        if (data?.isFavorite != null) {
+          if (data!.isFavorite) {
+            icon = Icons.circle;
+          }
+        }
+
+        return ListView(
+          addAutomaticKeepAlives: true,
           children: [
             SizedBox(
               width: double.infinity,
@@ -128,7 +104,10 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                      image: DecorationImage(image: NetworkImage(mainImageUrl), fit: BoxFit.cover)
+                      image: DecorationImage(
+                          image: NetworkImage(data?.images?.main ?? ""),
+                          fit: BoxFit.cover
+                      )
                   ),
                 ),
               ),
@@ -137,12 +116,10 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
             SizedBox(height: 10,),
             Row(children: [
               ProductsNameSection(
-                category,
-                productName,
-                "$price",
-                "$discountRate%",
-                "$discountPrice",
-                discount: isDiscount,
+                data?.stockType ?? "카테고리",
+                data?.name ?? "상품명",
+                data?.price ?? 1000,
+                data?.discount ?? 0,
               ),
               Spacer(),
               GestureDetector(
@@ -164,62 +141,62 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
               children: [
                 CircleAvatar(backgroundColor: AppColors.primary, radius: 16,), //TODO: 이미지 넣을 것
                 SizedBox(width: 10,),
-                Text(brandName)
+                Text(data?.store?.name ?? "브랜드")
               ],
             ),
             Divider(color: Colors.black,),
             SizedBox(height: 20,),
-            ProductsDetailImageSection(detailImageUrl),
+            ProductsDetailImageSection(data?.images?.detail ?? []),
             SizedBox(height: 20,),
             Divider(color: Colors.black,),
             Container( //사이즈 옵션
-              color: AppColors.optionStateList,
-              width: double.infinity,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    value: size ?? sizeOptions[0],
-                    items: sizeOptions.map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e, style: TextStyle(fontSize: 16),),
-                    )).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        size = value!;
-                      });
-                    },
-                    menuWidth: double.infinity,
-                    isExpanded: true,
-                    icon: Icon(Icons.keyboard_arrow_down, color: Colors.black,),
+                color: AppColors.optionStateList,
+                width: double.infinity,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                      value: size ?? sizeOptions[0],
+                      items: sizeOptions.map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e, style: TextStyle(fontSize: 16),),
+                      )).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          size = value!;
+                        });
+                      },
+                      menuWidth: double.infinity,
+                      isExpanded: true,
+                      icon: Icon(Icons.keyboard_arrow_down, color: Colors.black,),
+                    ),
                   ),
-                ),
-              )
+                )
             ),
             SizedBox(height: 5,),
             Container( //컬러 옵션
-              width: double.infinity,
-              color: AppColors.optionStateList,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    value: color ?? colorOptions[0],
-                    items: colorOptions.map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e, style: TextStyle(fontSize: 16),),
-                    )).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        color = value!;
-                      });
-                    },
-                    menuWidth: double.infinity,
-                    isExpanded: true,
-                    icon: Icon(Icons.keyboard_arrow_down, color: Colors.black,),
-                  ),
+                width: double.infinity,
+                color: AppColors.optionStateList,
+                child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        value: color ?? colorOptions[0],
+                        items: colorOptions.map((e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e, style: TextStyle(fontSize: 16),),
+                        )).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            color = value!;
+                          });
+                        },
+                        menuWidth: double.infinity,
+                        isExpanded: true,
+                        icon: Icon(Icons.keyboard_arrow_down, color: Colors.black,),
+                      ),
+                    )
                 )
-              )
             ),
             SizedBox(height: 5,),
             Container( //총합산
@@ -232,7 +209,7 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(productName, style: TextStyle(fontSize: 16),),
+                        Text(data?.name ?? "상품명", style: TextStyle(fontSize: 16),),
                         Text(size ?? "사이즈 옵션", style: TextStyle(fontSize: 13, color: AppColors.grey),),
                         Text(color ?? "컬러 옵션", style: TextStyle(fontSize: 13, color: AppColors.grey),)
                       ],
@@ -244,7 +221,7 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
                       SizedBox(height: 10,),
                       Padding(
                         padding: EdgeInsets.only(right: 15),
-                        child: Text(li0n!.productPrice, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),),
+                        child: Text("${quantity * (data?.price ?? 0)}", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),),
                       ),
                       Row( //수량변경 파트
                         children: [
@@ -257,8 +234,8 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
                               });
                             },
                             style: TextButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              minimumSize: Size(36, 36)
+                                padding: EdgeInsets.zero,
+                                minimumSize: Size(36, 36)
                             ),
                             child: Icon(Icons.remove, color: Colors.black,),
                           ),
@@ -287,7 +264,7 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
               width: double.infinity,
               child: TextButton(
                 onPressed: () {}, //TODO: 장바구니에 추가
-                child: Text(li0n.cart, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),),
+                child: Text(li0n!.cart, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),),
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     backgroundColor: AppColors.primary
@@ -299,7 +276,7 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
               width: double.infinity,
               child: TextButton(
                 onPressed: () {}, //TODO: 주문 생성
-                child: Text(li0n.order, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),),
+                child: Text(li0n!.order, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),),
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     backgroundColor: AppColors.primary
@@ -308,31 +285,30 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
             ),
             SizedBox(height: 20,)
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
 
 class ProductsNameSection extends StatelessWidget { //상품 이름 위젯 할인유무에 따라 리턴
-  bool discount;
+  late bool discount;
   String category;
   String productName;
-  String originalPrice;
-  String discountRate;
-  String discountPrice;
+  int originalPrice;
+  int discountRate;
 
   ProductsNameSection(
       this.category,
       this.productName,
       this.originalPrice,
-      this.discountRate,
-      this.discountPrice,
-      {this.discount = false}
+      this.discountRate
   );
 
   @override
   Widget build(BuildContext context) {
+    if (discountRate == 0) { discount = false; } else { discount = true; }
+
     if (discount) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,13 +317,13 @@ class ProductsNameSection extends StatelessWidget { //상품 이름 위젯 할�
           SizedBox(height: 2,),
           Text(productName, style: TextStyle(fontSize: 16),),
           SizedBox(height: 2,),
-          Text(originalPrice, style: TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough),),
+          Text("$originalPrice", style: TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough),),
           SizedBox(height: 2,),
           Row(
             children: [
-              Text(discountRate, style: TextStyle(fontSize: 13, color: Colors.red),),
+              Text("$discountRate%", style: TextStyle(fontSize: 13, color: Colors.red),),
               SizedBox(width: 5,),
-              Text(discountPrice, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)
+              Text("${originalPrice - originalPrice * (100 * discountRate)}", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)
             ],
           ),
         ],
@@ -361,7 +337,7 @@ class ProductsNameSection extends StatelessWidget { //상품 이름 위젯 할�
         SizedBox(height: 2,),
         Text(productName, style: TextStyle(fontSize: 16),),
         SizedBox(height: 2,),
-        Text(originalPrice, style: TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough),),
+        Text("$originalPrice", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
       ],
     );
   }
@@ -379,5 +355,4 @@ class ProductsDetailImageSection extends StatelessWidget { //디테일 이미지
     }
     return Column(children: images,);
   }
-
 }

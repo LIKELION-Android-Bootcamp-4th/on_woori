@@ -69,14 +69,14 @@ class MyPage extends StatelessWidget {
                     minimumSize: Size(0, 0),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
+                      borderRadius: BorderRadius.circular(6),
                       side: const BorderSide(
                         color: AppColors.grey,
                       ),
                     ),
                   ),
                   onPressed: () {
-                    // TODO: 프로필 수정 이동
+                    context.push('/mypage/edit');
                   },
                   child: const Text(
                     '프로필 수정',

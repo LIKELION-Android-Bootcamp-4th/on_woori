@@ -9,6 +9,9 @@ import 'package:on_woori/ui/order/order_detail_page.dart';
 import 'package:on_woori/ui/products/products_detail.dart';
 import 'package:on_woori/ui/products/products_list.dart';
 import 'package:on_woori/ui/wish/wish.dart';
+import 'package:on_woori/ui/mypage/editprofile/editprofile.dart';
+
+
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -50,7 +53,12 @@ final GoRouter router = GoRouter(
             return const OrderDetailPage();
           },
         ),
-
+        GoRoute(
+          path: '/mypage/edit',
+          builder: (context, state) {
+            return const EditProfilePage();
+          },
+        ),
         GoRoute(
             path: '/productslist/:categoryId',
             builder: (context, state) {
@@ -60,9 +68,10 @@ final GoRouter router = GoRouter(
         ),
 
         GoRoute(
-            path: '/productdetail',
+            path: '/productdetail/:productId',
             builder: (context, state) {
-              return ProductsDetailPage();
+              final String productId = state.pathParameters['productId'] ?? "";
+              return ProductsDetailPage(productId);
             },
         ),
         GoRoute(

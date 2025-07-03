@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
 
     } catch (e, s) {
       print("오류 내용: $e");
+      print(s);
       rethrow;
     }
   }
@@ -123,13 +124,7 @@ class _HomePageState extends State<HomePage> {
                     itemCount: 4,
                     itemBuilder: (context, index) {
                       final product = productItems[index];
-                      return ProductsGridItem(
-                        product.name,
-                        product.store?.name ?? '브랜드 없음',
-                        product.images?.main ?? 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg',
-                        product.isFavorite,
-                        price: product.price,
-                      );
+                      return ProductsGridItem(product);
                     },
                   ),
                 ),

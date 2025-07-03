@@ -1,6 +1,22 @@
+import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'products_response.g.dart';
+
+
+ProductImages? _productImagesFromJson(dynamic json) {
+  if (json == null) {
+    return null;
+  }
+  if (json is Map<String, dynamic>) {
+    return ProductImages.fromJson(json);
+  }
+  if (json is String) {
+    return ProductImages.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  }
+  return null;
+}
+
 
 @JsonSerializable(explicitToJson: true)
 class ProductsResponse {
@@ -37,29 +53,20 @@ class ProductItem {
   final String id;
   final String name;
   final int price;
-  final String stockType;
-  final int stock;
-
-  final ProductImages? images;
-  final ProductOptions? options;
-
-  final int? discount;
-  final String status;
-  final StoreData? store;
   final bool isFavorite;
+
+  @JsonKey(fromJson: _productImagesFromJson)
+  final ProductImages? images;
+
+  final StoreData? store;
 
   const ProductItem({
     required this.id,
     required this.name,
     required this.price,
-    required this.stockType,
-    required this.stock,
-    this.images,
-    this.options,
-    this.discount,
-    required this.status,
-    this.store,
     required this.isFavorite,
+    this.images,
+    this.store,
   });
 
   factory ProductItem.fromJson(Map<String, dynamic> json) =>
@@ -70,30 +77,22 @@ class ProductItem {
 @JsonSerializable()
 class ProductImages {
   final String main;
-  final List<String>? sub;
-  final List<String>? detail;
-  const ProductImages({required this.main, this.sub, this.detail});
+
+  const ProductImages({required this.main});
+
   factory ProductImages.fromJson(Map<String, dynamic> json) =>
       _$ProductImagesFromJson(json);
   Map<String, dynamic> toJson() => _$ProductImagesToJson(this);
 }
-@JsonSerializable()
-class ProductOptions {
-  final List<String> color;
-  const ProductOptions({required this.color});
-  factory ProductOptions.fromJson(Map<String, dynamic> json) =>
-      _$ProductOptionsFromJson(json);
-  Map<String, dynamic> toJson() => _$ProductOptionsToJson(this);
-}
+
 @JsonSerializable()
 class StoreData {
   @JsonKey(name: 'id', includeIfNull: false)
   final String? id;
   final String name;
-  final String owner;
-  final String companyId;
-  final String? status;
-  const StoreData({this.id, required this.name, required this.owner, required this.companyId, this.status});
+
+  const StoreData({this.id, required this.name});
+
   factory StoreData.fromJson(Map<String, dynamic> json) =>
       _$StoreDataFromJson(json);
   Map<String, dynamic> toJson() => _$StoreDataToJson(this);

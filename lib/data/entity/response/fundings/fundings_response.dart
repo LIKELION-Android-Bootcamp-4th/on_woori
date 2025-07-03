@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'fundings_response.g.dart';
@@ -18,7 +17,6 @@ class FundingsResponse {
   factory FundingsResponse.fromJson(Map<String, dynamic> json) =>
       _$FundingsResponseFromJson(json);
   Map<String, dynamic> toJson() => _$FundingsResponseToJson(this);
-
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -38,16 +36,21 @@ class FundingsItem {
   final String title;
   final String imageUrl;
   final String linkUrl;
-  final String? descripition;
+  final String? description;
   final CompanyId? companyId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
 
   const FundingsItem({
     required this.id,
     required this.title,
     required this.imageUrl,
     required this.linkUrl,
-    this.descripition,
-    this.companyId
+    this.description,
+    this.companyId,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory FundingsItem.fromJson(Map<String, dynamic> json) =>
@@ -55,12 +58,14 @@ class FundingsItem {
   Map<String, dynamic> toJson() => _$FundingsItemToJson(this);
 }
 
-
 @JsonSerializable()
 class CompanyId {
+  @JsonKey(name: '_id')
+  final String id;
   final String name;
 
   const CompanyId({
+    required this.id,
     required this.name
   });
 

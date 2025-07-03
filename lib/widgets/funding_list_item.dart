@@ -42,11 +42,15 @@ class FundingListItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text(
-                fundingName,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  fundingName,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
               const SizedBox(width: 8),
@@ -57,7 +61,7 @@ class FundingListItem extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
-            ],
+            ]
           ),
           const SizedBox(height: 4),
           Text(
@@ -72,7 +76,7 @@ class FundingListItem extends StatelessWidget {
         ],
       ),
       // 3. 탭(클릭) 제스처 처리
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12.0),
     );
   }
 }

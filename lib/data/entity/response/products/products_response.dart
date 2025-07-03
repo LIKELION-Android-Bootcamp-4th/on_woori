@@ -77,6 +77,7 @@ class ProductImages {
       _$ProductImagesFromJson(json);
   Map<String, dynamic> toJson() => _$ProductImagesToJson(this);
 }
+
 @JsonSerializable()
 class ProductOptions {
   final List<String> color;
@@ -85,6 +86,7 @@ class ProductOptions {
       _$ProductOptionsFromJson(json);
   Map<String, dynamic> toJson() => _$ProductOptionsToJson(this);
 }
+
 @JsonSerializable()
 class StoreData {
   @JsonKey(name: 'id', includeIfNull: false)

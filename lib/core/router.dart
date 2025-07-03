@@ -7,6 +7,7 @@ import 'package:on_woori/ui/home/home.dart';
 import 'package:on_woori/ui/mypage/mypage.dart';
 import 'package:on_woori/ui/products/products_detail.dart';
 import 'package:on_woori/ui/products/products_list.dart';
+import 'package:on_woori/ui/store/brand_detail.dart';
 import 'package:on_woori/ui/wish/wish.dart';
 
 final GoRouter router = GoRouter(
@@ -58,11 +59,20 @@ final GoRouter router = GoRouter(
               return ProductsDetailPage(productId);
             },
         ),
+
         GoRoute(
           path: '/wish/cart',
           builder: (context, state) {
             return const CartPage();
           },
+        ),
+
+        GoRoute(
+          path: '/branddetail/:brandId',
+          builder: (context, state) {
+            final String brandId = state.pathParameters['brandId'] ?? "";
+            return BrandDetailPage(brandId);
+          }
         ),
       ],
     ),

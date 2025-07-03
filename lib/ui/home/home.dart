@@ -136,6 +136,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 32),
 
+                const SizedBox(height: 32),
                 _buildSectionHeader(title: "진행중인 펀딩"),
                 ListView.builder(
                   shrinkWrap: true,
@@ -148,6 +149,7 @@ class _HomePageState extends State<HomePage> {
                       fundingName: item.title,
                       brandName: item.companyId?.name ?? '브랜드 없음',
                       description: item.descripition ?? item.linkUrl,
+                      linkUrl: item.linkUrl,
                     );
                   },
                 ),

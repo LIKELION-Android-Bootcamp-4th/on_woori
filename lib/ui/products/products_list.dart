@@ -46,6 +46,19 @@ class ProductsListScreen extends StatelessWidget {
     return FutureBuilder(
       future: response,
       builder: (context, snapshot) {
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator(),);
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text("오류 발생: ${snapshot.error}"),);
+        }
+
+        if (!snapshot.hasData) {
+          return const Center(child: Text("데이터가 없습니다."),);
+        }
+
         final data = snapshot.data?.data?.items ?? [];
         return Row(
           children: [

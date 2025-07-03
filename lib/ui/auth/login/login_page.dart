@@ -70,7 +70,7 @@ class LoginPageStatus extends State<LoginPage> {
                                 ),
                               ),
                               onTap: () {
-                                // context.go();
+                                context.go("/auth/signup");
                               },
                             ),
                           ],

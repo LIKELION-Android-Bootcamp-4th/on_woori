@@ -36,10 +36,16 @@ FundingsItem _$FundingsItemFromJson(Map<String, dynamic> json) => FundingsItem(
   title: json['title'] as String,
   imageUrl: json['imageUrl'] as String,
   linkUrl: json['linkUrl'] as String,
-  descripition: json['descripition'] as String?,
+  description: json['description'] as String?,
   companyId: json['companyId'] == null
       ? null
       : CompanyId.fromJson(json['companyId'] as Map<String, dynamic>),
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
 );
 
 Map<String, dynamic> _$FundingsItemToJson(FundingsItem instance) =>
@@ -48,13 +54,16 @@ Map<String, dynamic> _$FundingsItemToJson(FundingsItem instance) =>
       'title': instance.title,
       'imageUrl': instance.imageUrl,
       'linkUrl': instance.linkUrl,
-      'descripition': instance.descripition,
+      'description': instance.description,
       'companyId': instance.companyId?.toJson(),
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'updatedAt': instance.updatedAt?.toIso8601String(),
     };
 
 CompanyId _$CompanyIdFromJson(Map<String, dynamic> json) =>
-    CompanyId(name: json['name'] as String);
+    CompanyId(id: json['_id'] as String, name: json['name'] as String);
 
 Map<String, dynamic> _$CompanyIdToJson(CompanyId instance) => <String, dynamic>{
+  '_id': instance.id,
   'name': instance.name,
 };

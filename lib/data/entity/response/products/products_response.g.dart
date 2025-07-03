@@ -37,20 +37,11 @@ ProductItem _$ProductItemFromJson(Map<String, dynamic> json) => ProductItem(
   id: json['_id'] as String,
   name: json['name'] as String,
   price: (json['price'] as num).toInt(),
-  stockType: json['stockType'] as String,
-  stock: (json['stock'] as num).toInt(),
-  images: json['images'] == null
-      ? null
-      : ProductImages.fromJson(json['images'] as Map<String, dynamic>),
-  options: json['options'] == null
-      ? null
-      : ProductOptions.fromJson(json['options'] as Map<String, dynamic>),
-  discount: (json['discount'] as num?)?.toInt(),
-  status: json['status'] as String,
+  isFavorite: json['isFavorite'] as bool,
+  images: _productImagesFromJson(json['images']),
   store: json['store'] == null
       ? null
       : StoreData.fromJson(json['store'] as Map<String, dynamic>),
-  isFavorite: json['isFavorite'] as bool,
 );
 
 Map<String, dynamic> _$ProductItemToJson(ProductItem instance) =>
@@ -58,52 +49,21 @@ Map<String, dynamic> _$ProductItemToJson(ProductItem instance) =>
       '_id': instance.id,
       'name': instance.name,
       'price': instance.price,
-      'stockType': instance.stockType,
-      'stock': instance.stock,
-      'images': instance.images?.toJson(),
-      'options': instance.options?.toJson(),
-      'discount': instance.discount,
-      'status': instance.status,
-      'store': instance.store?.toJson(),
       'isFavorite': instance.isFavorite,
+      'images': instance.images?.toJson(),
+      'store': instance.store?.toJson(),
     };
 
 ProductImages _$ProductImagesFromJson(Map<String, dynamic> json) =>
-    ProductImages(
-      main: json['main'] as String,
-      sub: (json['sub'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      detail: (json['detail'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-    );
+    ProductImages(main: json['main'] as String);
 
 Map<String, dynamic> _$ProductImagesToJson(ProductImages instance) =>
-    <String, dynamic>{
-      'main': instance.main,
-      'sub': instance.sub,
-      'detail': instance.detail,
-    };
+    <String, dynamic>{'main': instance.main};
 
-ProductOptions _$ProductOptionsFromJson(Map<String, dynamic> json) =>
-    ProductOptions(
-      color: (json['color'] as List<dynamic>).map((e) => e as String).toList(),
-    );
-
-Map<String, dynamic> _$ProductOptionsToJson(ProductOptions instance) =>
-    <String, dynamic>{'color': instance.color};
-
-StoreData _$StoreDataFromJson(Map<String, dynamic> json) => StoreData(
-  id: json['id'] as String?,
-  name: json['name'] as String,
-  owner: json['owner'] as String,
-  companyId: json['companyId'] as String,
-  status: json['status'] as String?,
-);
+StoreData _$StoreDataFromJson(Map<String, dynamic> json) =>
+    StoreData(id: json['id'] as String?, name: json['name'] as String);
 
 Map<String, dynamic> _$StoreDataToJson(StoreData instance) => <String, dynamic>{
   if (instance.id case final value?) 'id': value,
   'name': instance.name,
-  'owner': instance.owner,
-  'companyId': instance.companyId,
-  'status': instance.status,
 };

@@ -35,38 +35,46 @@ Map<String, dynamic> _$LoginDataToJson(LoginData instance) => <String, dynamic>{
 };
 
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
-  isEmailVerified: json['isEmailVerified'] as bool,
   id: json['_id'] as String,
   email: json['email'] as String,
-  nickName: json['nickName'] as String,
-  profile: ProfileData.fromJson(json['profile'] as Map<String, dynamic>),
-  platformRoles: (json['platformRoles'] as List<dynamic>)
-      .map((e) => e as String)
+  nickName: json['nickName'] as String?,
+  profile: json['profile'] == null
+      ? null
+      : ProfileData.fromJson(json['profile'] as Map<String, dynamic>),
+  platformRoles: (json['platformRoles'] as List<dynamic>?)
+      ?.map((e) => e as String)
       .toList(),
-  isAdmin: json['isAdmin'] as bool,
-  companyId: json['companyId'] as String,
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  updatedAt: DateTime.parse(json['updatedAt'] as String),
-  v: (json['__v'] as num).toInt(),
-  isActive: json['isActive'] as bool,
-  passwordChangedAt: DateTime.parse(json['passwordChangedAt'] as String),
-  updatedBy: json['updatedBy'] as String,
+  isAdmin: json['isAdmin'] as bool?,
+  isActive: json['isActive'] as bool?,
+  isEmailVerified: json['isEmailVerified'] as bool?,
+  companyId: json['companyId'] as String?,
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
+  v: (json['__v'] as num?)?.toInt(),
+  passwordChangedAt: json['passwordChangedAt'] == null
+      ? null
+      : DateTime.parse(json['passwordChangedAt'] as String),
+  updatedBy: json['updatedBy'] as String?,
 );
 
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
-  'isEmailVerified': instance.isEmailVerified,
   '_id': instance.id,
   'email': instance.email,
   'nickName': instance.nickName,
-  'profile': instance.profile.toJson(),
+  'profile': instance.profile?.toJson(),
   'platformRoles': instance.platformRoles,
   'isAdmin': instance.isAdmin,
-  'companyId': instance.companyId,
-  'createdAt': instance.createdAt.toIso8601String(),
-  'updatedAt': instance.updatedAt.toIso8601String(),
-  '__v': instance.v,
   'isActive': instance.isActive,
-  'passwordChangedAt': instance.passwordChangedAt.toIso8601String(),
+  'isEmailVerified': instance.isEmailVerified,
+  'companyId': instance.companyId,
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
+  '__v': instance.v,
+  'passwordChangedAt': instance.passwordChangedAt?.toIso8601String(),
   'updatedBy': instance.updatedBy,
 };
 

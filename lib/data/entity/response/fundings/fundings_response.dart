@@ -14,6 +14,11 @@ class FundingsResponse {
     required this.message,
     this.data
   });
+
+  factory FundingsResponse.fromJson(Map<String, dynamic> json) =>
+      _$FundingsResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$FundingsResponseToJson(this);
+
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -33,32 +38,33 @@ class FundingsItem {
   final String title;
   final String imageUrl;
   final String linkUrl;
-  final int stock;
+  final String? descripition;
+  final CompanyId? companyId;
 
   const FundingsItem({
     required this.id,
     required this.title,
     required this.imageUrl,
     required this.linkUrl,
-    required this.stock,
+    this.descripition,
+    this.companyId
   });
 
   factory FundingsItem.fromJson(Map<String, dynamic> json) =>
       _$FundingsItemFromJson(json);
   Map<String, dynamic> toJson() => _$FundingsItemToJson(this);
-
 }
 
 
 @JsonSerializable()
-class CompanyItem {
+class CompanyId {
   final String name;
 
-  const CompanyItem({
+  const CompanyId({
     required this.name
   });
 
-  factory CompanyItem.fromJson(Map<String, dynamic> json) =>
-      _$CompanyItemFromJson(json);
-  Map<String, dynamic> toJson() => _$CompanyItemToJson(this);
+  factory CompanyId.fromJson(Map<String, dynamic> json) =>
+      _$CompanyIdFromJson(json);
+  Map<String, dynamic> toJson() => _$CompanyIdToJson(this);
 }

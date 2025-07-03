@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:on_woori/config/endpoint/auth_endpoints.dart';
+import 'package:on_woori/config/endpoint/buyer/fundings_endpoints.dart';
 import 'package:on_woori/config/endpoint/buyer/products_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
 import 'package:on_woori/data/entity/request/auth/login_request.dart';
@@ -9,28 +10,21 @@ import 'package:on_woori/data/entity/request/auth/verify_email_request.dart';
 import 'package:on_woori/data/entity/response/auth/login_response.dart';
 import 'package:on_woori/data/entity/response/auth/register_response.dart';
 import 'package:on_woori/data/entity/response/auth/verify_email_response.dart';
-import 'package:on_woori/data/entity/response/products/products_detail_response.dart';
+import 'package:on_woori/data/entity/response/fundings/fundings_response.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 
-class ProductsApiClient {
+class FundingsApiClient {
   final Dio _dio;
 
-  ProductsApiClient({Dio? dio}) : _dio = dio ?? ApiClient().dio;
+  FundingsApiClient({Dio? dio}) : _dio = dio ?? ApiClient().dio;
 
-  // 상품 목록 검색
-  Future<ProductsResponse> products()
+  // 공개 펀딩 목록 조회
+  Future<FundingsResponse> fundings()
   async {
     final response = await _dio.get(
-      ProductsEndpoints.getProducts,
+      FundingsEndpoints.getFundings,
     );
-    return ProductsResponse.fromJson(response.data);
+    return FundingsResponse.fromJson(response.data);
   }
 
-  Future<ProductsDetailResponse> productDetail(String id)
-  async {
-    final response = await _dio.get(
-      ProductsEndpoints.getProductDetail(id: id),
-    );
-    return ProductsDetailResponse.fromJson(response.data);
-  }
 }

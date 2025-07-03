@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:on_woori/data/client/auth_api_client.dart';
+import 'package:on_woori/data/client/wishes_api_client.dart';
+import 'package:on_woori/data/entity/response/wishes/wish_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/category_horizontal_scroll.dart';
 import 'package:on_woori/widgets/category_horizontal_scroll_item.dart';
 import 'package:on_woori/widgets/list_toolbar.dart';
 import 'package:on_woori/widgets/products_grid_item.dart';
 
-class WishPage extends StatelessWidget {
+class WishPage extends StatefulWidget {
   const WishPage({super.key});
 
+  @override
+  State<WishPage> createState() => WishPageState();
+}
+
+class WishPageState extends State<WishPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -65,5 +73,7 @@ class WishPage extends StatelessWidget {
         ],
       ),
     );
+
+
   }
 }

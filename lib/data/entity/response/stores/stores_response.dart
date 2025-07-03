@@ -88,14 +88,12 @@ class StoreDetailItem {
   final String name;
   final StoreOwner owner;
   final String description;
-  final DateTime timestamp;
 
   StoreDetailItem({
     required this.id,
     required this.name,
     required this.owner,
     required this.description,
-    required this.timestamp
   });
 
   factory StoreDetailItem.fromJson(Map<String, dynamic> json) =>
@@ -106,12 +104,10 @@ class StoreDetailItem {
 @JsonSerializable()
 class StoreOwnerProfile {
   final String name;
-  final String? birthDate;
   final String profileImage;
 
   StoreOwnerProfile({
     required this.name,
-    this.birthDate,
     required this.profileImage
   });
 

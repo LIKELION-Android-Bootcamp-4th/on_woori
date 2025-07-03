@@ -20,12 +20,15 @@
    @override
    Widget build(BuildContext context) {
      return Scaffold(
-       body: Column(
-         children: [
-           BrandDetailScreen(brandId),
-           BrandProductScreen(brandId)
-         ],
-       ),
+       appBar: AppBar(),
+       body: SingleChildScrollView(
+         child: Column(
+           children: [
+             BrandDetailScreen(brandId),
+             BrandProductScreen(brandId)
+           ],
+         ),
+       )
      );
    }
  }
@@ -78,7 +81,6 @@
            shrinkWrap: true,
            physics: NeverScrollableScrollPhysics(),
            children: [
-             SizedBox(height: 56,),
              BrandNameSection(
                false,
                data?.name ?? "브랜드 이름",
@@ -218,9 +220,9 @@
        return Row(
          mainAxisAlignment: MainAxisAlignment.start,
          children: [
-           CircleAvatar(backgroundColor: AppColors.primary, radius: 36,),
+           CircleAvatar(radius: 36, foregroundImage: NetworkImage(_BrandImageUrl),),
            SizedBox(width: 15,),
-           Text("브랜드 이름", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+           Text(_BrandName, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
            Spacer(),
            TextButton(
              onPressed: (){},
@@ -233,9 +235,9 @@
      return Row(
        mainAxisAlignment: MainAxisAlignment.center,
        children: [
-         CircleAvatar(backgroundColor: AppColors.primary, radius: 36,),
+         CircleAvatar(radius: 36, foregroundImage: NetworkImage(_BrandImageUrl)),
          SizedBox(width: 15,),
-         Text("브랜드 이름", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+         Text(_BrandName, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
          Spacer()
        ],
      );

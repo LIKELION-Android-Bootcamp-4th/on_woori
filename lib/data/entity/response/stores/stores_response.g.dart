@@ -74,7 +74,6 @@ StoreDetailItem _$StoreDetailItemFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       owner: StoreOwner.fromJson(json['owner'] as Map<String, dynamic>),
       description: json['description'] as String,
-      timestamp: DateTime.parse(json['timestamp'] as String),
     );
 
 Map<String, dynamic> _$StoreDetailItemToJson(StoreDetailItem instance) =>
@@ -83,20 +82,17 @@ Map<String, dynamic> _$StoreDetailItemToJson(StoreDetailItem instance) =>
       'name': instance.name,
       'owner': instance.owner,
       'description': instance.description,
-      'timestamp': instance.timestamp.toIso8601String(),
     };
 
 StoreOwnerProfile _$StoreOwnerProfileFromJson(Map<String, dynamic> json) =>
     StoreOwnerProfile(
       name: json['name'] as String,
-      birthDate: json['birthDate'] as String?,
       profileImage: json['profileImage'] as String,
     );
 
 Map<String, dynamic> _$StoreOwnerProfileToJson(StoreOwnerProfile instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'birthDate': instance.birthDate,
       'profileImage': instance.profileImage,
     };
 

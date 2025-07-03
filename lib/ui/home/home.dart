@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/data/client/auth_api_client.dart';
 import 'package:on_woori/data/client/fundings_api_client.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
@@ -11,6 +12,7 @@ import 'package:on_woori/data/entity/response/stores/stores_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/brand_grid_item.dart';
 import 'package:on_woori/widgets/funding_list_item.dart';
+import 'package:on_woori/widgets/products_double_grid.dart';
 import 'package:on_woori/widgets/products_grid_item.dart';
 
 class HomePage extends StatefulWidget {
@@ -115,18 +117,7 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 12),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, childAspectRatio: 0.6, crossAxisSpacing: 12, mainAxisSpacing: 20,
-                    ),
-                    itemCount: 4,
-                    itemBuilder: (context, index) {
-                      final product = productItems[index];
-                      return ProductsGridItem(product);
-                    },
-                  ),
+                  child: ProductsNonScrollableGrid(productItems.take(4).toList())
                 ),
                 const SizedBox(height: 32),
 
@@ -171,6 +162,7 @@ class _HomePageState extends State<HomePage> {
                             brandName: brand.name,
                             onTap: () {
                               print('${brand.name} 클릭됨, ID: ${brand.id}');
+                              context.push('/branddetail/${brand.id}');
                             },
                           );
                         },

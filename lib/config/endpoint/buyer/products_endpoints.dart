@@ -4,7 +4,7 @@ abstract class ProductsEndpoints {
 
   // 상품 상세 조회
   static String getProductDetail({
-    required int id
+    required String id
   }) {
     return '/api/products/$id';
   }

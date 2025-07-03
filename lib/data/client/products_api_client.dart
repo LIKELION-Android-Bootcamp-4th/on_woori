@@ -9,6 +9,7 @@ import 'package:on_woori/data/entity/request/auth/verify_email_request.dart';
 import 'package:on_woori/data/entity/response/auth/login_response.dart';
 import 'package:on_woori/data/entity/response/auth/register_response.dart';
 import 'package:on_woori/data/entity/response/auth/verify_email_response.dart';
+import 'package:on_woori/data/entity/response/products/products_detail_response.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 
 class ProductsApiClient {
@@ -25,4 +26,11 @@ class ProductsApiClient {
     return ProductsResponse.fromJson(response.data);
   }
 
+  Future<ProductsDetailResponse> productDetail(String id)
+  async {
+    final response = await _dio.get(
+      ProductsEndpoints.getProductDetail(id: id),
+    );
+    return ProductsDetailResponse.fromJson(response.data);
+  }
 }

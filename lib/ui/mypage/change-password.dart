@@ -23,15 +23,11 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
     super.dispose();
   }
 
-  void _onSave() {
-    // 실제로는 비밀번호 검증/저장 처리 로직이 여기에 들어가야 함
-    context.go('/mypage');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -44,12 +40,11 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
           ),
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// 현재 비밀번호
             const Text(
               '현재 비밀번호',
               style: TextStyle(
@@ -71,10 +66,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               ),
             ),
-
             const SizedBox(height: 24),
-
-            /// 새 비밀번호
             const Text(
               '새 비밀번호',
               style: TextStyle(
@@ -96,10 +88,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               ),
             ),
-
             const SizedBox(height: 24),
-
-            /// 비밀번호 확인
             const Text(
               '비밀번호 확인',
               style: TextStyle(
@@ -121,10 +110,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               ),
             ),
-
             const SizedBox(height: 32),
-
-            /// 저장 버튼
             BottomButton('비밀번호 변경'),
           ],
         ),

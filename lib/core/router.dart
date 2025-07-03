@@ -10,6 +10,8 @@ import 'package:on_woori/ui/products/products_detail.dart';
 import 'package:on_woori/ui/products/products_list.dart';
 import 'package:on_woori/ui/wish/wish.dart';
 import 'package:on_woori/ui/mypage/editprofile/editprofile.dart';
+import 'package:on_woori/ui/mypage/change-password.dart';
+
 
 
 
@@ -80,6 +82,14 @@ final GoRouter router = GoRouter(
             return const CartPage();
           },
         ),
+
+        GoRoute(
+          path: '/mypage/password',
+          builder: (context, state) {
+            return const PasswordEditPage();
+          },
+        ),
+
       ],
     ),
   ],

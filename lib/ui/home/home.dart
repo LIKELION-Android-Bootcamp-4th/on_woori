@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
 import 'package:on_woori/data/client/auth_api_client.dart';
 import 'package:on_woori/data/client/fundings_api_client.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
@@ -12,7 +11,6 @@ import 'package:on_woori/data/entity/response/stores/stores_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/brand_grid_item.dart';
 import 'package:on_woori/widgets/funding_list_item.dart';
-import 'package:on_woori/widgets/products_double_grid.dart';
 import 'package:on_woori/widgets/products_grid_item.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,17 +32,25 @@ class _HomePageState extends State<HomePage> {
   Future<(ProductsResponse, FundingsResponse, StoresResponse)> _initializeData() async {
     await _loginAndSaveToken();
 
-    final results = await Future.wait([
-      ProductsApiClient().products(),
-      FundingsApiClient().fundings(),
-      StoresApiClient().stores(),
-    ]);
+    // 각 엔티티의 파싱 성공 여부를 확인하기 위한 순차적 호출
+    try {
+      final productsResponse = await ProductsApiClient().products();
+      print("[파싱 성공] Product 엔티티 변환 완료. (아이템 수: ${productsResponse.data?.items?.length ?? 0})");
 
-    final productsResponse = results[0] as ProductsResponse;
-    final fundingsResponse = results[1] as FundingsResponse;
-    final storesResponse = results[2] as StoresResponse;
+      final fundingsResponse = await FundingsApiClient().fundings();
+      print("[파싱 성공] Funding 엔티티 변환 완료. (아이템 수: ${fundingsResponse.data?.items?.length ?? 0})");
 
-    return (productsResponse, fundingsResponse, storesResponse);
+      final storesResponse = await StoresApiClient().stores();
+      print("[파싱 성공] Store 엔티티 변환 완료. (아이템 수: ${storesResponse.data?.length ?? 0})");
+
+      print("모든 엔티티 파싱 성공");
+      return (productsResponse, fundingsResponse, storesResponse);
+
+    } catch (e, s) {
+      print("오류 내용: $e");
+      print(s);
+      rethrow;
+    }
   }
 
 
@@ -55,10 +61,11 @@ class _HomePageState extends State<HomePage> {
     try {
       final response = await apiClient.authLogin(
         request: LoginRequest(
-          email: 'admin@git.hansul.kr',
-          password: 'qwer1234!@#\$',
+          email: 'haebun@tetraplace.com',
+          password: 'password123',
         ),
       );
+      await storage.delete(key: 'ACCESS_TOKEN');
       await storage.write(key: 'ACCESS_TOKEN', value: response.data.accessToken);
       await storage.write(key: 'REFRESH_TOKEN', value: response.data.refreshToken);
     } catch (e) {
@@ -69,15 +76,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
-    final List<Map<String, String>> brandData = List.generate(
-      8,
-          (index) => {
-        'name': '브랜드 ${index + 1}',
-        'imageUrl': 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg', // 임시 이미지 URL
-        'id': 'brand_${index + 1}',
-      },
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -117,10 +115,22 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 12),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: ProductsNonScrollableGrid(productItems.take(4).toList()),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, childAspectRatio: 0.6, crossAxisSpacing: 12, mainAxisSpacing: 20,
+                    ),
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      final product = productItems[index];
+                      return ProductsGridItem(product);
+                    },
+                  ),
                 ),
                 const SizedBox(height: 32),
 
+                const SizedBox(height: 32),
                 _buildSectionHeader(title: "진행중인 펀딩"),
                 ListView.builder(
                   shrinkWrap: true,
@@ -161,7 +171,6 @@ class _HomePageState extends State<HomePage> {
                             brandName: brand.name,
                             onTap: () {
                               print('${brand.name} 클릭됨, ID: ${brand.id}');
-                              context.push('/branddetail/${brand.id}');
                             },
                           );
                         },
@@ -169,7 +178,6 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-
               ],
             ),
           );

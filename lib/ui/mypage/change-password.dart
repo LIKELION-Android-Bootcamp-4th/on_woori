@@ -15,6 +15,10 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
+  bool _obscureCurrent = true;
+  bool _obscureNew = true;
+  bool _obscureConfirm = true;
+
   @override
   void dispose() {
     currentPasswordController.dispose();
@@ -23,11 +27,14 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
     super.dispose();
   }
 
+  void _onSave() {
+    context.go('/mypage');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -45,6 +52,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 현재 비밀번호
             const Text(
               '현재 비밀번호',
               style: TextStyle(
@@ -56,7 +64,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
             const SizedBox(height: 8),
             TextField(
               controller: currentPasswordController,
-              obscureText: true,
+              obscureText: _obscureCurrent,
               decoration: InputDecoration(
                 hintText: '현재 비밀번호',
                 border: OutlineInputBorder(
@@ -64,9 +72,23 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
                   borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureCurrent ? Icons.visibility_off : Icons.visibility,
+                    color: AppColors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureCurrent = !_obscureCurrent;
+                    });
+                  },
+                ),
               ),
             ),
+
             const SizedBox(height: 24),
+
+            // 새 비밀번호
             const Text(
               '새 비밀번호',
               style: TextStyle(
@@ -78,7 +100,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
             const SizedBox(height: 8),
             TextField(
               controller: newPasswordController,
-              obscureText: true,
+              obscureText: _obscureNew,
               decoration: InputDecoration(
                 hintText: '새 비밀번호',
                 border: OutlineInputBorder(
@@ -86,9 +108,23 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
                   borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureNew ? Icons.visibility_off : Icons.visibility,
+                    color: AppColors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureNew = !_obscureNew;
+                    });
+                  },
+                ),
               ),
             ),
+
             const SizedBox(height: 24),
+
+            // 비밀번호 확인
             const Text(
               '비밀번호 확인',
               style: TextStyle(
@@ -100,7 +136,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
             const SizedBox(height: 8),
             TextField(
               controller: confirmPasswordController,
-              obscureText: true,
+              obscureText: _obscureConfirm,
               decoration: InputDecoration(
                 hintText: '비밀번호 확인',
                 border: OutlineInputBorder(
@@ -108,9 +144,22 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
                   borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureConfirm ? Icons.visibility_off : Icons.visibility,
+                    color: AppColors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureConfirm = !_obscureConfirm;
+                    });
+                  },
+                ),
               ),
             ),
+
             const SizedBox(height: 32),
+            // 저장 버튼
             BottomButton('비밀번호 변경'),
           ],
         ),

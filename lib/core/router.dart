@@ -8,6 +8,9 @@ import 'package:on_woori/ui/mypage/mypage.dart';
 import 'package:on_woori/ui/products/products_detail.dart';
 import 'package:on_woori/ui/products/products_list.dart';
 import 'package:on_woori/ui/wish/wish.dart';
+import 'package:on_woori/ui/mypage/editprofile/editprofile.dart';
+
+
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -41,6 +44,12 @@ final GoRouter router = GoRouter(
           path: '/mypage',
           builder: (context, state) {
             return const MyPage();
+          },
+        ),
+        GoRoute(
+          path: '/mypage/edit',
+          builder: (context, state) {
+            return const EditProfilePage();
           },
         ),
         GoRoute(

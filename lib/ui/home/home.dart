@@ -3,22 +3,24 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:on_woori/data/client/auth_api_client.dart';
 import 'package:on_woori/data/client/fundings_api_client.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
+import 'package:on_woori/data/client/stores_api_client.dart';
 import 'package:on_woori/data/entity/request/auth/login_request.dart';
 import 'package:on_woori/data/entity/response/fundings/fundings_response.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
+import 'package:on_woori/data/entity/response/stores/stores_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
+import 'package:on_woori/widgets/brand_grid_item.dart';
 import 'package:on_woori/widgets/funding_list_item.dart';
 import 'package:on_woori/widgets/products_grid_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<(ProductsResponse, FundingsResponse)> _apiDataFuture;
+  late Future<(ProductsResponse, FundingsResponse, StoresResponse)> _apiDataFuture;
 
   @override
   void initState() {
@@ -27,18 +29,20 @@ class _HomePageState extends State<HomePage> {
     _apiDataFuture = _initializeData();
   }
 
-  Future<(ProductsResponse, FundingsResponse)> _initializeData() async {
+  Future<(ProductsResponse, FundingsResponse, StoresResponse)> _initializeData() async {
     await _loginAndSaveToken();
 
     final results = await Future.wait([
       ProductsApiClient().products(),
       FundingsApiClient().fundings(),
+      StoresApiClient().stores(),
     ]);
 
     final productsResponse = results[0] as ProductsResponse;
     final fundingsResponse = results[1] as FundingsResponse;
+    final storesResponse = results[2] as StoresResponse;
 
-    return (productsResponse, fundingsResponse);
+    return (productsResponse, fundingsResponse, storesResponse);
   }
 
 
@@ -64,12 +68,21 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    final List<Map<String, String>> brandData = List.generate(
+      8,
+          (index) => {
+        'name': '브랜드 ${index + 1}',
+        'imageUrl': 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg', // 임시 이미지 URL
+        'id': 'brand_${index + 1}',
+      },
+    );
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(l10n.appTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
       ),
-      body: FutureBuilder<(ProductsResponse, FundingsResponse)>(
+      body: FutureBuilder<(ProductsResponse, FundingsResponse, StoresResponse)>(
         future: _apiDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -86,6 +99,7 @@ class _HomePageState extends State<HomePage> {
 
           final productItems = snapshot.data?.$1.data?.items ?? [];
           final fundingItems = snapshot.data?.$2.data?.items ?? [];
+          final storeItems = snapshot.data?.$3.data ?? [];
 
           return SingleChildScrollView(
             child: Column(
@@ -100,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                 _buildSectionHeader(title: l10n.home_RecommendedProducts),
                 const SizedBox(height: 12),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -138,6 +152,38 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 const SizedBox(height: 32),
+
+                _buildSectionHeader(title: "브랜드 둘러보기"),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 24),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 0.8,
+                        ),
+                        itemCount: storeItems.length,
+                        itemBuilder: (context, index) {
+                          final brand = storeItems[index];
+                          return BrandGridItem(
+                            imageUrl: 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg',
+                            brandName: brand.name,
+                            onTap: () {
+                              print('${brand.name} 클릭됨, ID: ${brand.id}');
+                            },
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ),
+
               ],
             ),
           );
@@ -148,7 +194,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildSectionHeader({required String title}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

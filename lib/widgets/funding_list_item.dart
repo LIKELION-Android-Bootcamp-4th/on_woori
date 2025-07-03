@@ -76,7 +76,7 @@ class FundingListItem extends StatelessWidget {
         ],
       ),
       // 3. 탭(클릭) 제스처 처리
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12.0),
     );
   }
 }

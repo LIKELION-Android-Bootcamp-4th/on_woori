@@ -72,7 +72,8 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: BottomButton(
-            '펀딩 추가',
+            buttonText: '펀딩 추가',
+            pressedFunc: () {},
           ),
         ),
       ),

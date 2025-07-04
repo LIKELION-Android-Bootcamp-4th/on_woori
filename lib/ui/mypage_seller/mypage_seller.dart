@@ -183,7 +183,9 @@ class SellerMyPage extends StatelessWidget {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {},
+              onTap: () {
+                context.go('/mypage/password');
+              },
             ),
 
             // 상품 등록
@@ -236,7 +238,9 @@ class SellerMyPage extends StatelessWidget {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {},
+              onTap: () {
+                context.push('/brand/editproduct');
+              },
             ),
 
             // Divider

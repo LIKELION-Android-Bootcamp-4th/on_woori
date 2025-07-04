@@ -165,7 +165,7 @@ final GoRouter router = GoRouter(
         
         GoRoute(
           path: '/brand/editproduct',
-          builder: (context, state) { //TODO: brand id 추가해서 전달 (현재 통신 불안으로 테스트 상태)
+          builder: (context, state) {
             return BrandProductEditPage();
           }
         ),

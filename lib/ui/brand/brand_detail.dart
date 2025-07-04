@@ -232,7 +232,8 @@ import 'package:on_woori/data/client/fundings_api_client.dart';
               imageUrl: item.imageUrl,
               fundingName: item.title,
               brandName: item.companyId.toString(),
-              description: item.linkUrl,
+              description: item?.description ?? "",
+              linkUrl: item.linkUrl,
             );
           }).toList(),
         );

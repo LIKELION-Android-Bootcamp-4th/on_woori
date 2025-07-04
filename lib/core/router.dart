@@ -132,11 +132,11 @@ final GoRouter router = GoRouter(
             final String brandId = state.pathParameters['brandId'] ?? "";
             return BrandDetailPage(brandId);
           }
-        )
+        ),
         
         GoRoute(
           path: '/funding/register',
-          builder: (context, state) => const FundingRegisterPage(),
+          builder: (context, state) => const FundingRegisterPage()
         ),
 
         GoRoute(

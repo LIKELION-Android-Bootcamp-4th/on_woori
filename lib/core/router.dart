@@ -16,6 +16,7 @@ import 'package:on_woori/ui/order/order_detail_page.dart';
 import 'package:on_woori/ui/mypage/editprofile/editprofile.dart';
 import 'package:on_woori/ui/auth/login/login_page.dart';
 import 'package:on_woori/ui/mypage/change-password.dart';
+import 'package:on_woori/ui/mypage_seller/add_funding.dart';
 import 'package:on_woori/ui/mypage_seller/add_product.dart';
 
 final GoRouter router = GoRouter(
@@ -122,6 +123,11 @@ final GoRouter router = GoRouter(
             return const PasswordEditPage();
           },
         ),
+        
+        GoRoute(
+          path: '/funding/register',
+          builder: (context, state) => const FundingRegisterPage(),
+        ),
 
         GoRoute(
           path: '/mypage/register',
@@ -129,7 +135,6 @@ final GoRouter router = GoRouter(
             return const ProductRegisterPage();
           },
         ),
-
       ],
     ),
   ],

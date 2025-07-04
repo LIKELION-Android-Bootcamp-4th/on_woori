@@ -4,8 +4,9 @@ import '../core/styles/app_colors.dart';
 
 class BottomButton extends StatelessWidget {
   String buttonText;
+  VoidCallback? pressedFunc;
 
-  BottomButton(this.buttonText, {super.key});
+  BottomButton({required this.buttonText, required this.pressedFunc, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class BottomButton extends StatelessWidget {
       height: 60,
       margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: pressedFunc,
         style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primarySub,
             shape: RoundedRectangleBorder(
@@ -26,7 +27,7 @@ class BottomButton extends StatelessWidget {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
       ),

@@ -72,7 +72,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
             const Spacer(),
 
-            BottomButton(buttonText: '저장', pressedFunc: () {},),
+            BottomButton(buttonText: '저장', pressedFunc: (){}),
             // TODO: 저장 후 마이페이지로 이동하도록 구현
           ],
         ),

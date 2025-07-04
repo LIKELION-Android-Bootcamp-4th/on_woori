@@ -43,7 +43,7 @@ class CartPage extends StatelessWidget {
               ),
             ),
             // 하단 버튼
-            BottomButton(buttonText: "0원 결제하기", pressedFunc: () {},),
+            BottomButton(buttonText: "0원 결제하기", pressedFunc: (){}),
           ],
         ),
       ),

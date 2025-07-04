@@ -62,7 +62,7 @@ class CustomDropdown extends StatelessWidget {
                                         item,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 20,
+                                          fontSize: 16,
                                           color: Colors.black,
                                         ),
                                       ),
@@ -105,7 +105,7 @@ class CustomDropdown extends StatelessWidget {
                   selectedValue,
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 20,
+                    fontSize: 16,
                     color: Colors.black,
                   ),
                 ),

@@ -17,13 +17,15 @@ class MyPage extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          l10n.bottomNavigationBarMyPage, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+          l10n.bottomNavigationBarMyPage,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
         actions: [
           IconButton(
             onPressed: () {
               context.push('/wish/cart');
             },
-            icon: Icon(Icons.shopping_bag_outlined),
+            icon: const Icon(Icons.shopping_bag_outlined),
           ),
         ],
       ),
@@ -69,14 +71,14 @@ class MyPage extends StatelessWidget {
                     minimumSize: Size(0, 0),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
+                      borderRadius: BorderRadius.circular(6),
                       side: const BorderSide(
                         color: AppColors.grey,
                       ),
                     ),
                   ),
                   onPressed: () {
-                    // TODO: 프로필 수정 이동
+                    context.push('/mypage/edit');
                   },
                   child: const Text(
                     '프로필 수정',
@@ -117,7 +119,9 @@ class MyPage extends StatelessWidget {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {},
+              onTap: () {
+                context.push('/orderdetail');
+              },
             ),
 
             // 위시리스트
@@ -133,7 +137,9 @@ class MyPage extends StatelessWidget {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {},
+              onTap: () {
+                context.push('/wish');
+              },
             ),
 
             // Divider between 위시리스트 and 내 정보
@@ -168,7 +174,9 @@ class MyPage extends StatelessWidget {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {},
+              onTap: () {
+                context.push('/mypage/password');
+              },
             ),
 
             // Divider under 비밀번호 변경

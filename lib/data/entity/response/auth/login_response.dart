@@ -42,8 +42,6 @@ class LoginData {
 
 @JsonSerializable(explicitToJson: true)
 class UserData {
-  @JsonKey(name: '_id')
-  final String id;
   final String email;
   final String? nickName;
   final ProfileData? profile;
@@ -52,16 +50,14 @@ class UserData {
   final bool? isActive;
   final bool? isEmailVerified;
   final String? companyId;
+  final String? name;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+
   @JsonKey(name: '__v')
   final int? v;
 
-  final DateTime? passwordChangedAt;
-  final String? updatedBy;
-
   const UserData({
-    required this.id,
     required this.email,
     this.nickName,
     this.profile,
@@ -70,11 +66,10 @@ class UserData {
     this.isActive,
     this.isEmailVerified,
     this.companyId,
+    this.name,
     this.createdAt,
     this.updatedAt,
     this.v,
-    this.passwordChangedAt,
-    this.updatedBy,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) =>

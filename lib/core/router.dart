@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import 'package:on_woori/main.dart';
+import 'package:on_woori/ui/brand/brand_product_edit.dart';
 import 'package:on_woori/ui/cart/cart.dart';
 import 'package:on_woori/ui/category/category.dart';
 import 'package:on_woori/ui/home/home.dart';
@@ -76,6 +77,7 @@ final GoRouter router = GoRouter(
               return ProductsDetailPage(productId);
             },
         ),
+
         GoRoute(
           path: '/wish/cart',
           builder: (context, state) {
@@ -90,6 +92,12 @@ final GoRouter router = GoRouter(
           },
         ),
 
+        GoRoute(
+          path: '/brand/editproduct',
+          builder: (context, state) { //TODO: brand id 추가해서 전달 (현재 통신 불안으로 테스트 상태)
+            return BrandProductEditPage();
+          }
+        )
       ],
     ),
   ],

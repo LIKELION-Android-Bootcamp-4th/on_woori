@@ -3,6 +3,7 @@ import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/data/entity/response/fundings/fundings_response.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
+import 'package:on_woori/widgets/brand_product_edit_item.dart';
 
 class BrandProductEditPage extends StatelessWidget {
   @override
@@ -62,7 +63,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
     });
   }
 
-  void deleteSelection() {
+  void deleteMultiSelection() {
     List<ProductItem> deletedList = List.from(tempList);
     List<bool> deletedSelection = List.from(selectionList);
     for (int i = tempList.length - 1; i >= 0; i--) {
@@ -75,6 +76,13 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
       tempList = List.from(deletedList);
       selectionList = List.from(deletedSelection);
       selecting = false;
+    });
+  }
+
+  void deleteSelection(int index) {
+    setState(() {
+      tempList.removeAt(index);
+      selectionList.removeAt(index);
     });
   }
 
@@ -107,7 +115,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
               ),
               TextButton(
                 onPressed: (){
-                  deleteSelection();
+                  deleteMultiSelection();
                 },
                 child: Text("선택 삭제", style: TextStyle(fontSize: 16, color: AppColors.editDeleteTextButton),),
               )
@@ -152,7 +160,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
           itemCount: tempList.length,
           itemBuilder: (context, index) {
             final item = tempList[index];
-            return BrandProductEditListItem(item.name);
+            return BrandProductEditListItem(item.name, index, deleteSelection);
           },
         )
       ],
@@ -192,7 +200,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
     });
   }
 
-  void deleteSelection() {
+  void deleteMultiSelection() {
     List<FundingsItem> deletedList = List.from(tempList);
     List<bool> deletedSelection = List.from(selectionList);
     for (int i = tempList.length - 1; i >= 0; i--) {
@@ -205,6 +213,13 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
       tempList = List.from(deletedList);
       selectionList = List.from(deletedSelection);
       selecting = false;
+    });
+  }
+
+  void deleteSelection(int index) {
+    setState(() {
+      tempList.removeAt(index);
+      selectionList.removeAt(index);
     });
   }
 
@@ -234,7 +249,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
               ),
               TextButton(
                 onPressed: (){
-                  deleteSelection();
+                  deleteMultiSelection();
                 },
                 child: Text("선택 삭제", style: TextStyle(fontSize: 16, color: AppColors.editDeleteTextButton),),
               )
@@ -263,7 +278,11 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
             Text("등록된 펀딩 ${tempList.length}개", style: TextStyle(fontSize: 16, color: AppColors.grey),),
             Spacer(),
             TextButton(
-              onPressed: (){},
+              onPressed: (){
+                setState(() {
+                  selecting = true;
+                });
+              },
               child: Text("다중선택", style: TextStyle(fontSize: 16, color: AppColors.editDeleteTextButton),),
             )
           ],
@@ -275,74 +294,9 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
           itemCount: tempList.length,
           itemBuilder: (context, index) {
             final item = tempList[index];
-            return BrandProductEditListItem(item.title);
+            return BrandProductEditListItem(item.title, index, deleteSelection);
           },
         )
-      ],
-    );
-  }
-}
-
-class BrandProductEditListItem extends StatelessWidget {
-  String name;
-  BrandProductEditListItem(this.name);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 10,),
-        Row(
-          children: [
-            CircleAvatar(backgroundColor: AppColors.primary, radius: 36,),
-            SizedBox(width: 15,),
-            Text(name, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
-            Spacer(),
-            IconButton(
-              onPressed: (){}, //TODO: 함수 input으로 받아서 edit 화면으로 넘겨주기
-              icon: Icon(Icons.edit),
-            ),
-            IconButton(
-              onPressed: (){}, //TODO: 함수 input으로 받아서 삭제해주기
-              icon: Icon(Icons.delete),
-            )
-          ],
-        ),
-        SizedBox(height: 10,),
-        Divider(color: AppColors.grey,)
-      ],
-    );
-  }
-}
-
-class BrandProductMultiSelectItem extends StatelessWidget {
-  String name;
-  int index;
-  bool isSelected;
-  Function(bool?, int) onChanged;
-  BrandProductMultiSelectItem(this.name, this.index, this.isSelected, this.onChanged);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 10,),
-        Row(
-          children: [
-            CircleAvatar(backgroundColor: AppColors.primary, radius: 36,),
-            SizedBox(width: 15,),
-            Text(name, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
-            Spacer(),
-            Checkbox(
-                value: isSelected,
-                onChanged: (value) {
-                  onChanged(value, index);
-                }
-            )
-          ],
-        ),
-        SizedBox(height: 10,),
-        Divider(color: AppColors.grey,)
       ],
     );
   }

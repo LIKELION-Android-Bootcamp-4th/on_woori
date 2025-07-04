@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/data/client/auth_api_client.dart';
 import 'package:on_woori/data/client/fundings_api_client.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
@@ -172,6 +173,7 @@ class _HomePageState extends State<HomePage> {
                             imageUrl: 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg',
                             brandName: brand.name,
                             onTap: () {
+                              context.push('/brand/editproduct');
                               print('${brand.name} 클릭됨, ID: ${brand.id}');
                             },
                           );

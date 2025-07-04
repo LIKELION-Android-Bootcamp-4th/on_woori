@@ -46,7 +46,7 @@ class StoreItem {
 
 @JsonSerializable()
 class StoreOwner {
-  @JsonKey(name: '_id')
+  @JsonKey(name: 'id')
   final String id;
   final String nickName;
   final StoreOwnerProfile profile;
@@ -83,7 +83,7 @@ class StoreDetailResponse {
 
 @JsonSerializable()
 class StoreDetailItem {
-  @JsonKey(name: '_id')
+  @JsonKey(name: 'id')
   final String id;
   final String name;
   final StoreOwner owner;

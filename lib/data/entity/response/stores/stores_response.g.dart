@@ -39,14 +39,14 @@ Map<String, dynamic> _$StoreItemToJson(StoreItem instance) => <String, dynamic>{
 };
 
 StoreOwner _$StoreOwnerFromJson(Map<String, dynamic> json) => StoreOwner(
-  id: json['_id'] as String,
+  id: json['id'] as String,
   nickName: json['nickName'] as String,
   profile: StoreOwnerProfile.fromJson(json['profile'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$StoreOwnerToJson(StoreOwner instance) =>
     <String, dynamic>{
-      '_id': instance.id,
+      'id': instance.id,
       'nickName': instance.nickName,
       'profile': instance.profile,
     };
@@ -70,7 +70,7 @@ Map<String, dynamic> _$StoreDetailResponseToJson(
 
 StoreDetailItem _$StoreDetailItemFromJson(Map<String, dynamic> json) =>
     StoreDetailItem(
-      id: json['_id'] as String,
+      id: json['id'] as String,
       name: json['name'] as String,
       owner: StoreOwner.fromJson(json['owner'] as Map<String, dynamic>),
       description: json['description'] as String,
@@ -78,7 +78,7 @@ StoreDetailItem _$StoreDetailItemFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$StoreDetailItemToJson(StoreDetailItem instance) =>
     <String, dynamic>{
-      '_id': instance.id,
+      'id': instance.id,
       'name': instance.name,
       'owner': instance.owner,
       'description': instance.description,

@@ -23,14 +23,6 @@ class SellerMyPage extends StatelessWidget {
             fontSize: 24,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.push('/wish/cart');
-            },
-            icon: const Icon(Icons.shopping_bag_outlined),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

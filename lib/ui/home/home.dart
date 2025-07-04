@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
       print("[파싱 성공] Product 엔티티 변환 완료. (아이템 수: ${productsResponse.data?.items?.length ?? 0})");
 
       final fundingsResponse = await FundingsApiClient().fundings();
-      print("[파싱 성공] Funding 엔티티 변환 완료. (아이템 수: ${fundingsResponse.data?.items?.length ?? 0})");
+      print("[파싱 성공] Funding 엔티티 변환 완료. (아이템 수: ${fundingsResponse.data?.length ?? 0})");
 
       final storesResponse = await StoresApiClient().stores();
       print("[파싱 성공] Store 엔티티 변환 완료. (아이템 수: ${storesResponse.data?.length ?? 0})");
@@ -63,15 +63,16 @@ class _HomePageState extends State<HomePage> {
     try {
       final response = await apiClient.authLogin(
         request: LoginRequest(
-          email: 'haebun@tetraplace.com',
-          password: 'password123',
+          email: 'admin@git.hansul.kr',
+          password: 'qwer1234',
         ),
       );
       await storage.delete(key: 'ACCESS_TOKEN');
       await storage.write(key: 'ACCESS_TOKEN', value: response.data.accessToken);
       await storage.write(key: 'REFRESH_TOKEN', value: response.data.refreshToken);
-    } catch (e) {
+    } catch (e, s) {
       print('로그인 실패: $e');
+      print(s);
     }
   }
 
@@ -100,7 +101,7 @@ class _HomePageState extends State<HomePage> {
           }
 
           final productItems = snapshot.data?.$1.data?.items ?? [];
-          final fundingItems = snapshot.data?.$2.data?.items ?? [];
+          final fundingItems = snapshot.data?.$2.data;
           final storeItems = snapshot.data?.$3.data ?? [];
 
           return SingleChildScrollView(
@@ -126,14 +127,14 @@ class _HomePageState extends State<HomePage> {
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: fundingItems.length,
+                  itemCount: fundingItems?.length,
                   itemBuilder: (context, index) {
-                    final item = fundingItems[index];
+                    final item = fundingItems?[index];
                     return FundingListItem(
-                      imageUrl: item.imageUrl,
+                      imageUrl: item!.imageUrl,
                       fundingName: item.title,
                       brandName: item.companyId?.name ?? '브랜드 없음',
-                      description: item.descripition ?? item.linkUrl,
+                      description: item.description ?? item.linkUrl,
                     );
                   },
                 ),

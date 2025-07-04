@@ -25,7 +25,7 @@ class StoresResponse {
 
 @JsonSerializable()
 class StoreItem {
-  @JsonKey(name: '_id')
+  @JsonKey(name: 'id')
   final String id;
   final String name;
   final String? description;

@@ -25,14 +25,14 @@ Map<String, dynamic> _$StoresResponseToJson(StoresResponse instance) =>
     };
 
 StoreItem _$StoreItemFromJson(Map<String, dynamic> json) => StoreItem(
-  id: json['_id'] as String,
+  id: json['id'] as String,
   name: json['name'] as String,
   description: json['description'] as String?,
   owner: json['owner'] as String,
 );
 
 Map<String, dynamic> _$StoreItemToJson(StoreItem instance) => <String, dynamic>{
-  '_id': instance.id,
+  'id': instance.id,
   'name': instance.name,
   'description': instance.description,
   'owner': instance.owner,

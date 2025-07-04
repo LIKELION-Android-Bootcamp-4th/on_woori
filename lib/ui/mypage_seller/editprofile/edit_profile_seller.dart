@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 
@@ -11,8 +10,11 @@ class EditProfileSellerPage extends StatefulWidget {
 }
 
 class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _managerController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _zipcodeController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _detailAddressController = TextEditingController();
 
@@ -21,6 +23,7 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
     super.initState();
     _managerController.text = '신서진';
     _phoneController.text = '01051797631';
+    _zipcodeController.text = '12345';
     _addressController.text = '서울 종로구 종로3길 17 D타워 D1동 16,';
     _detailAddressController.text = '17층, 세렝게티';
   }
@@ -29,9 +32,16 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
   void dispose() {
     _managerController.dispose();
     _phoneController.dispose();
+    _zipcodeController.dispose();
     _addressController.dispose();
     _detailAddressController.dispose();
     super.dispose();
+  }
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      // TODO: 저장 처리
+    }
   }
 
   @override
@@ -42,7 +52,7 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            ///TODO: 뒤로가기 동작
+            // TODO: 뒤로가기 처리
           },
         ),
         title: const Text(
@@ -59,26 +69,49 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildLabel('담당자명'),
-            _buildTextField(_managerController),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildLabel('담당자명'),
+              _buildTextFormField(_managerController, validatorText: '담당자명을 입력해주세요'),
 
-            const SizedBox(height: 16),
-            _buildLabel('전화번호'),
-            _buildTextField(_phoneController, keyboardType: TextInputType.phone),
+              const SizedBox(height: 16),
+              _buildLabel('전화번호'),
+              _buildTextFormField(
+                _phoneController,
+                keyboardType: TextInputType.phone,
+                validatorText: '전화번호를 입력해주세요',
+              ),
 
-            const SizedBox(height: 16),
-            _buildLabel('주소'),
-            _buildTextField(_addressController),
+              const SizedBox(height: 16),
+              _buildLabel('우편번호'),
+              _buildTextFormField(
+                _zipcodeController,
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return '우편번호를 입력해주세요';
+                  }
+                  if (!RegExp(r'^\d{5}$').hasMatch(value)) {
+                    return '우편번호는 5자리 숫자로 입력해주세요';
+                  }
+                  return null;
+                },
+              ),
 
-            const SizedBox(height: 16),
-            _buildLabel('상세주소'),
-            _buildTextField(_detailAddressController),
+              const SizedBox(height: 16),
+              _buildLabel('주소'),
+              _buildTextFormField(_addressController, validatorText: '주소를 입력해주세요'),
 
-            const SizedBox(height: 32),
-          ],
+              const SizedBox(height: 16),
+              _buildLabel('상세주소'),
+              _buildTextFormField(_detailAddressController, validatorText: '상세주소를 입력해주세요'),
+
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: SafeArea(
@@ -86,9 +119,7 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
           padding: const EdgeInsets.all(16.0),
           child: BottomButton(
             buttonText: '저장',
-            pressedFunc: () {
-              // TODO: 저장 처리
-            },
+            pressedFunc: _submit,
           ),
         ),
       ),
@@ -106,14 +137,16 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
     );
   }
 
-  Widget _buildTextField(
+  Widget _buildTextFormField(
       TextEditingController controller, {
         TextInputType keyboardType = TextInputType.text,
+        String? validatorText,
+        String? Function(String?)? validator,
       }) {
     return Column(
       children: [
         const SizedBox(height: 4),
-        TextField(
+        TextFormField(
           controller: controller,
           keyboardType: keyboardType,
           style: const TextStyle(
@@ -137,6 +170,13 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
               borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
             ),
           ),
+          validator: validator ??
+                  (value) {
+                if (value == null || value.isEmpty) {
+                  return validatorText ?? '내용을 입력해주세요';
+                }
+                return null;
+              },
         ),
       ],
     );

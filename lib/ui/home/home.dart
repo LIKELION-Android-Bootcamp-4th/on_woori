@@ -173,7 +173,6 @@ class _HomePageState extends State<HomePage> {
                             imageUrl: 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg',
                             brandName: brand.name,
                             onTap: () {
-                              context.push('/brand/editproduct');
                               print('${brand.name} 클릭됨, ID: ${brand.id}');
                             },
                           );

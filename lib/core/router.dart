@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import 'package:on_woori/main.dart';
+import 'package:on_woori/ui/brand/brand_product_edit.dart';
 import 'package:on_woori/ui/brand/brand_detail.dart';
 import 'package:on_woori/ui/auth/signup/common_signup_page.dart';
 import 'package:on_woori/ui/auth/signup/completed_signup_page.dart';
@@ -138,12 +139,19 @@ final GoRouter router = GoRouter(
           path: '/funding/register',
           builder: (context, state) => const FundingRegisterPage()
         ),
-
+        
         GoRoute(
           path: '/mypage/register',
           builder: (context, state) {
             return const ProductRegisterPage();
           },
+        ),
+        
+        GoRoute(
+          path: '/brand/editproduct',
+          builder: (context, state) { //TODO: brand id 추가해서 전달 (현재 통신 불안으로 테스트 상태)
+            return BrandProductEditPage();
+          }
         ),
       ],
     ),

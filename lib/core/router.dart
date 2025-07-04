@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import 'package:on_woori/main.dart';
+import 'package:on_woori/ui/brand/brand_detail.dart';
 import 'package:on_woori/ui/auth/signup/common_signup_page.dart';
 import 'package:on_woori/ui/auth/signup/completed_signup_page.dart';
 import 'package:on_woori/ui/auth/signup/seller_signup_page.dart';
@@ -110,6 +111,7 @@ final GoRouter router = GoRouter(
               return ProductsDetailPage(productId);
             },
         ),
+
         GoRoute(
           path: '/wish/cart',
           builder: (context, state) {
@@ -123,6 +125,14 @@ final GoRouter router = GoRouter(
             return const PasswordEditPage();
           },
         ),
+        
+        GoRoute(
+          path: '/branddetail/:brandId',
+          builder: (context, state) {
+            final String brandId = state.pathParameters['brandId'] ?? "";
+            return BrandDetailPage(brandId);
+          }
+        )
         
         GoRoute(
           path: '/funding/register',

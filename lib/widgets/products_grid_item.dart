@@ -32,6 +32,11 @@ class ProductsGridItemState extends State<ProductsGridItem> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero, // ← 이거 추가
+          minimumSize: Size.zero,   // ← 이것도 같이 쓰면 좋아
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
         onPressed: () {
           context.push('/productdetail/${widget.item.id}');
         },
@@ -40,11 +45,11 @@ class ProductsGridItemState extends State<ProductsGridItem> {
           children: [
             Stack(
               children: [
-                AspectRatio(
-                  aspectRatio: 0.8,
-                  child: SizedBox(
-                    width: 170,
-                    child: Image(image: NetworkImage(imageUrl), fit: BoxFit.cover),
+                SizedBox(
+                  width: 170,
+                  child: AspectRatio(
+                    aspectRatio: 0.8,
+                    child: Image.network(imageUrl, fit: BoxFit.cover,),
                   ),
                 ),
                 Positioned(

@@ -30,6 +30,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get home_RecommendedProducts => '추천 상품';
 
   @override
+  String get home_OngoingFunding => '진행중인 펀딩';
+
+  @override
   String get loginTitle => '로그인';
 
   @override
@@ -163,4 +166,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get categoryGoods_etc => '기타 잡화';
+
+  @override
+  String get edit => '수정';
+
+  @override
+  String get more => '더보기';
 }

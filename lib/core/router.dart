@@ -6,6 +6,7 @@ import 'package:on_woori/ui/category/category.dart';
 import 'package:on_woori/ui/home/home.dart';
 import 'package:on_woori/ui/mypage/mypage.dart';
 import 'package:on_woori/ui/order/order_detail_page.dart';
+import 'package:on_woori/ui/order/order_list.dart';
 import 'package:on_woori/ui/products/products_detail.dart';
 import 'package:on_woori/ui/products/products_list.dart';
 import 'package:on_woori/ui/wish/wish.dart';
@@ -47,6 +48,12 @@ final GoRouter router = GoRouter(
           path: '/mypage',
           builder: (context, state) {
             return const MyPage();
+          },
+        ),
+        GoRoute(
+          path: '/orderlist',
+          builder: (context, state) {
+            return const OrderListPage();
           },
         ),
         GoRoute(

@@ -5,7 +5,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 class ApiClient {
   final Dio dio;
 
-  // 통신 발생 시 반드시 해당 회사 코드와 베이스 URL 을 따라 동작하도록 싱글톤 패턴으로 구현
+  // 싱글톤 패턴으로 구현
   ApiClient._privateConstructor() : dio = Dio() {
     dio.options = BaseOptions(
       baseUrl: 'http://git.hansul.kr:3000/',
@@ -13,7 +13,7 @@ class ApiClient {
       receiveTimeout: const Duration(milliseconds: 3000),
       headers: {
         'Content-Type' : 'application/json',
-        'X-Company-Code' : '685f69fc439922c09c21aef0' // 임시 코드입니다.
+        'X-Company-Code' : '685f69fc439922c09c21aef0'
       }
     );
 

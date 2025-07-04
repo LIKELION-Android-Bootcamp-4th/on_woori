@@ -56,7 +56,6 @@ class ProductsData {
 
 @JsonSerializable(explicitToJson: true)
 class ProductItem {
-  @JsonKey(name: '_id')
   final String id;
   final String name;
   final int price;

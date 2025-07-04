@@ -36,7 +36,7 @@ Map<String, dynamic> _$ProductsDataToJson(ProductsData instance) =>
     <String, dynamic>{'items': instance.items?.map((e) => e.toJson()).toList()};
 
 ProductItem _$ProductItemFromJson(Map<String, dynamic> json) => ProductItem(
-  id: json['_id'] as String,
+  id: json['id'] as String,
   name: json['name'] as String,
   price: (json['price'] as num).toInt(),
   isFavorite: json['isFavorite'] as bool,
@@ -52,7 +52,7 @@ ProductItem _$ProductItemFromJson(Map<String, dynamic> json) => ProductItem(
 
 Map<String, dynamic> _$ProductItemToJson(ProductItem instance) =>
     <String, dynamic>{
-      '_id': instance.id,
+      'id': instance.id,
       'name': instance.name,
       'price': instance.price,
       'isFavorite': instance.isFavorite,

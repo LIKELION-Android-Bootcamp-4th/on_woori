@@ -2,16 +2,16 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'fundings_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class FundingsResponse {
   final bool success;
   final String message;
-  final FundingsData? data;
+  final List<FundingsItem>? data;
 
   const FundingsResponse({
     required this.success,
     required this.message,
-    this.data
+    this.data,
   });
 
   factory FundingsResponse.fromJson(Map<String, dynamic> json) =>
@@ -20,18 +20,8 @@ class FundingsResponse {
 }
 
 @JsonSerializable(explicitToJson: true)
-class FundingsData {
-  final List<FundingsItem>? items;
-  const FundingsData({this.items});
-
-  factory FundingsData.fromJson(Map<String, dynamic> json) =>
-      _$FundingsDataFromJson(json);
-  Map<String, dynamic> toJson() => _$FundingsDataToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class FundingsItem {
-  @JsonKey(name: '_id')
+  @JsonKey(name: 'id')
   final String id;
   final String title;
   final String imageUrl;
@@ -40,7 +30,6 @@ class FundingsItem {
   final CompanyId? companyId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-
 
   const FundingsItem({
     required this.id,
@@ -60,13 +49,13 @@ class FundingsItem {
 
 @JsonSerializable()
 class CompanyId {
-  @JsonKey(name: '_id')
+  @JsonKey(name: 'id')
   final String id;
   final String name;
 
   const CompanyId({
     required this.id,
-    required this.name
+    required this.name,
   });
 
   factory CompanyId.fromJson(Map<String, dynamic> json) =>

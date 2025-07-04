@@ -52,11 +52,13 @@ class UserData {
   final bool? isActive;
   final bool? isEmailVerified;
   final String? companyId;
+  final String? name;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
+  @JsonKey(name: '__v')
+  final int? v;
   const UserData({
-    required this.id,
     required this.email,
     this.name, // 생성자에 추가
     this.nickName,
@@ -66,8 +68,10 @@ class UserData {
     this.isActive,
     this.isEmailVerified,
     this.companyId,
+    this.name,
     this.createdAt,
     this.updatedAt,
+    this.v,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) =>

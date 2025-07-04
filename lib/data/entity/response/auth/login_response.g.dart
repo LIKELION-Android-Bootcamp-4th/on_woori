@@ -51,6 +51,7 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
   isActive: json['isActive'] as bool?,
   isEmailVerified: json['isEmailVerified'] as bool?,
   companyId: json['companyId'] as String?,
+  name: json['name'] as String?,
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
@@ -61,6 +62,10 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
 
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
   'id': instance.id,
+  v: (json['__v'] as num?)?.toInt(),
+);
+
+Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
   'email': instance.email,
   'name': instance.name,
   'nickName': instance.nickName,
@@ -70,8 +75,10 @@ Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
   'isActive': instance.isActive,
   'isEmailVerified': instance.isEmailVerified,
   'companyId': instance.companyId,
+  'name': instance.name,
   'createdAt': instance.createdAt?.toIso8601String(),
   'updatedAt': instance.updatedAt?.toIso8601String(),
+  '__v': instance.v,
 };
 
 ProfileData _$ProfileDataFromJson(Map<String, dynamic> json) => ProfileData(

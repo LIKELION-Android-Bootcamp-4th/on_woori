@@ -136,6 +136,12 @@ abstract class AppLocalizations {
   /// **'추천 상품'**
   String get home_RecommendedProducts;
 
+  /// No description provided for @home_OngoingFunding.
+  ///
+  /// In ko, this message translates to:
+  /// **'진행중인 펀딩'**
+  String get home_OngoingFunding;
+
   /// No description provided for @loginTitle.
   ///
   /// In ko, this message translates to:
@@ -225,6 +231,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'주문하기'**
   String get order;
+
+  /// No description provided for @brandProductEditTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'상품 관리'**
+  String get brandProductEditTitle;
 
   /// No description provided for @categoryOuter.
   ///
@@ -405,6 +417,18 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'기타 잡화'**
   String get categoryGoods_etc;
+
+  /// No description provided for @edit.
+  ///
+  /// In ko, this message translates to:
+  /// **'수정'**
+  String get edit;
+
+  /// No description provided for @more.
+  ///
+  /// In ko, this message translates to:
+  /// **'더보기'**
+  String get more;
 }
 
 class _AppLocalizationsDelegate

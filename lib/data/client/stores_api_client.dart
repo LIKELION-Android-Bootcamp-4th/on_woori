@@ -17,4 +17,19 @@ class StoresApiClient {
     return StoresResponse.fromJson(response.data);
   }
 
+  Future<StoreDetailResponse> storeDetail(String id)
+  async {
+    final response = await _dio.get(
+      StoresEndpoints.getStoreDetail(id: id),
+    );
+    return StoreDetailResponse.fromJson(response.data);
+  }
+
+  Future<StoreProductsResponse> storeProductList(String id)
+  async {
+    final response = await _dio.get(
+      StoresEndpoints.getStoreProducts(id: id),
+    );
+    return StoreProductsResponse.fromJson(response.data);
+  }
 }

@@ -78,7 +78,6 @@ class WishPageState extends State<WishPage> {
               isFavorite: true,
               stockType: 'normal',
               status: 'approved',
-              options: null,
             );
           }).toList();
 

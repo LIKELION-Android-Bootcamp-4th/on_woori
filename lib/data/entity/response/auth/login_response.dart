@@ -2,8 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'login_response.g.dart';
 
-// 최상위 응답 객체
-@JsonSerializable(explicitToJson: true) // 중첩 객체가 있으므로 explicitToJson: true 추가
+@JsonSerializable(explicitToJson: true)
 class LoginResponse {
   final bool success;
   final String message;
@@ -23,7 +22,6 @@ class LoginResponse {
   Map<String, dynamic> toJson() => _$LoginResponseToJson(this);
 }
 
-// 'data' 필드에 해당하는 객체
 @JsonSerializable(explicitToJson: true)
 class LoginData {
   final String accessToken;
@@ -44,38 +42,34 @@ class LoginData {
 
 @JsonSerializable(explicitToJson: true)
 class UserData {
-  final bool isEmailVerified;
-  @JsonKey(name: '_id')
-  final String id;
   final String email;
-  final String nickName;
-  final ProfileData profile;
-  final List<String> platformRoles;
-  final bool isAdmin;
-  final String companyId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String? nickName;
+  final ProfileData? profile;
+  final List<String>? platformRoles;
+  final bool? isAdmin;
+  final bool? isActive;
+  final bool? isEmailVerified;
+  final String? companyId;
+  final String? name;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
   @JsonKey(name: '__v')
-  final int v;
-  final bool isActive;
-  final DateTime passwordChangedAt;
-  final String updatedBy;
+  final int? v;
 
   const UserData({
-    required this.isEmailVerified,
-    required this.id,
     required this.email,
-    required this.nickName,
-    required this.profile,
-    required this.platformRoles,
-    required this.isAdmin,
-    required this.companyId,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.v,
-    required this.isActive,
-    required this.passwordChangedAt,
-    required this.updatedBy,
+    this.nickName,
+    this.profile,
+    this.platformRoles,
+    this.isAdmin,
+    this.isActive,
+    this.isEmailVerified,
+    this.companyId,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) =>

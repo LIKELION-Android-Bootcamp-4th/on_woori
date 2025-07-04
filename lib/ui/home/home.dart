@@ -32,17 +32,25 @@ class _HomePageState extends State<HomePage> {
   Future<(ProductsResponse, FundingsResponse, StoresResponse)> _initializeData() async {
     await _loginAndSaveToken();
 
-    final results = await Future.wait([
-      ProductsApiClient().products(),
-      FundingsApiClient().fundings(),
-      StoresApiClient().stores(),
-    ]);
+    // 각 엔티티의 파싱 성공 여부를 확인하기 위한 순차적 호출
+    try {
+      final productsResponse = await ProductsApiClient().products();
+      print("[파싱 성공] Product 엔티티 변환 완료. (아이템 수: ${productsResponse.data?.items?.length ?? 0})");
 
-    final productsResponse = results[0] as ProductsResponse;
-    final fundingsResponse = results[1] as FundingsResponse;
-    final storesResponse = results[2] as StoresResponse;
+      final fundingsResponse = await FundingsApiClient().fundings();
+      print("[파싱 성공] Funding 엔티티 변환 완료. (아이템 수: ${fundingsResponse.data?.length ?? 0})");
 
-    return (productsResponse, fundingsResponse, storesResponse);
+      final storesResponse = await StoresApiClient().stores();
+      print("[파싱 성공] Store 엔티티 변환 완료. (아이템 수: ${storesResponse.data?.length ?? 0})");
+
+      print("모든 엔티티 파싱 성공");
+      return (productsResponse, fundingsResponse, storesResponse);
+
+    } catch (e, s) {
+      print("오류 내용: $e");
+      print(s);
+      rethrow;
+    }
   }
 
 
@@ -54,28 +62,21 @@ class _HomePageState extends State<HomePage> {
       final response = await apiClient.authLogin(
         request: LoginRequest(
           email: 'admin@git.hansul.kr',
-          password: 'qwer1234!@#\$',
+          password: 'qwer1234',
         ),
       );
+      await storage.delete(key: 'ACCESS_TOKEN');
       await storage.write(key: 'ACCESS_TOKEN', value: response.data.accessToken);
       await storage.write(key: 'REFRESH_TOKEN', value: response.data.refreshToken);
-    } catch (e) {
+    } catch (e, s) {
       print('로그인 실패: $e');
+      print(s);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
-    final List<Map<String, String>> brandData = List.generate(
-      8,
-          (index) => {
-        'name': '브랜드 ${index + 1}',
-        'imageUrl': 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg', // 임시 이미지 URL
-        'id': 'brand_${index + 1}',
-      },
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -98,7 +99,7 @@ class _HomePageState extends State<HomePage> {
           }
 
           final productItems = snapshot.data?.$1.data?.items ?? [];
-          final fundingItems = snapshot.data?.$2.data?.items ?? [];
+          final fundingItems = snapshot.data?.$2.data;
           final storeItems = snapshot.data?.$3.data ?? [];
 
           return SingleChildScrollView(
@@ -130,18 +131,20 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 32),
 
+                const SizedBox(height: 32),
                 _buildSectionHeader(title: "진행중인 펀딩"),
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: fundingItems.length,
+                  itemCount: fundingItems?.length,
                   itemBuilder: (context, index) {
-                    final item = fundingItems[index];
+                    final item = fundingItems?[index];
                     return FundingListItem(
-                      imageUrl: item.imageUrl,
+                      imageUrl: item!.imageUrl,
                       fundingName: item.title,
                       brandName: item.companyId?.name ?? '브랜드 없음',
-                      description: item.descripition ?? item.linkUrl,
+                      description: item.description ?? item.linkUrl,
+                      linkUrl: item.linkUrl,
                     );
                   },
                 ),
@@ -177,7 +180,6 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-
               ],
             ),
           );

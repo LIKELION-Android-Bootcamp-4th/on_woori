@@ -35,7 +35,6 @@ Map<String, dynamic> _$LoginDataToJson(LoginData instance) => <String, dynamic>{
 };
 
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
-  id: json['_id'] as String,
   email: json['email'] as String,
   nickName: json['nickName'] as String?,
   profile: json['profile'] == null
@@ -48,6 +47,7 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
   isActive: json['isActive'] as bool?,
   isEmailVerified: json['isEmailVerified'] as bool?,
   companyId: json['companyId'] as String?,
+  name: json['name'] as String?,
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
@@ -55,14 +55,9 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
       ? null
       : DateTime.parse(json['updatedAt'] as String),
   v: (json['__v'] as num?)?.toInt(),
-  passwordChangedAt: json['passwordChangedAt'] == null
-      ? null
-      : DateTime.parse(json['passwordChangedAt'] as String),
-  updatedBy: json['updatedBy'] as String?,
 );
 
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
-  '_id': instance.id,
   'email': instance.email,
   'nickName': instance.nickName,
   'profile': instance.profile?.toJson(),
@@ -71,11 +66,10 @@ Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
   'isActive': instance.isActive,
   'isEmailVerified': instance.isEmailVerified,
   'companyId': instance.companyId,
+  'name': instance.name,
   'createdAt': instance.createdAt?.toIso8601String(),
   'updatedAt': instance.updatedAt?.toIso8601String(),
   '__v': instance.v,
-  'passwordChangedAt': instance.passwordChangedAt?.toIso8601String(),
-  'updatedBy': instance.updatedBy,
 };
 
 ProfileData _$ProfileDataFromJson(Map<String, dynamic> json) => ProfileData(

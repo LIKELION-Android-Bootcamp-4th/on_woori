@@ -199,7 +199,9 @@ class SellerMyPage extends StatelessWidget {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {},
+              onTap: () {
+                context.go('/mypage/register');
+              },
             ),
 
             // 펀딩 등록

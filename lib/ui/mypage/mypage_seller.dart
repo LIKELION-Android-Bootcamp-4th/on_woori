@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
-import 'package:on_woori/widgets/app_bottom_navigation_bar.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
 class SellerMyPage extends StatelessWidget {

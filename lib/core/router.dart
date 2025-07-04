@@ -2,6 +2,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:on_woori/main.dart';
 import 'package:on_woori/ui/auth/signup/common_signup_page.dart';
+import 'package:on_woori/ui/auth/signup/completed_signup_page.dart';
+import 'package:on_woori/ui/auth/signup/seller_signup_page.dart';
 import 'package:on_woori/ui/auth/signup/user_role_selection_page.dart';
 import 'package:on_woori/ui/cart/cart.dart';
 import 'package:on_woori/ui/category/category.dart';
@@ -66,6 +68,18 @@ final GoRouter router = GoRouter(
           path: '/auth/signup/common',
           builder: (context, state) {
             return CommonSignupPage();
+          },
+        ),
+        GoRoute(
+          path: '/auth/signup/seller',
+          builder: (context, state) {
+            return SellerSignupPage();
+          },
+        ),
+        GoRoute(
+          path: '/auth/signup/completed',
+          builder: (context, state) {
+            return CompletedSignupPage();
           },
         ),
         GoRoute(

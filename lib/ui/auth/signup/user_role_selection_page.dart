@@ -81,7 +81,7 @@ class UserRoleSelectionPage extends StatelessWidget {
                     ),
                   ),
                   onTap: (){
-                    context.go('/auth/signup/common');
+                    context.go('/auth/signup/seller');
                   },
                 ),
               ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 import 'package:on_woori/widgets/login_textfield.dart';
@@ -21,7 +22,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       // 모든 유효성 통과
-      print("유효성 통과: ${emailController.text}, ${passwordController.text}");
+      context.go('/auth/signup/completed');
     }
   }
 
@@ -125,6 +126,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
                           width: 60,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(10),
                               backgroundColor: AppColors.primarySub,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),

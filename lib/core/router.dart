@@ -23,6 +23,7 @@ import 'package:on_woori/ui/auth/login/login_page.dart';
 import 'package:on_woori/ui/mypage/change-password.dart';
 import 'package:on_woori/ui/mypage_seller/add_funding.dart';
 import 'package:on_woori/ui/mypage_seller/add_product.dart';
+import 'package:on_woori/ui/mypage_seller/edit_brand.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -169,6 +170,12 @@ final GoRouter router = GoRouter(
             return BrandProductEditPage();
           }
         ),
+
+        GoRoute(
+          path: '/brand/edit',
+          builder: (context, state) => const BrandEditPage(),
+        ),
+
       ],
     ),
   ],

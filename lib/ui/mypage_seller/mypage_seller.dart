@@ -92,6 +92,7 @@ class SellerMyPage extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
+                    context.push('/brand/edit');
                   },
                   child: Text(
                     '브랜드 수정',  // 여기는 l10n 키 없음

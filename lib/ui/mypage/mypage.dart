@@ -120,7 +120,7 @@ class MyPage extends StatelessWidget {
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
               onTap: () {
-                context.push('/orderdetail');
+                context.push('/orderlist');
               },
             ),
 

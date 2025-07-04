@@ -7,13 +7,13 @@ class LoginResponse {
   final bool success;
   final String message;
   final LoginData data;
-  final DateTime timestamp;
+  final DateTime? timestamp;
 
   const LoginResponse({
     required this.success,
     required this.message,
     required this.data,
-    required this.timestamp,
+    this.timestamp,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>
@@ -42,7 +42,9 @@ class LoginData {
 
 @JsonSerializable(explicitToJson: true)
 class UserData {
+  final String id;
   final String email;
+  final String? name;
   final String? nickName;
   final ProfileData? profile;
   final List<String>? platformRoles;
@@ -56,9 +58,9 @@ class UserData {
 
   @JsonKey(name: '__v')
   final int? v;
-
   const UserData({
     required this.email,
+    this.name, // 생성자에 추가
     this.nickName,
     this.profile,
     this.platformRoles,

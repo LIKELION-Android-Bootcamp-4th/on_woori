@@ -75,6 +75,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get order => '주문하기';
 
   @override
+  String get brandProductEditTitle => '상품 관리';
+
+  @override
   String get categoryOuter => '아우터';
 
   @override

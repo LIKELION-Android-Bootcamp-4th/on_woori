@@ -226,6 +226,12 @@ abstract class AppLocalizations {
   /// **'주문하기'**
   String get order;
 
+  /// No description provided for @brandProductEditTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'상품 관리'**
+  String get brandProductEditTitle;
+
   /// No description provided for @categoryOuter.
   ///
   /// In ko, this message translates to:

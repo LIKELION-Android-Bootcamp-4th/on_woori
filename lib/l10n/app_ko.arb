@@ -28,6 +28,8 @@
     "cart": "장바구니",
     "order": "주문하기",
 
+    "brandProductEditTitle": "상품 관리",
+
     "categoryOuter": "아우터",
     "categoryOuter_coat": "코트",
     "categoryOuter_jacket": "재킷",

@@ -135,6 +135,7 @@ class _HomePageState extends State<HomePage> {
                       fundingName: item.title,
                       brandName: item.companyId?.name ?? '브랜드 없음',
                       description: item.description ?? item.linkUrl,
+                      linkUrl: item.linkUrl,
                     );
                   },
                 ),

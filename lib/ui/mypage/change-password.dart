@@ -19,6 +19,8 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
   bool _obscureNew = true;
   bool _obscureConfirm = true;
 
+  String? _errorMessage;
+
   @override
   void dispose() {
     currentPasswordController.dispose();
@@ -27,8 +29,47 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
     super.dispose();
   }
 
+  void _validateInputs() {
+    setState(() {
+      _errorMessage = null;
+
+      String currentPwd = currentPasswordController.text.trim();
+      String newPwd = newPasswordController.text.trim();
+      String confirm = confirmPasswordController.text.trim();
+
+      if (newPwd.isEmpty) {
+        return;
+      }
+
+      if (newPwd.length < 6) {
+        _errorMessage = '새 비밀번호는 최소 6자리 이상이어야 합니다.';
+        return;
+      }
+
+      if (newPwd == currentPwd) {
+        _errorMessage = '새 비밀번호는 현재 비밀번호와 달라야 합니다.';
+        return;
+      }
+
+      if (confirm.isNotEmpty && newPwd != confirm) {
+        _errorMessage = '새 비밀번호가 일치하지 않습니다.';
+        return;
+      }
+    });
+  }
+
   void _onSave() {
-    context.go('/mypage');
+    _validateInputs();
+
+    if (_errorMessage == null) {
+      ///TODO: 저장 처리
+      context.go('/mypage');
+    }
+  }
+
+  bool _isSaveEnabled() {
+    final currentPwd = currentPasswordController.text.trim();
+    return currentPwd.length >= 6 && _errorMessage == null;
   }
 
   @override
@@ -52,117 +93,91 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 현재 비밀번호
-            const Text(
-              '현재 비밀번호',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: currentPasswordController,
-              obscureText: _obscureCurrent,
-              decoration: InputDecoration(
-                hintText: '현재 비밀번호',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureCurrent ? Icons.visibility_off : Icons.visibility,
-                    color: AppColors.grey,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureCurrent = !_obscureCurrent;
-                    });
-                  },
-                ),
-              ),
-            ),
+            _buildLabel('현재 비밀번호'),
+            _buildPasswordField(currentPasswordController, _obscureCurrent, () {
+              setState(() {
+                _obscureCurrent = !_obscureCurrent;
+                _validateInputs();
+              });
+            }),
 
             const SizedBox(height: 24),
 
-            // 새 비밀번호
-            const Text(
-              '새 비밀번호',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: newPasswordController,
-              obscureText: _obscureNew,
-              decoration: InputDecoration(
-                hintText: '새 비밀번호',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureNew ? Icons.visibility_off : Icons.visibility,
-                    color: AppColors.grey,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureNew = !_obscureNew;
-                    });
-                  },
-                ),
-              ),
-            ),
+            _buildLabel('새 비밀번호'),
+            _buildPasswordField(newPasswordController, _obscureNew, () {
+              setState(() {
+                _obscureNew = !_obscureNew;
+                _validateInputs();
+              });
+            }),
 
             const SizedBox(height: 24),
 
-            // 비밀번호 확인
-            const Text(
-              '비밀번호 확인',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: confirmPasswordController,
-              obscureText: _obscureConfirm,
-              decoration: InputDecoration(
-                hintText: '비밀번호 확인',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureConfirm ? Icons.visibility_off : Icons.visibility,
-                    color: AppColors.grey,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureConfirm = !_obscureConfirm;
-                    });
-                  },
+            _buildLabel('비밀번호 확인'),
+            _buildPasswordField(confirmPasswordController, _obscureConfirm, () {
+              setState(() {
+                _obscureConfirm = !_obscureConfirm;
+                _validateInputs();
+              });
+            }),
+
+            if (_errorMessage != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text(
+                  _errorMessage!,
+                  style: const TextStyle(color: Colors.blue, fontSize: 13),
                 ),
               ),
-            ),
 
             const SizedBox(height: 32),
-            // 저장 버튼
-            BottomButton(buttonText: '비밀번호 변경', pressedFunc: () {},),
+
+            BottomButton(
+              buttonText: '비밀번호 변경',
+              pressedFunc: _isSaveEnabled() ? _onSave : null,
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLabel(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 16,
+        color: Colors.black,
+      ),
+    );
+  }
+
+  Widget _buildPasswordField(
+      TextEditingController controller,
+      bool obscure,
+      VoidCallback toggle,
+      ) {
+    return TextField(
+      controller: controller,
+      obscureText: obscure,
+      onChanged: (_) => _validateInputs(),
+      decoration: InputDecoration(
+        hintText: '비밀번호 입력',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        suffixIcon: controller.text.isNotEmpty
+            ? IconButton(
+          icon: Icon(
+            obscure ? Icons.visibility_off : Icons.visibility,
+            color: AppColors.grey,
+          ),
+          onPressed: toggle,
+        )
+            : null,
       ),
     );
   }

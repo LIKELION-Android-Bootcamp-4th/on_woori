@@ -51,21 +51,27 @@ class LoginPageStatus extends State<LoginPage> {
                         LoginTextField(
                           labelText: l10n.loginEmailTitle,
                           hintText: l10n.loginEmailInputHint,
+                          inputType: TextInputType.emailAddress,
                         ),
                         SizedBox(height: 15),
                         LoginTextField(
                           labelText: l10n.loginPasswordTitle,
                           hintText: l10n.loginPasswordInputHint,
+                          inputType: TextInputType.visiblePassword,
+                          isPassword: true,
                         ),
-                        BottomButton(l10n.loginTitle),
+                        BottomButton(buttonText: l10n.loginTitle, pressedFunc: (){}),
+                        SizedBox(height: 15),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
+                            Spacer(),
+                            Text("온우리가 처음이신가요?  ", style: TextStyle(color: AppColors.grey),),
                             InkWell(
                               child: Text(
                                 l10n.signInTitle,
                                 style: TextStyle(
                                   color: AppColors.primarySub,
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
                               ),

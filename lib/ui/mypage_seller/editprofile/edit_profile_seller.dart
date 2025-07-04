@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 
@@ -38,6 +39,12 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            ///TODO: 뒤로가기 동작
+          },
+        ),
         title: const Text(
           '프로필 수정',
           style: TextStyle(

@@ -1,6 +1,7 @@
  import 'package:flutter/material.dart';
  import 'package:on_woori/core/styles/app_colors.dart';
  import 'package:on_woori/data/api_client.dart';
+import 'package:on_woori/data/client/fundings_api_client.dart';
  import 'package:on_woori/data/client/stores_api_client.dart';
  import 'package:on_woori/data/entity/response/fundings/fundings_response.dart';
  import 'package:on_woori/data/entity/response/stores/stores_response.dart';
@@ -185,16 +186,7 @@
                ],
              ),
              SizedBox(height: 10,),
-             // Column(
-             //   children: _dummyFundingList.take(3).map((item) { //TODO: 브랜드별 펀딩목록 보는 기능 없음
-             //     return FundingListItem(
-             //       imageUrl: item.imageUrl,
-             //       fundingName: item.title,
-             //       brandName: "브랜드 없음",
-             //       description: item.linkUrl,
-             //     );
-             //   }).toList(),
-             // ),
+             BrandFundingSection(),
              Divider(color: AppColors.DividerTextBoxLineDivider,),
              CategoryHorizontalScroll(),
              SizedBox(height: 20,),
@@ -205,6 +197,48 @@
      );
    }
 
+ }
+
+ class BrandFundingSection extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return BrandFundingSectionState();
+  }
+ }
+
+ class BrandFundingSectionState extends State<BrandFundingSection> {
+   final apiClient = FundingsApiClient();
+   late Future<FundingsResponse> _fundingFuture;
+
+   Future<FundingsResponse> _initializeProducts() async {
+     return apiClient.fundings();
+   }
+
+   @override
+  void initState() {
+    super.initState();
+    _fundingFuture = _initializeProducts();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _fundingFuture,
+      builder: (context, snapshot) {
+        final data = snapshot.data?.data?.take(3).toList() ?? [];
+        return Column(
+          children: data.map((item) {
+            return FundingListItem(
+              imageUrl: item.imageUrl,
+              fundingName: item.title,
+              brandName: item.companyId.toString(),
+              description: item.linkUrl,
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
  }
 
  class BrandNameSection extends StatelessWidget {

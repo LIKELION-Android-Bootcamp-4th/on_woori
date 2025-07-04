@@ -56,6 +56,12 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            ///TODO: 뒤로가기 기능
+          },
+        ),
         title: const Text(
           '신규 상품 등록',
           style: TextStyle(
@@ -75,7 +81,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _sectionTitle('대표 이미지'),
+            _centeredSectionTitle('대표 이미지'),
             const SizedBox(height: 8),
             Center(child: _imageBox()),
 
@@ -136,7 +142,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
             ),
 
             const SizedBox(height: 24),
-            _sectionTitle('상품 소개 이미지'),
+            _centeredSectionTitle('상품 소개 이미지'),
             const SizedBox(height: 8),
             Center(child: _imagePreviewWithButton()),
 
@@ -161,6 +167,19 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         fontWeight: FontWeight.w600,
         fontSize: 16,
         color: Colors.black,
+      ),
+    );
+  }
+
+  Widget _centeredSectionTitle(String title) {
+    return Center(
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+          color: Colors.black,
+        ),
       ),
     );
   }

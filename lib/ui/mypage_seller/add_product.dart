@@ -143,8 +143,8 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
             const SizedBox(height: 32),
             Center(
               child: BottomButton(
-                '상품 등록',
-                onPressed: () {},
+                buttonText: '상품 등록',
+                pressedFunc: () {},
               ),
             ),
             const SizedBox(height: 16),

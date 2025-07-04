@@ -160,7 +160,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
 
             const SizedBox(height: 32),
             // 저장 버튼
-            BottomButton('비밀번호 변경'),
+            BottomButton(buttonText: '비밀번호 변경', pressedFunc: () {},),
           ],
         ),
       ),

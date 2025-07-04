@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 
 import '../../../l10n/app_localizations.dart';
@@ -52,7 +53,9 @@ class UserRoleSelectionPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  onTap: (){},
+                  onTap: (){
+                    context.go('/auth/signup/common');
+                  },
                 ),
                 SizedBox(width: 20,),
                 InkWell(
@@ -77,7 +80,9 @@ class UserRoleSelectionPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  onTap: (){},
+                  onTap: (){
+                    context.go('/auth/signup/common');
+                  },
                 ),
               ],
             )

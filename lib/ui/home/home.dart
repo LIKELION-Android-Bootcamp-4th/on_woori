@@ -58,6 +58,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loginAndSaveToken() async {
     print("로그인 테스트 시작");
+
     final apiClient = AuthApiClient();
     final storage = const FlutterSecureStorage();
     try {
@@ -110,8 +111,14 @@ class _HomePageState extends State<HomePage> {
               children: [
                 AspectRatio(
                   aspectRatio: 2.5 / 1,
-                  child: Container(color: Colors.grey[300], child: const Center(child: Text('배너'))),
+                  child:
+
+                  TextButton(
+                      onPressed: () { context.push('/auth/login'); },
+                      child: const Center(child: Text('배너')
+                  )),
                 ),
+
                 const SizedBox(height: 24),
 
                 _buildSectionHeader(title: l10n.home_RecommendedProducts),

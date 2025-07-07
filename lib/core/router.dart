@@ -98,10 +98,11 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const EditProfileSellerPage(),
         ),
         GoRoute(
-          path: '/productslist/:categoryId',
+          path: '/productlist',
           builder: (context, state) {
-            final String categoryId = state.pathParameters['categoryId'] ?? "";
-            return ProductsListPage(categoryId: categoryId);
+            final String categoryId = state.uri.queryParameters['category'] ?? '';
+            final String query = state.uri.queryParameters['q'] ?? '';
+            return ProductsListPage(category: categoryId, query: query);
           },
         ),
         GoRoute(

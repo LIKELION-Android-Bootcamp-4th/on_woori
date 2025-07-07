@@ -142,6 +142,12 @@ abstract class AppLocalizations {
   /// **'진행중인 펀딩'**
   String get home_OngoingFunding;
 
+  /// No description provided for @home_BrandList.
+  ///
+  /// In ko, this message translates to:
+  /// **'브랜드 둘러보기'**
+  String get home_BrandList;
+
   /// No description provided for @loginTitle.
   ///
   /// In ko, this message translates to:

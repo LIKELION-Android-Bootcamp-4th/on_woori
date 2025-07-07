@@ -119,7 +119,7 @@ class ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 data?.stockType ?? "카테고리",
                 data?.name ?? "상품명",
                 data?.price ?? 1000,
-                data?.discount ?? 0,
+                data!.discount as int,
               ),
               Spacer(),
               GestureDetector(

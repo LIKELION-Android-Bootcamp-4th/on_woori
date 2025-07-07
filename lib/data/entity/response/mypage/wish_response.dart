@@ -58,7 +58,7 @@ class Product {
   final String id;
   final String name;
   final int price;
-  final int discountRate;
+  final String discountRate;
   final String imageUrl;
   final int stockQuantity;
 

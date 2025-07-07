@@ -5,25 +5,27 @@ part 'products_response.g.dart';
 
 ProductImages? _productImagesFromJson(dynamic json) {
   if (json == null) return null;
-  if (json is Map<String, dynamic>) return ProductImages.fromJson(json);
+
+  if (json is Map<String, dynamic>) {
+    return ProductImages.fromJson(json);
+  }
+
   if (json is String) {
     if (json.isEmpty) return null;
-    return ProductImages.fromJson(jsonDecode(json) as Map<String, dynamic>);
+    // jsonDecode 대신, 문자열을 main 이미지 URL로 직접 사용하여 객체 생성
+    return ProductImages(main: json, detail: null);
   }
+
   return null;
 }
 
-int? _discountFromJson(dynamic json) {
+String? _discountToStringJson(dynamic json) {
   if (json == null) return null;
-  if (json is int) return json;
-  if (json is String) {
-    if (json.isEmpty) return null;
-    final decoded = jsonDecode(json) as Map<String, dynamic>;
-    return decoded['value'] as int?;
-  }
-  return null;
+  if (json is int) return json.toString();
+  if (json is String) return json;
+  if (json is Map) return jsonEncode(json);
+  return json.toString();
 }
-
 
 @JsonSerializable(explicitToJson: true)
 class ProductsResponse {
@@ -64,12 +66,14 @@ class ProductItem {
   final int? stock;
   final String? stockType;
 
-  @JsonKey(fromJson: _discountFromJson)
-  final int? discount;
+  @JsonKey(fromJson: _discountToStringJson)
+  final String? discount;
 
   final String? status;
+
   @JsonKey(fromJson: _productImagesFromJson)
   final ProductImages? images;
+
   final StoreData? store;
 
   const ProductItem({

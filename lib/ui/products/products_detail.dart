@@ -287,7 +287,7 @@ class ProductsNameSection extends StatelessWidget {
     bool hasDiscount = false;
     int finalPrice = product.price;
 
-    if (product.discount != null && product.discount!.isNotEmpty) {
+    if (product.discount != null && product.discount! != 0) {
       try {
         final discountData = jsonDecode(product.discount!);
         rate = discountData['value'];

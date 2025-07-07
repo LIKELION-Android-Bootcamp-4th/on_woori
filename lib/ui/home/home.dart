@@ -105,6 +105,7 @@ class _HomePageState extends State<HomePage> {
           final storeItems = (snapshot.data?.$3.data ?? []).take(8).toList();
 
           return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -122,15 +123,13 @@ class _HomePageState extends State<HomePage> {
 
                 _buildSectionHeader(title: l10n.home_RecommendedProducts),
                 const SizedBox(height: 12),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: ProductsNonScrollableGrid(productItems.take(4).toList())
-                ),
+                ProductsNonScrollableGrid(productItems.take(4).toList()),
                 const SizedBox(height: 32),
 
                 const SizedBox(height: 32),
                 _buildSectionHeaderAndMore(title: l10n.home_OngoingFunding),
                 ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: 0),
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: fundingItems.length,
@@ -148,35 +147,33 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 32),
 
                 _buildSectionHeaderAndMore(title: l10n.home_BrandList),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 24),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 12,
-                          childAspectRatio: 0.8,
-                        ),
-                        itemCount: storeItems.length,
-                        itemBuilder: (context, index) {
-                          final brand = storeItems[index];
-                          return BrandGridItem(
-                            imageUrl: 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg',
-                            brandName: brand.name,
-                            onTap: () {
-                              print('${brand.name} 클릭됨, ID: ${brand.id}');
-                              context.push('/branddetail/${brand.id}');
-                            },
-                          );
-                        },
-                      )
-                    ],
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 24),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 0.8,
+                      ),
+                      itemCount: storeItems.length,
+                      itemBuilder: (context, index) {
+                        final brand = storeItems[index];
+                        return BrandGridItem(
+                          imageUrl: 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg',
+                          brandName: brand.name,
+                          onTap: () {
+                            print('${brand.name} 클릭됨, ID: ${brand.id}');
+                            context.push('/branddetail/${brand.id}');
+                          },
+                        );
+                      },
+                    ),
+                    SizedBox(height: 20,)
+                  ],
                 ),
               ],
             ),
@@ -187,44 +184,39 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildSectionHeader({required String title}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+      ],
     );
   }
 
   Widget _buildSectionHeaderAndMore({required String title}) {
 
-    return Padding(padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Spacer(),
+        TextButton(
+          onPressed: (){},
+          child: Text(
+            "더보기",
             style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.grey,
+                decoration: TextDecoration.underline
             ),
           ),
-          Spacer(),
-          TextButton(
-            onPressed: (){},
-            child: Text(
-              "더보기",
-              style: TextStyle(
-                  fontSize: 16,
-                  color: AppColors.grey,
-                  decoration: TextDecoration.underline
-              ),
-            ),
-          ),
-        ],
-      )
+        ),
+      ],
     );
   }
 }

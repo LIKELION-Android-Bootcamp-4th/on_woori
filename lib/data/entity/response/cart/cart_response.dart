@@ -30,12 +30,14 @@ class CartData {
 
 @JsonSerializable(explicitToJson: true)
 class CartItem {
+  final String id;
   final CartProduct product;
-  final int quantity; // 수량
-  final int cartPrice; // 할인이 적용된 개당 가격
-  final int totalPrice; // 수량 * 개당 가격
+  final int quantity;
+  final int cartPrice;
+  final int totalPrice;
 
   const CartItem({
+    required this.id,
     required this.product,
     required this.quantity,
     required this.cartPrice,

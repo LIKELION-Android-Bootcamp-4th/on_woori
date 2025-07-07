@@ -23,14 +23,6 @@ class SellerMyPage extends StatelessWidget {
             fontSize: 24,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.push('/wish/cart');
-            },
-            icon: const Icon(Icons.shopping_bag_outlined),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -107,9 +99,9 @@ class SellerMyPage extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // 쇼핑 섹션 라벨
+            // 주문 섹션 라벨
             const Text(
-              '쇼핑',
+              '주문',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 13,
@@ -167,7 +159,9 @@ class SellerMyPage extends StatelessWidget {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {},
+              onTap: () {
+                context.go('/mypage/edit-seller');
+              },
             ),
 
             // 비밀번호 변경

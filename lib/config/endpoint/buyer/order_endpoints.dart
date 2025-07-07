@@ -7,21 +7,21 @@ abstract class OrderEndpoints {
 
   // 주문 상세 조회
   static String getOrdersDetail({
-    required int orderId
+    required String orderId
   }) {
     return '/api/orders/$orderId';
   }
 
   // 주문 상태 변경
   static String patchOrdersStatus({
-    required int orderId
+    required String orderId
   }) {
     return '/api/orders/$orderId/status';
   }
 
   // 주문 완료 변경
   static String putOrdersComplete({
-    required int orderId
+    required String orderId
   }) {
     return '/api/orders/$orderId/complete';
   }

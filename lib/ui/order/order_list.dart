@@ -84,6 +84,7 @@ class _OrderListPageState extends State<OrderListPage> {
                         .toList();
 
                     return OrderListItem(
+                      id: order.id,
                       orderNumber: order.orderNumber,
                       // 4. 날짜(DateTime)를 문자열로 직접 포맷팅합니다.
                       orderDate: DateFormat('yyyy.MM.dd').format(order.createdAt),

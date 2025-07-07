@@ -17,15 +17,13 @@ class MyPage extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          l10n.bottomNavigationBarMyPage,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-        ),
+          l10n.bottomNavigationBarMyPage, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
         actions: [
           IconButton(
             onPressed: () {
               context.push('/wish/cart');
             },
-            icon: const Icon(Icons.shopping_bag_outlined),
+            icon: Icon(Icons.shopping_bag_outlined),
           ),
         ],
       ),
@@ -71,14 +69,14 @@ class MyPage extends StatelessWidget {
                     minimumSize: Size(0, 0),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.zero,
                       side: const BorderSide(
                         color: AppColors.grey,
                       ),
                     ),
                   ),
                   onPressed: () {
-                    context.push('/mypage/edit');
+                    // TODO: 프로필 수정 이동
                   },
                   child: const Text(
                     '프로필 수정',
@@ -137,9 +135,7 @@ class MyPage extends StatelessWidget {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {
-                context.push('/wish');
-              },
+              onTap: () {},
             ),
 
             // Divider between 위시리스트 and 내 정보
@@ -174,9 +170,7 @@ class MyPage extends StatelessWidget {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {
-                context.push('/mypage/password');
-              },
+              onTap: () {},
             ),
 
             // Divider under 비밀번호 변경

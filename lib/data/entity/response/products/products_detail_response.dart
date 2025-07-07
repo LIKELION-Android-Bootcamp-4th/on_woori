@@ -8,11 +8,13 @@ class ProductsDetailResponse {
   final bool success;
   final String message;
   final ProductItem? data;
+  final DateTime? timestamp;
 
   const ProductsDetailResponse({
     required this.success,
     required this.message,
     this.data,
+    this.timestamp,
   });
 
   factory ProductsDetailResponse.fromJson(Map<String, dynamic> json) =>

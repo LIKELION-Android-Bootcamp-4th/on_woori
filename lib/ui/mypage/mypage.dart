@@ -1,10 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dio/dio.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
-class MyPage extends StatelessWidget {
+class MyPage extends StatefulWidget {
   const MyPage({super.key});
+
+  @override
+  State<MyPage> createState() => _MyPageState();
+}
+
+class _MyPageState extends State<MyPage> {
+  String? userName;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserProfile();
+  }
+
+  Future<void> fetchUserProfile() async {
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: 'http://git.hansul.kr:3000',
+        headers: {
+          'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY3YzI3YzI0MTBiYmVlMTY4MDFkZDUiLCJjb21wYW55SWQiOiI2ODVmNjlmYzQzOTkyMmMwOWMyMWFlZjAiLCJpc0FkbWluIjp0cnVlLCJpc1N1cGVyQWRtaW4iOnRydWUsImlhdCI6MTc1MTg2Njg0MiwiZXhwIjoxNzUxOTUzMjQyfQ.404gq3LD9UicXvToI6FYQUcxSN4VQemYW9IAMbljO40',
+          'X-Company-Code': '685f69fc439922c09c21aef0',
+        },
+      ),
+    );
+
+    try {
+      final response = await dio.get('/api/mypage/profile');
+      setState(() {
+        userName = response.data['data']['name'];
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        userName = '정보 없음';
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,17 +84,29 @@ class MyPage extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
-                  children: const [
+                  children: [
+                    ClipOval(
+                      child: SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: Image.asset(
+                          'assets/default_profile.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 8),
                     Text(
-                      '안현진',
-                      style: TextStyle(
+                      isLoading ? '로딩 중...' : (userName ?? '사용자'),
+                      style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 20,
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(width: 6),
-                    Text(
+                    const SizedBox(width: 6),
+                    const Text(
                       '고객님',
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
@@ -68,7 +121,7 @@ class MyPage extends StatelessWidget {
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                    minimumSize: Size(0, 0),
+                    minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
@@ -94,7 +147,6 @@ class MyPage extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // 쇼핑 섹션 라벨
             const Text(
               '쇼핑',
               style: TextStyle(
@@ -106,7 +158,6 @@ class MyPage extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            // 주문 내역
             ListTile(
               contentPadding: EdgeInsets.zero,
               dense: true,
@@ -124,7 +175,6 @@ class MyPage extends StatelessWidget {
               },
             ),
 
-            // 위시리스트
             ListTile(
               contentPadding: EdgeInsets.zero,
               dense: true,
@@ -142,14 +192,12 @@ class MyPage extends StatelessWidget {
               },
             ),
 
-            // Divider between 위시리스트 and 내 정보
             const Divider(
               color: AppColors.DividerTextBoxLineDivider,
               thickness: 1,
               height: 16,
             ),
 
-            // 내 정보 섹션 라벨
             const Text(
               '내 정보',
               style: TextStyle(
@@ -161,7 +209,6 @@ class MyPage extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            // 비밀번호 변경
             ListTile(
               contentPadding: EdgeInsets.zero,
               dense: true,
@@ -179,7 +226,6 @@ class MyPage extends StatelessWidget {
               },
             ),
 
-            // Divider under 비밀번호 변경
             const Divider(
               color: AppColors.DividerTextBoxLineDivider,
               thickness: 1,

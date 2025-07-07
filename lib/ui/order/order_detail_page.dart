@@ -1,103 +1,140 @@
 import 'package:flutter/material.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/data/client/orders_api_client.dart';
+import 'package:on_woori/data/entity/response/orders/order_detail_response.dart';
 
-class OrderDetailPage extends StatelessWidget {
-  const OrderDetailPage({super.key});
+class OrderDetailPage extends StatefulWidget {
+  final String orderId;
+  const OrderDetailPage(this.orderId, {super.key});
+
+  @override
+  State<OrderDetailPage> createState() => _OrderDetailPageState();
+}
+
+class _OrderDetailPageState extends State<OrderDetailPage> {
+  late Future<OrderDetailResponse> _orderDetailFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _orderDetailFuture = _fetchOrderDetail();
+  }
+
+  Future<OrderDetailResponse> _fetchOrderDetail() async {
+    return await OrdersApiClient().getOrderDetail(orderId: widget.orderId);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          "주문상세조회",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-        ),
+        title: const Text("주문상세조회", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.fromLTRB(24, 10, 24, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              OrderDetailHeader(
-                orderNumber: "000000000",
-                orderDate: "2025-00-00",
-                userName: "김이박",
-              ),
-              SizedBox(height: 10),
-              Divider(color: Color(0xFFC9C9C9)),
-              Text(
-                "주문 상품",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
+      body: FutureBuilder<OrderDetailResponse>(
+        future: _orderDetailFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text("오류가 발생했습니다: ${snapshot.error}"));
+          }
+          if (!snapshot.hasData || snapshot.data?.data == null) {
+            return const Center(child: Text("주문 정보를 찾을 수 없습니다."));
+          }
+
+          final order = snapshot.data!.data!;
+          const placeholderImage = 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg';
+
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: OrderDetailHeader(
+                    orderNumber: order.orderNumber,
+                    orderDate: order.orderDate,
+                    userName: order.userInfo.name,
+                  ),
                 ),
-              ),
-              SizedBox(height: 15),
-              ListView.separated(
-                itemCount: 4,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  return OrderProductListItem(
-                    imageUrl:
-                        "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg",
-                    productName: "상품명",
-                    options: "옵션옵션",
-                    quantity: 1,
-                    price: 168000,
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(color: Color(0xFFC9C9C9)),
-              ),
-              SizedBox(height: 10),
-              Divider(color: Color(0xFFC9C9C9)),
-              Text(
-                "결제 정보",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
+                const SizedBox(height: 10),
+                const Divider(color: Color(0xFFC9C9C9)),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Text("주문 상품", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20)),
                 ),
-              ),
-              SizedBox(height: 15),
-              PriceInfoBox(price: 16800, shippingFee: 0, totalPrice: 16800),
-              SizedBox(height: 20),
-              Divider(color: Color(0xFFC9C9C9)),
-              Text(
-                "배송지 정보",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
+                const SizedBox(height: 15),
+                ListView.separated(
+                  itemCount: order.items.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    final product = order.items[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: OrderProductListItem(
+                        imageUrl: product.productImage ?? placeholderImage,
+                        productName: product.productName,
+                        options: product.optionsText,
+                        quantity: product.quantity,
+                        price: product.totalPrice,
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) =>
+                  const Divider(color: Color(0xFFC9C9C9), height: 30, indent: 24, endIndent: 24),
                 ),
-              ),
-              SizedBox(height: 15),
-              ShippingInfoBox(
-                recipientName: "김이박",
-                recipientPhone: "010-0000-0000",
-                zipCode: 00000,
-                address1: "서울특별시 --구 --동",
-                address2: "0000호",
-              ),
-              SizedBox(height: 10),
-            ],
-          ),
-        ),
+                const SizedBox(height: 10),
+                const Divider(color: Color(0xFFC9C9C9)),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Text("결제 정보", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20)),
+                ),
+                const SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: PriceInfoBox(
+                    price: order.subtotalAmount,
+                    shippingFee: order.shippingCost,
+                    totalPrice: order.totalAmount,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Divider(color: Color(0xFFC9C9C9)),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: Text("배송지 정보", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20)),
+                ),
+                const SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: ShippingInfoBox(
+                    recipientName: order.shippingInfo.recipient,
+                    recipientPhone: order.shippingInfo.phone,
+                    zipCode: order.shippingInfo.zipCode,
+                    address1: order.shippingInfo.address,
+                    address2: "",
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
 }
 
 class OrderDetailHeader extends StatelessWidget {
-  String orderNumber;
-  String orderDate;
-  String userName;
+  final String orderNumber;
+  final String orderDate;
+  final String userName;
 
-  OrderDetailHeader({
+  const OrderDetailHeader({
     super.key,
     required this.orderNumber,
     required this.orderDate,
@@ -111,7 +148,7 @@ class OrderDetailHeader extends StatelessWidget {
       children: [
         Text(
           "주문번호 $orderNumber",
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w600,
             fontSize: 20,
@@ -119,7 +156,7 @@ class OrderDetailHeader extends StatelessWidget {
         ),
         Text(
           "$orderDate | $userName",
-          style: TextStyle(color: AppColors.grey, fontSize: 13),
+          style: const TextStyle(color: AppColors.grey, fontSize: 13),
         ),
       ],
     );
@@ -127,13 +164,13 @@ class OrderDetailHeader extends StatelessWidget {
 }
 
 class OrderProductListItem extends StatelessWidget {
-  String imageUrl;
-  String productName;
-  String options;
-  int quantity;
-  int price;
+  final String imageUrl;
+  final String productName;
+  final String options;
+  final int quantity;
+  final int price;
 
-  OrderProductListItem({
+  const OrderProductListItem({
     super.key,
     required this.imageUrl,
     required this.productName,
@@ -144,59 +181,56 @@ class OrderProductListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          // mainAxisSize: MainAxisSize.max,
-          children: [
-            // 상품 이미지
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                imageUrl,
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-              ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.network(
+            imageUrl,
+            width: 80,
+            height: 80,
+            fit: BoxFit.cover,
+            errorBuilder: (c, e, s) => Image.network(
+              'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg',
+              width: 80,
+              height: 80,
+              fit: BoxFit.cover,
             ),
-
-            const SizedBox(width: 10),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    productName,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                    ),
-                  ),
-                  Text(
-                    "$options | $quantity개",
-                    style: TextStyle(
-                      color: AppColors.grey,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  Text(
-                    "$price",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
+          ),
+        ),
+        const SizedBox(width: 10),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                productName,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
               ),
-            ),
-          ],
+              Text(
+                "$options | $quantity개",
+                style: const TextStyle(
+                  color: AppColors.grey,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(height: 15),
+              Text(
+                "$price",
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -204,11 +238,11 @@ class OrderProductListItem extends StatelessWidget {
 }
 
 class PriceInfoBox extends StatelessWidget {
-  int price;
-  int shippingFee;
-  int totalPrice;
+  final int price;
+  final int shippingFee;
+  final int totalPrice;
 
-  PriceInfoBox({
+  const PriceInfoBox({
     required this.price,
     required this.shippingFee,
     required this.totalPrice,
@@ -218,7 +252,7 @@ class PriceInfoBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: AppColors.categorySizeButtonUnSelected,
@@ -228,13 +262,13 @@ class PriceInfoBox extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 "총 상품 금액",
                 style: TextStyle(color: AppColors.grey, fontSize: 18),
               ),
               Text(
                 "$price원",
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -242,17 +276,17 @@ class PriceInfoBox extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 "총 배송비",
                 style: TextStyle(color: AppColors.grey, fontSize: 18),
               ),
               Text(
                 "$shippingFee원",
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -260,13 +294,13 @@ class PriceInfoBox extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 10),
-          Divider(color: Color(0xFFC9C9C9)),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
+          const Divider(color: Color(0xFFC9C9C9)),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 "결제 금액",
                 style: TextStyle(
                   color: Colors.black,
@@ -276,7 +310,7 @@ class PriceInfoBox extends StatelessWidget {
               ),
               Text(
                 "$totalPrice원",
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -291,13 +325,13 @@ class PriceInfoBox extends StatelessWidget {
 }
 
 class ShippingInfoBox extends StatelessWidget {
-  String recipientName;
-  String recipientPhone;
-  int zipCode;
-  String address1;
-  String address2;
+  final String recipientName;
+  final String recipientPhone;
+  final String zipCode;
+  final String address1;
+  final String address2;
 
-  ShippingInfoBox({
+  const ShippingInfoBox({
     required this.recipientName,
     required this.recipientPhone,
     required this.zipCode,
@@ -309,7 +343,8 @@ class ShippingInfoBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20),
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: AppColors.categorySizeButtonUnSelected,
@@ -319,68 +354,40 @@ class ShippingInfoBox extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "수령인",
-                style: TextStyle(color: AppColors.grey, fontSize: 16),
-              ),
-              Text(
-                recipientName,
-                style: TextStyle(color: Colors.black, fontSize: 16),
-              ),
+              const Text("수령인", style: TextStyle(color: AppColors.grey, fontSize: 16)),
+              Text(recipientName, style: const TextStyle(color: Colors.black, fontSize: 16)),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "핸드폰",
-                style: TextStyle(color: AppColors.grey, fontSize: 16),
-              ),
-              Text(
-                recipientPhone,
-                style: TextStyle(color: Colors.black, fontSize: 16),
-              ),
+              const Text("핸드폰", style: TextStyle(color: AppColors.grey, fontSize: 16)),
+              Text(recipientPhone, style: const TextStyle(color: Colors.black, fontSize: 16)),
             ],
           ),
-          SizedBox(height: 10),
-          Divider(color: Color(0xFFC9C9C9)),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
+          const Divider(color: Color(0xFFC9C9C9)),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "우편번호",
-                style: TextStyle(color: AppColors.grey, fontSize: 16),
-              ),
-              Text(
-                "$zipCode",
-                style: TextStyle(color: Colors.black, fontSize: 16),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("주소", style: TextStyle(color: AppColors.grey, fontSize: 16)),
-              Text(
-                address1,
-                style: TextStyle(color: Colors.black, fontSize: 16),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "상세주소",
-                style: TextStyle(color: AppColors.grey, fontSize: 16),
-              ),
-              Text(
-                address2,
-                style: TextStyle(color: Colors.black, fontSize: 16),
+              const Text("주소", style: TextStyle(color: AppColors.grey, fontSize: 16)),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text("($zipCode)", style: const TextStyle(color: Colors.black, fontSize: 16)),
+                    const SizedBox(height: 4),
+                    Text(address1, style: const TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.right),
+                    if (address2.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(address2, style: const TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.right),
+                    ]
+                  ],
+                ),
               ),
             ],
           ),

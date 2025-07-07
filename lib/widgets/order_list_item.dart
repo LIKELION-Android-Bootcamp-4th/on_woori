@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 
 class OrderListItem extends StatelessWidget {
+  final String id;
   final String orderNumber;
   final String orderDate;
   final int totalAmount;
@@ -12,6 +13,7 @@ class OrderListItem extends StatelessWidget {
 
   const OrderListItem({
     super.key,
+    required this.id,
     required this.orderNumber,
     required this.orderDate,
     required this.totalAmount,
@@ -26,7 +28,7 @@ class OrderListItem extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        context.push('/orderdetail');
+        context.push('/orderdetail/$id');
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20.0),

@@ -69,6 +69,7 @@ class _HomePageState extends State<HomePage> {
       await storage.delete(key: 'ACCESS_TOKEN');
       await storage.write(key: 'ACCESS_TOKEN', value: response.data.accessToken);
       await storage.write(key: 'REFRESH_TOKEN', value: response.data.refreshToken);
+      print(await storage.read(key: 'ACCESS_TOKEN'));
     } catch (e, s) {
       print('로그인 실패: $e');
       print(s);
@@ -136,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) {
                     final item = fundingItems[index];
                     return FundingListItem(
-                      imageUrl: item.imageUrl ?? '',
+                      imageUrl: item.imageUrl ?? 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg',
                       fundingName: item.title,
                       brandName: item.companyId?.name ?? '브랜드 없음',
                       description: item.description ?? item.linkUrl ?? '',

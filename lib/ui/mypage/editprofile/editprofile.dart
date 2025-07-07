@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 import 'package:on_woori/widgets/dropdown.dart';
@@ -21,16 +23,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _detailAddressController = TextEditingController();
 
   String _selectedGender = '여성';
+  File? _profileImageFile;
+  String? _profileImageUrl;
+
+  bool _isPickingImage = false;
 
   @override
   void initState() {
     super.initState();
-    _nicknameController.text = '멋쟁이 사자';
-    _nameController.text = '안현진';
-    _phoneController.text = '01012334531';
-    _zipcodeController.text = '12345';
-    _addressController.text = '서울 종로구 종로3길 17 DE타워 D1동 16,';
-    _detailAddressController.text = '17층, 세렝게티';
+    _fetchProfile();
   }
 
   @override
@@ -44,10 +45,118 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.dispose();
   }
 
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      // TODO: 저장 처리
+  Future<void> _fetchProfile() async {
+    // TODO: 서버에서 사용자 프로필 조회 후 데이터 세팅
+    setState(() {
+      _nicknameController.text = '사용자닉네임';
+      _nameController.text = '홍길동';
+      _phoneController.text = '010-1234-5678';
+      _zipcodeController.text = '12345';
+      _addressController.text = '서울시 강남구 테헤란로';
+      _detailAddressController.text = '123번길 45';
+      _profileImageUrl = null;
+    });
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('에러'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('확인'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _pickImage() async {
+    if (_isPickingImage) {
+      print('이미 이미지 선택 중입니다.');
+      return;
     }
+
+    setState(() {
+      _isPickingImage = true;
+    });
+
+    final ImagePicker picker = ImagePicker();
+
+    await showModalBottomSheet(
+      context: context,
+      isDismissible: true,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('카메라로 촬영'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? picked = await picker.pickImage(
+                    source: ImageSource.camera,
+                    imageQuality: 85,
+                  );
+                  if (!mounted) return;
+                  setState(() {
+                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageUrl = picked != null ? null : _profileImageUrl;
+                    _isPickingImage = false;
+                  });
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('갤러리에서 선택'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? picked = await picker.pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: 85,
+                  );
+                  if (!mounted) return;
+                  setState(() {
+                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageUrl = picked != null ? null : _profileImageUrl;
+                    _isPickingImage = false;
+                  });
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    ).whenComplete(() {
+      // BottomSheet 닫힐 때 플래그 해제
+      if (mounted) {
+        setState(() {
+          _isPickingImage = false;
+        });
+      }
+    });
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    // TODO: 서버로 수정 내용 전송
+    print('저장할 닉네임: ${_nicknameController.text}');
+    print('저장할 이름: ${_nameController.text}');
+    print('저장할 전화번호: ${_phoneController.text}');
+    print('저장할 우편번호: ${_zipcodeController.text}');
+    print('저장할 주소: ${_addressController.text}');
+    print('저장할 상세주소: ${_detailAddressController.text}');
+    print('선택된 성별: $_selectedGender');
+    print('프로필 이미지 파일: $_profileImageFile');
+
+    if (!mounted) return;
+    Navigator.of(context).pop();
   }
 
   @override
@@ -74,6 +183,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Center(
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 48,
+                      backgroundColor: AppColors.categoryContainer,
+                      backgroundImage: _profileImageFile != null
+                          ? FileImage(_profileImageFile!)
+                          : (_profileImageUrl != null
+                          ? NetworkImage(_profileImageUrl!)
+                          : null) as ImageProvider?,
+                      child: (_profileImageFile == null && _profileImageUrl == null)
+                          ? const Icon(Icons.person, size: 48, color: AppColors.grey)
+                          : null,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: InkWell(
+                        onTap: _pickImage,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.primarySub,
+                            shape: BoxShape.circle,
+                          ),
+                          padding: const EdgeInsets.all(6),
+                          child: const Icon(Icons.add, size: 20, color: Colors.white),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
               _buildLabel('닉네임'),
               _buildTextFormField(_nicknameController, validatorText: '닉네임을 입력해주세요'),
 

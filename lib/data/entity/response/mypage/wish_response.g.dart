@@ -46,7 +46,7 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
   id: json['_id'] as String,
   name: json['name'] as String,
   price: (json['price'] as num).toInt(),
-  discountRate: (json['discountRate'] as num).toInt(),
+  discountRate: json['discountRate'] as String,
   imageUrl: json['imageUrl'] as String,
   stockQuantity: (json['stockQuantity'] as num).toInt(),
 );

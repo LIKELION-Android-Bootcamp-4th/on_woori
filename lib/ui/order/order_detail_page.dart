@@ -25,8 +25,7 @@ class OrderDetailPage extends StatelessWidget {
                 orderDate: "2025-00-00",
                 userName: "김이박",
               ),
-              SizedBox(height: 10),
-              Divider(color: Color(0xFFC9C9C9)),
+              Divider(color: Colors.black, height: 30.0,),
               Text(
                 "주문 상품",
                 style: TextStyle(
@@ -35,7 +34,7 @@ class OrderDetailPage extends StatelessWidget {
                   fontSize: 20,
                 ),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 10),
               ListView.separated(
                 itemCount: 4,
                 shrinkWrap: true,
@@ -51,10 +50,10 @@ class OrderDetailPage extends StatelessWidget {
                   );
                 },
                 separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(color: Color(0xFFC9C9C9)),
+                    const Divider(color: AppColors.DividerTextBoxLineDivider, height: 20.0,),
               ),
-              SizedBox(height: 10),
-              Divider(color: Color(0xFFC9C9C9)),
+              SizedBox(height: 10,),
+              Divider(color: Colors.black, height: 30.0,),
               Text(
                 "결제 정보",
                 style: TextStyle(
@@ -65,8 +64,8 @@ class OrderDetailPage extends StatelessWidget {
               ),
               SizedBox(height: 15),
               PriceInfoBox(price: 16800, shippingFee: 0, totalPrice: 16800),
-              SizedBox(height: 20),
-              Divider(color: Color(0xFFC9C9C9)),
+              SizedBox(height: 10),
+              Divider(color: Colors.black, height: 30.0,),
               Text(
                 "배송지 정보",
                 style: TextStyle(

@@ -41,34 +41,41 @@ class OrderListPage extends StatelessWidget {
         surfaceTintColor: Colors.white,
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-            child: Text(
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Padding(
+            //   padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+            //   child:
+            // ),
+            Text(
               '총 주문 내역 ${_dummyOrders.length}개',
               style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
-          ),
-          // 주문 목록
-          Expanded(
-            child: ListView.builder(
-              itemCount: _dummyOrders.length,
-              itemBuilder: (context, index) {
-                final order = _dummyOrders[index];
-                return OrderListItem(
-                  orderNumber: order['orderNumber'],
-                  orderDate: order['orderDate'],
-                  totalAmount: order['totalAmount'],
-                  status: order['status'],
-                  products: List<String>.from(order['products']),
-                );
-              },
+            SizedBox(height: 10,),
+            Divider(color: Colors.black, height: 1.0,),
+            // 주문 목록
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: _dummyOrders.length,
+                itemBuilder: (context, index) {
+                  final order = _dummyOrders[index];
+                  return OrderListItem(
+                    orderNumber: order['orderNumber'],
+                    orderDate: order['orderDate'],
+                    totalAmount: order['totalAmount'],
+                    status: order['status'],
+                    products: List<String>.from(order['products']),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      )
     );
   }
 }

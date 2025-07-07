@@ -19,7 +19,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       // 모든 유효성 통과
-      context.go('/auth/signup/common');
+      context.push('/auth/signup/common');
     }
   }
 

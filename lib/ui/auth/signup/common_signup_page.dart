@@ -22,7 +22,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       // 모든 유효성 통과
-      context.go('/auth/signup/completed');
+      context.push('/auth/signup/completed');
     }
   }
 
@@ -120,7 +120,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
                           ),
                         ),
 
-                        SizedBox(width: 5),
+                        SizedBox(width: 10),
                         SizedBox(
                           height: 60,
                           width: 60,

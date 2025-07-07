@@ -47,7 +47,7 @@ class LoginPageStatus extends State<LoginPage> {
                             fontSize: 24,
                           ),
                         ),
-                        SizedBox(height: 40),
+                        SizedBox(height: 20),
                         LoginTextField(
                           labelText: l10n.loginEmailTitle,
                           hintText: l10n.loginEmailInputHint,
@@ -60,8 +60,8 @@ class LoginPageStatus extends State<LoginPage> {
                           inputType: TextInputType.visiblePassword,
                           isPassword: true,
                         ),
+                        SizedBox(height: 15,),
                         BottomButton(buttonText: l10n.loginTitle, pressedFunc: (){}),
-                        SizedBox(height: 15),
                         Row(
                           children: [
                             Spacer(),

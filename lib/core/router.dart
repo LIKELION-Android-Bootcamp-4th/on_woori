@@ -74,7 +74,12 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/auth/signup/common',
-          builder: (context, state) => CommonSignupPage(),
+          builder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?;
+            return CommonSignupPage(
+              store: extra?['store'],
+            );
+          },
         ),
         GoRoute(
           path: '/auth/signup/seller',

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/data/client/auth_api_client.dart';
 import 'package:on_woori/data/entity/request/auth/register_buyer_request.dart';
+import 'package:on_woori/data/entity/request/auth/register_seller_request.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 import 'package:on_woori/widgets/login_textfield.dart';
 
 import '../../../l10n/app_localizations.dart';
 
 class CommonSignupPage extends StatefulWidget {
+  final StoreRequestData? store;
+
+  const CommonSignupPage({this.store, super.key});
   @override
   State<CommonSignupPage> createState() => _CommonSignupPageState();
 }
@@ -29,10 +34,24 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
       String password = passwordController.text;
       String nickName = textController.text;
 
-      RegisterBuyerRequest request = RegisterBuyerRequest(email: email, password: password, nickName: nickName);
-
-      apiClient.authRegisterBuyer(request: request);
-
+      if (widget.store == null) {
+        RegisterBuyerRequest request = RegisterBuyerRequest(
+          email: email,
+          password: password,
+          nickName: nickName,
+        );
+        apiClient.authRegisterBuyer(request: request);
+        Fluttertoast.showToast(msg: "구매자 회원가입이 완료되었습니다.");
+      } else {
+        RegisterSellerRequest request = RegisterSellerRequest(
+          email: email,
+          password: password,
+          nickName: nickName,
+          store: widget.store!,
+        );
+        apiClient.authRegisterSeller(request: request);
+        Fluttertoast.showToast(msg: "판매자 회원가입이 완료되었습니다.");
+      }
       context.go('/auth/signup/completed');
     }
   }
@@ -147,10 +166,13 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
                             onPressed: () {},
                             child: Text(
                               "인증",
-                              style: TextStyle(fontSize: 16, color: Colors.white),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
 
@@ -175,7 +197,10 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
       ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(left: 24, right: 24),
-        child: BottomButton(buttonText: l10n.signInTitle, pressedFunc: _submit),
+        child: BottomButton(
+          buttonText: l10n.signInTitle,
+          pressedFunc: () => _submit(),
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 import 'package:on_woori/widgets/login_textfield.dart';
 
+import '../../../data/entity/request/auth/register_seller_request.dart';
 import '../../../l10n/app_localizations.dart';
 
 class SellerSignupPage extends StatefulWidget {
@@ -19,7 +20,10 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       // 모든 유효성 통과
-      context.go('/auth/signup/common');
+      StoreRequestData store = StoreRequestData(name: nameController.text, description: introController.text);
+      context.go('/auth/signup/common', extra: {
+        'store': store
+      });
     }
   }
 

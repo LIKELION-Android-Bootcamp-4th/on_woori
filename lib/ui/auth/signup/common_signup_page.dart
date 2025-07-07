@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/data/client/auth_api_client.dart';
+import 'package:on_woori/data/entity/request/auth/register_buyer_request.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 import 'package:on_woori/widgets/login_textfield.dart';
 
@@ -18,10 +20,19 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
   final passwordController = TextEditingController();
   final passwordConfirmController = TextEditingController();
   final codeController = TextEditingController();
+  final apiClient = AuthApiClient();
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
       // 모든 유효성 통과
+      String email = emailController.text;
+      String password = passwordController.text;
+      String nickName = textController.text;
+
+      RegisterBuyerRequest request = RegisterBuyerRequest(email: email, password: password, nickName: nickName);
+
+      apiClient.authRegisterBuyer(request: request);
+
       context.go('/auth/signup/completed');
     }
   }
@@ -93,6 +104,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
                         if (passwordController.text != value) {
                           return '입력한 비밀번호가 서로 다릅니다';
                         }
+                        if (value.length < 6) return '비밀번호는 6자리 이상이여야 합니다';
                         return null;
                       },
                     ),

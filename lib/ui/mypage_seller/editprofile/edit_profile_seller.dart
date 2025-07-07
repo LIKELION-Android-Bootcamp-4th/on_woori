@@ -1,42 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
-import 'package:on_woori/widgets/dropdown.dart';
 
-class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key});
+class EditProfileSellerPage extends StatefulWidget {
+  const EditProfileSellerPage({super.key});
 
   @override
-  State<EditProfilePage> createState() => _EditProfilePageState();
+  State<EditProfileSellerPage> createState() => _EditProfileSellerPageState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
+class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _nicknameController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _managerController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _zipcodeController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _detailAddressController = TextEditingController();
 
-  String _selectedGender = '여성';
-
   @override
   void initState() {
     super.initState();
-    _nicknameController.text = '멋쟁이 사자';
-    _nameController.text = '안현진';
-    _phoneController.text = '01012334531';
+    _managerController.text = '신서진';
+    _phoneController.text = '01051797631';
     _zipcodeController.text = '12345';
-    _addressController.text = '서울 종로구 종로3길 17 DE타워 D1동 16,';
+    _addressController.text = '서울 종로구 종로3길 17 D타워 D1동 16,';
     _detailAddressController.text = '17층, 세렝게티';
   }
 
   @override
   void dispose() {
-    _nicknameController.dispose();
-    _nameController.dispose();
+    _managerController.dispose();
     _phoneController.dispose();
     _zipcodeController.dispose();
     _addressController.dispose();
@@ -55,6 +49,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            // TODO: 뒤로가기 처리
+          },
+        ),
         title: const Text(
           '프로필 수정',
           style: TextStyle(
@@ -74,25 +74,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildLabel('닉네임'),
-              _buildTextFormField(_nicknameController, validatorText: '닉네임을 입력해주세요'),
-
-              const SizedBox(height: 16),
-              _buildLabel('성함'),
-              _buildTextFormField(_nameController, validatorText: '성함을 입력해주세요'),
-
-              const SizedBox(height: 16),
-              _buildLabel('성별'),
-              const SizedBox(height: 8),
-              CustomDropdown(
-                selectedValue: _selectedGender,
-                items: ['여성', '남성', '선택하지않음'],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedGender = value!;
-                  });
-                },
-              ),
+              _buildLabel('담당자명'),
+              _buildTextFormField(_managerController, validatorText: '담당자명을 입력해주세요'),
 
               const SizedBox(height: 16),
               _buildLabel('전화번호'),

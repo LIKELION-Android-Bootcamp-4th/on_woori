@@ -6,7 +6,7 @@ part 'fundings_response.g.dart';
 class FundingsResponse {
   final bool success;
   final String message;
-  final List<FundingsItem>? data;
+  final FundingData? data;
 
   const FundingsResponse({
     required this.success,
@@ -20,26 +20,43 @@ class FundingsResponse {
 }
 
 @JsonSerializable(explicitToJson: true)
+class FundingData {
+  final List<FundingsItem> items;
+  final Pagination pagination;
+
+  const FundingData({
+    required this.items,
+    required this.pagination,
+  });
+
+  factory FundingData.fromJson(Map<String, dynamic> json) =>
+      _$FundingDataFromJson(json);
+  Map<String, dynamic> toJson() => _$FundingDataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class FundingsItem {
   @JsonKey(name: 'id')
   final String id;
   final String title;
-  final String imageUrl;
-  final String linkUrl;
+  final String? imageUrl;
+  final String? linkUrl;
   final String? description;
   final CompanyId? companyId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final Map<String, dynamic>? images; // images 필드 추가
 
   const FundingsItem({
     required this.id,
     required this.title,
-    required this.imageUrl,
-    required this.linkUrl,
+    this.imageUrl,
+    this.linkUrl,
     this.description,
     this.companyId,
     this.createdAt,
     this.updatedAt,
+    this.images,
   });
 
   factory FundingsItem.fromJson(Map<String, dynamic> json) =>
@@ -61,4 +78,27 @@ class CompanyId {
   factory CompanyId.fromJson(Map<String, dynamic> json) =>
       _$CompanyIdFromJson(json);
   Map<String, dynamic> toJson() => _$CompanyIdToJson(this);
+}
+
+@JsonSerializable()
+class Pagination {
+  final int currentPage;
+  final int totalPages;
+  final int totalItems;
+  final int itemsPerPage;
+  final bool hasNext;
+  final bool hasPrev;
+
+  const Pagination({
+    required this.currentPage,
+    required this.totalPages,
+    required this.totalItems,
+    required this.itemsPerPage,
+    required this.hasNext,
+    required this.hasPrev,
+  });
+
+  factory Pagination.fromJson(Map<String, dynamic> json) =>
+      _$PaginationFromJson(json);
+  Map<String, dynamic> toJson() => _$PaginationToJson(this);
 }

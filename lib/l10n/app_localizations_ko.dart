@@ -33,6 +33,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get home_OngoingFunding => '진행중인 펀딩';
 
   @override
+  String get home_BrandList => '브랜드 둘러보기';
+
+  @override
   String get loginTitle => '로그인';
 
   @override

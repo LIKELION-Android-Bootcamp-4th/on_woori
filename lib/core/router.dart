@@ -25,6 +25,8 @@ import 'package:on_woori/ui/mypage_seller/add_funding.dart';
 import 'package:on_woori/ui/mypage_seller/add_product.dart';
 import 'package:on_woori/ui/mypage_seller/edit_brand.dart';
 
+import '../ui/mypage_seller/editprofile/edit_profile_seller.dart';
+
 final GoRouter router = GoRouter(
   initialLocation: '/',
   routes: <RouteBase>[
@@ -170,12 +172,18 @@ final GoRouter router = GoRouter(
             return BrandProductEditPage();
           }
         ),
-
+        
         GoRoute(
           path: '/brand/edit',
           builder: (context, state) => const BrandEditPage(),
         ),
 
+        GoRoute(
+          path: '/mypage/edit-seller',
+          builder: (context, state) {
+            return const EditProfileSellerPage();
+          },
+        ),
       ],
     ),
   ],

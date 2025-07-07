@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 
@@ -21,6 +22,8 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
   @override
   void initState() {
     super.initState();
+
+    // TODO: 서버에서 판매자 프로필 정보 가져오기
     _managerController.text = '신서진';
     _phoneController.text = '01051797631';
     _zipcodeController.text = '12345';
@@ -40,8 +43,23 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      // TODO: 저장 처리
+      // TODO: 서버에 수정 내용 전송
+      print('=== 저장할 정보 ===');
+      print('담당자명: ${_managerController.text}');
+      print('전화번호: ${_phoneController.text}');
+      print('우편번호: ${_zipcodeController.text}');
+      print('주소: ${_addressController.text}');
+      print('상세주소: ${_detailAddressController.text}');
+      print('==================');
+
+      if (!mounted) return;
+      context.go('/mypage/seller');
     }
+  }
+
+  void _onBackPressed() {
+    // TODO: 필요하면 저장 여부 확인 다이얼로그 띄우기
+    Navigator.of(context).pop();
   }
 
   @override
@@ -51,9 +69,7 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            // TODO: 뒤로가기 처리
-          },
+          onPressed: _onBackPressed,
         ),
         title: const Text(
           '프로필 수정',

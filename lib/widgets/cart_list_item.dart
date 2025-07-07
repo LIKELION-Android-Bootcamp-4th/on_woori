@@ -2,42 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 
 class CartListItem extends StatefulWidget {
-  String productName;
-  String option;
-  int productCount;
-  int price;
-  String imageUrl;
+  final String productName;
+  final String option;
+  final int productCount;
+  final int price;
+  final String imageUrl;
+  final VoidCallback? onDelete;
 
-  CartListItem({
+  const CartListItem({
     required this.productName,
     required this.option,
     required this.productCount,
     required this.price,
     required this.imageUrl,
+    this.onDelete,
     super.key,
   });
 
   @override
-  State createState() {
+  State<CartListItem> createState() {
     return CartListItemState();
   }
 }
 
 class CartListItemState extends State<CartListItem> {
-  late String productName;
-  late String option;
   late int productCount;
-  late int price;
-  late String imageUrl;
 
   @override
   void initState() {
     super.initState();
-    productName = widget.productName;
-    option = widget.option;
     productCount = widget.productCount;
-    price = widget.price;
-    imageUrl = widget.imageUrl;
   }
 
   @override
@@ -45,52 +39,48 @@ class CartListItemState extends State<CartListItem> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 상품명 + 삭제 아이콘
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              productName,
-              style: TextStyle(
+              widget.productName,
+              style: const TextStyle(
                 color: Colors.black,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
             ),
             InkWell(
-              child: Icon(Icons.delete_outlined, color: Color(0xFF7D7D7D)),
-              onTap: () {},
+              onTap: widget.onDelete,
+              child: const Icon(Icons.delete_outlined, color: Color(0xFF7D7D7D)),
             ),
           ],
         ),
-
         const SizedBox(height: 10),
-
-        // 상품 이미지 + 옵션/수량/가격
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          // mainAxisSize: MainAxisSize.max,
           children: [
             // 상품 이미지
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                imageUrl,
+                widget.imageUrl,
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.network('https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg', width: 80, height: 80, fit: BoxFit.cover);
+                },
               ),
             ),
-
             const SizedBox(width: 10),
-
-            // 옵션 + 수량 컨트롤 + 가격
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // 옵션
                   Text(
-                    "옵션",
+                    widget.option,
                     style: TextStyle(
                       color: AppColors.grey,
                       fontWeight: FontWeight.w600,
@@ -107,41 +97,37 @@ class CartListItemState extends State<CartListItem> {
                           width: 100,
                           padding: const EdgeInsets.symmetric(vertical: 6),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xFFD9D9D9)),
+                            border: Border.all(color: const Color(0xFFD9D9D9)),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               InkWell(
-                                child: Icon(Icons.remove, size: 20),
+                                child: const Icon(Icons.remove, size: 20),
                                 onTap: () {
                                   if (productCount > 1) {
-                                    setState(() {
-                                      productCount--;
-                                    });
+                                    setState(() => productCount--);
+                                    // TODO: 수량 변경 API 호출 로직 추가
                                   }
                                 },
                               ),
                               Text("$productCount"),
                               InkWell(
-                                child: Icon(Icons.add, size: 20),
+                                child: const Icon(Icons.add, size: 20),
                                 onTap: () {
-                                  setState(() {
-                                    productCount++;
-                                  });
+                                  setState(() => productCount++);
+                                  // TODO: 수량 변경 API 호출 로직 추가
                                 },
                               ),
                             ],
                           ),
                         ),
-
                         const Spacer(),
-
                         // 가격
                         Text(
-                          "${price * productCount}",
-                          style: TextStyle(
+                          "${widget.price * productCount}",
+                          style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -150,7 +136,6 @@ class CartListItemState extends State<CartListItem> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
                 ],
               ),
             ),

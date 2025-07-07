@@ -9,6 +9,8 @@
     "bottomNavigationBarMyPage" : "마이페이지",
 
     "home_RecommendedProducts": "추천 상품",
+    "home_OngoingFunding": "진행중인 펀딩",
+    "home_BrandList": "브랜드 둘러보기",
 
     "loginTitle": "로그인",
     "loginEmailTitle": "이메일",
@@ -27,6 +29,8 @@
     "productPrice": "총 합산액",
     "cart": "장바구니",
     "order": "주문하기",
+
+    "brandProductEditTitle": "상품 관리",
 
     "categoryOuter": "아우터",
     "categoryOuter_coat": "코트",
@@ -60,5 +64,8 @@
     "categoryGoods_neck": "목걸이",
     "categoryGoods_ear": "귀걸이",
     "categoryGoods_ring": "반지",
-    "categoryGoods_etc": "기타 잡화"
+    "categoryGoods_etc": "기타 잡화",
+
+    "edit": "수정",
+    "more": "더보기"
 }

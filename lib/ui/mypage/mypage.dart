@@ -117,9 +117,7 @@ class MyPage extends StatelessWidget {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {
-                context.push('/orderdetail');
-              },
+              onTap: () {},
             ),
 
             // 위시리스트
@@ -135,9 +133,7 @@ class MyPage extends StatelessWidget {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {
-                context.push('/wish');
-              },
+              onTap: () {},
             ),
 
             // Divider between 위시리스트 and 내 정보

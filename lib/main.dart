@@ -55,6 +55,8 @@ class MainPage extends StatelessWidget {
       bottomNavigationBar: AppBottomNavigationBar(
         selectedIndex: _locationToTabIndex(GoRouterState.of(context).uri.toString()),
         onItemTapped: (index) {
+          final String currentLocation = GoRouterState.of(context).uri.toString();
+
           switch (index) {
             case 0:
               context.go('/');
@@ -66,7 +68,11 @@ class MainPage extends StatelessWidget {
               context.go('/wish');
               break;
             case 3:
-              context.go('/mypage');
+              if(currentLocation.startsWith('/mypage')) {
+                context.go('/mypage/seller');
+              } else {
+                context.go('/mypage');
+              }
               break;
           }
         },

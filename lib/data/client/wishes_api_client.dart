@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:on_woori/config/endpoint/buyer/products_favorites_endpoints.dart';
 
 import '../api_client.dart';
-import '../entity/response/wishes/wish_response.dart';
+import '../entity/response/mypage/wish_response.dart';
 
 class WishesApiClient {
   final Dio _dio;

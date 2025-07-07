@@ -68,17 +68,19 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildLabel('담당자명'),
+              const SizedBox(height: 5,),
               _buildTextFormField(_managerController, validatorText: '담당자명을 입력해주세요'),
 
               const SizedBox(height: 16),
               _buildLabel('전화번호'),
+              const SizedBox(height: 5,),
               _buildTextFormField(
                 _phoneController,
                 keyboardType: TextInputType.phone,
@@ -87,6 +89,7 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
 
               const SizedBox(height: 16),
               _buildLabel('우편번호'),
+              const SizedBox(height: 5,),
               _buildTextFormField(
                 _zipcodeController,
                 keyboardType: TextInputType.number,
@@ -103,13 +106,15 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
 
               const SizedBox(height: 16),
               _buildLabel('주소'),
+              const SizedBox(height: 5,),
               _buildTextFormField(_addressController, validatorText: '주소를 입력해주세요'),
 
               const SizedBox(height: 16),
               _buildLabel('상세주소'),
+              const SizedBox(height: 5,),
               _buildTextFormField(_detailAddressController, validatorText: '상세주소를 입력해주세요'),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -151,7 +156,7 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
           keyboardType: keyboardType,
           style: const TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 20,
+            fontSize: 16,
             color: Colors.black,
           ),
           decoration: InputDecoration(

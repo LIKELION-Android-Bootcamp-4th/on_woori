@@ -58,6 +58,12 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const OrderListPage(),
         ),
         GoRoute(
+          path: '/orderlist',
+          builder: (context, state) {
+            return const OrderListPage();
+          },
+        ),
+        GoRoute(
           path: '/orderdetail',
           builder: (context, state) => const OrderDetailPage(),
         ),

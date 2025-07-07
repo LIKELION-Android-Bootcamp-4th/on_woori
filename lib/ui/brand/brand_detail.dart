@@ -225,15 +225,15 @@ import 'package:on_woori/data/client/fundings_api_client.dart';
     return FutureBuilder(
       future: _fundingFuture,
       builder: (context, snapshot) {
-        final data = snapshot.data?.data?.take(3).toList() ?? [];
+        final data = snapshot.data?.data?.items.take(3).toList() ?? [];
         return Column(
           children: data.map((item) {
             return FundingListItem(
-              imageUrl: item.imageUrl,
+              imageUrl: item.imageUrl ?? '',
               fundingName: item.title,
-              brandName: item.companyId.toString(),
-              description: item?.description ?? "",
-              linkUrl: item.linkUrl,
+              brandName: item.companyId?.name ?? '브랜드 없음',
+              description: item.description ?? item.linkUrl ?? '',
+              linkUrl: item.linkUrl ?? '',
             );
           }).toList(),
         );

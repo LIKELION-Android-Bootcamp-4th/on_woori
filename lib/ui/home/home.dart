@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/data/client/auth_api_client.dart';
 import 'package:on_woori/data/client/fundings_api_client.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
@@ -13,7 +14,6 @@ import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/brand_grid_item.dart';
 import 'package:on_woori/widgets/funding_list_item.dart';
 import 'package:on_woori/widgets/products_double_grid.dart';
-import 'package:on_woori/widgets/products_grid_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,13 +34,12 @@ class _HomePageState extends State<HomePage> {
   Future<(ProductsResponse, FundingsResponse, StoresResponse)> _initializeData() async {
     await _loginAndSaveToken();
 
-    // 각 엔티티의 파싱 성공 여부를 확인하기 위한 순차적 호출
     try {
       final productsResponse = await ProductsApiClient().products();
       print("[파싱 성공] Product 엔티티 변환 완료. (아이템 수: ${productsResponse.data?.items?.length ?? 0})");
 
       final fundingsResponse = await FundingsApiClient().fundings();
-      print("[파싱 성공] Funding 엔티티 변환 완료. (아이템 수: ${fundingsResponse.data?.length ?? 0})");
+      print("[파싱 성공] Funding 엔티티 변환 완료. (아이템 수: ${fundingsResponse.data?.items.length ?? 0})");
 
       final storesResponse = await StoresApiClient().stores();
       print("[파싱 성공] Store 엔티티 변환 완료. (아이템 수: ${storesResponse.data?.length ?? 0})");
@@ -55,9 +54,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-
   Future<void> _loginAndSaveToken() async {
     print("로그인 테스트 시작");
+
     final apiClient = AuthApiClient();
     final storage = const FlutterSecureStorage();
     try {
@@ -70,6 +69,7 @@ class _HomePageState extends State<HomePage> {
       await storage.delete(key: 'ACCESS_TOKEN');
       await storage.write(key: 'ACCESS_TOKEN', value: response.data.accessToken);
       await storage.write(key: 'REFRESH_TOKEN', value: response.data.refreshToken);
+      print(await storage.read(key: 'ACCESS_TOKEN'));
     } catch (e, s) {
       print('로그인 실패: $e');
       print(s);
@@ -100,9 +100,9 @@ class _HomePageState extends State<HomePage> {
             return const Center(child: Text('데이터가 없습니다.'));
           }
 
-          final productItems = snapshot.data?.$1.data?.items ?? [];
-          final fundingItems = snapshot.data?.$2.data;
-          final storeItems = snapshot.data?.$3.data ?? [];
+          final productItems = (snapshot.data?.$1.data?.items ?? []).take(4).toList();
+          final fundingItems = (snapshot.data?.$2.data?.items ?? []).take(3).toList();
+          final storeItems = (snapshot.data?.$3.data ?? []).take(8).toList();
 
           return SingleChildScrollView(
             child: Column(
@@ -110,38 +110,44 @@ class _HomePageState extends State<HomePage> {
               children: [
                 AspectRatio(
                   aspectRatio: 2.5 / 1,
-                  child: Container(color: Colors.grey[300], child: const Center(child: Text('배너'))),
+                  child:
+
+                  TextButton(
+                      onPressed: () { context.push('/auth/login'); },
+                      child: const Center(child: Text('배너')
+                      )),
                 ),
+
                 const SizedBox(height: 24),
 
                 _buildSectionHeader(title: l10n.home_RecommendedProducts),
                 const SizedBox(height: 12),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: ProductsNonScrollableGrid(productItems.take(4).toList())
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: ProductsNonScrollableGrid(productItems.take(4).toList())
                 ),
                 const SizedBox(height: 32),
 
                 const SizedBox(height: 32),
-                _buildSectionHeader(title: "진행중인 펀딩"),
+                _buildSectionHeaderAndMore(title: l10n.home_OngoingFunding),
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: fundingItems?.length,
+                  itemCount: fundingItems.length,
                   itemBuilder: (context, index) {
-                    final item = fundingItems?[index];
+                    final item = fundingItems[index];
                     return FundingListItem(
-                      imageUrl: item!.imageUrl,
+                      imageUrl: item.imageUrl ?? 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg',
                       fundingName: item.title,
                       brandName: item.companyId?.name ?? '브랜드 없음',
-                      description: item.description ?? item.linkUrl,
-                      linkUrl: item.linkUrl,
+                      description: item.description ?? item.linkUrl ?? '',
+                      linkUrl: item.linkUrl ?? '',
                     );
                   },
                 ),
                 const SizedBox(height: 32),
 
-                _buildSectionHeader(title: "브랜드 둘러보기"),
+                _buildSectionHeaderAndMore(title: l10n.home_BrandList),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
@@ -189,6 +195,36 @@ class _HomePageState extends State<HomePage> {
           Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         ],
       ),
+    );
+  }
+
+  Widget _buildSectionHeaderAndMore({required String title}) {
+
+    return Padding(padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Spacer(),
+          TextButton(
+            onPressed: (){},
+            child: Text(
+              "더보기",
+              style: TextStyle(
+                  fontSize: 16,
+                  color: AppColors.grey,
+                  decoration: TextDecoration.underline
+              ),
+            ),
+          ),
+        ],
+      )
     );
   }
 }

@@ -1,7 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
-import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 import 'package:on_woori/widgets/dropdown.dart';
 
@@ -13,21 +13,154 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _zipcodeController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _detailAddressController = TextEditingController();
+
   String _selectedGender = '여성';
+  File? _profileImageFile;
+  String? _profileImageUrl;
+
+  bool _isPickingImage = false;
 
   @override
   void initState() {
     super.initState();
-    _nicknameController.text = '멋쟁이 사자';
-    _nameController.text = '안현진';
+    _fetchProfile();
+  }
+
+  @override
+  void dispose() {
+    _nicknameController.dispose();
+    _nameController.dispose();
+    _phoneController.dispose();
+    _zipcodeController.dispose();
+    _addressController.dispose();
+    _detailAddressController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchProfile() async {
+    // TODO: 서버에서 사용자 프로필 조회 후 데이터 세팅
+    setState(() {
+      _nicknameController.text = '사용자닉네임';
+      _nameController.text = '홍길동';
+      _phoneController.text = '010-1234-5678';
+      _zipcodeController.text = '12345';
+      _addressController.text = '서울시 강남구 테헤란로';
+      _detailAddressController.text = '123번길 45';
+      _profileImageUrl = null;
+    });
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('에러'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('확인'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _pickImage() async {
+    if (_isPickingImage) {
+      print('이미 이미지 선택 중입니다.');
+      return;
+    }
+
+    setState(() {
+      _isPickingImage = true;
+    });
+
+    final ImagePicker picker = ImagePicker();
+
+    await showModalBottomSheet(
+      context: context,
+      isDismissible: true,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('카메라로 촬영'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? picked = await picker.pickImage(
+                    source: ImageSource.camera,
+                    imageQuality: 85,
+                  );
+                  if (!mounted) return;
+                  setState(() {
+                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageUrl = picked != null ? null : _profileImageUrl;
+                    _isPickingImage = false;
+                  });
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('갤러리에서 선택'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? picked = await picker.pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: 85,
+                  );
+                  if (!mounted) return;
+                  setState(() {
+                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageUrl = picked != null ? null : _profileImageUrl;
+                    _isPickingImage = false;
+                  });
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    ).whenComplete(() {
+      // BottomSheet 닫힐 때 플래그 해제
+      if (mounted) {
+        setState(() {
+          _isPickingImage = false;
+        });
+      }
+    });
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    // TODO: 서버로 수정 내용 전송
+    print('저장할 닉네임: ${_nicknameController.text}');
+    print('저장할 이름: ${_nameController.text}');
+    print('저장할 전화번호: ${_phoneController.text}');
+    print('저장할 우편번호: ${_zipcodeController.text}');
+    print('저장할 주소: ${_addressController.text}');
+    print('저장할 상세주소: ${_detailAddressController.text}');
+    print('선택된 성별: $_selectedGender');
+    print('프로필 이미지 파일: $_profileImageFile');
+
+    if (!mounted) return;
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -43,38 +176,111 @@ class _EditProfilePageState extends State<EditProfilePage> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildLabel('닉네임'),
-            _buildTextField(_nicknameController),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 48,
+                      backgroundColor: AppColors.categoryContainer,
+                      backgroundImage: _profileImageFile != null
+                          ? FileImage(_profileImageFile!)
+                          : (_profileImageUrl != null
+                          ? NetworkImage(_profileImageUrl!)
+                          : null) as ImageProvider?,
+                      child: (_profileImageFile == null && _profileImageUrl == null)
+                          ? const Icon(Icons.person, size: 48, color: AppColors.grey)
+                          : null,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: InkWell(
+                        onTap: _pickImage,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.primarySub,
+                            shape: BoxShape.circle,
+                          ),
+                          padding: const EdgeInsets.all(6),
+                          child: const Icon(Icons.add, size: 20, color: Colors.white),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              _buildLabel('닉네임'),
+              _buildTextFormField(_nicknameController, validatorText: '닉네임을 입력해주세요'),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
+              _buildLabel('성함'),
+              _buildTextFormField(_nameController, validatorText: '성함을 입력해주세요'),
 
-            _buildLabel('성함'),
-            _buildTextField(_nameController),
+              const SizedBox(height: 16),
+              _buildLabel('성별'),
+              const SizedBox(height: 8),
+              CustomDropdown(
+                selectedValue: _selectedGender,
+                items: ['여성', '남성', '선택하지않음'],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedGender = value!;
+                  });
+                },
+              ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
+              _buildLabel('전화번호'),
+              _buildTextFormField(
+                _phoneController,
+                keyboardType: TextInputType.phone,
+                validatorText: '전화번호를 입력해주세요',
+              ),
 
-            _buildLabel('성별'),
-            const SizedBox(height: 6),
-            CustomDropdown(
-              selectedValue: _selectedGender,
-              items: ['여성', '남성', '선택하지않음'],
-              onChanged: (value) {
-                setState(() {
-                  _selectedGender = value!;
-                });
-              },
-            ),
+              const SizedBox(height: 16),
+              _buildLabel('우편번호'),
+              _buildTextFormField(
+                _zipcodeController,
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return '우편번호를 입력해주세요';
+                  }
+                  if (!RegExp(r'^\d{5}$').hasMatch(value)) {
+                    return '우편번호는 5자리 숫자로 입력해주세요';
+                  }
+                  return null;
+                },
+              ),
 
-            const Spacer(),
+              const SizedBox(height: 16),
+              _buildLabel('주소'),
+              _buildTextFormField(_addressController, validatorText: '주소를 입력해주세요'),
 
-            BottomButton(buttonText: '저장', pressedFunc: (){}),
-            // TODO: 저장 후 마이페이지로 이동하도록 구현
-          ],
+              const SizedBox(height: 16),
+              _buildLabel('상세주소'),
+              _buildTextFormField(_detailAddressController, validatorText: '상세주소를 입력해주세요'),
+
+              const SizedBox(height: 32),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: BottomButton(
+            buttonText: '저장',
+            pressedFunc: _submit,
+          ),
         ),
       ),
     );
@@ -91,24 +297,46 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller) {
+  Widget _buildTextFormField(
+      TextEditingController controller, {
+        TextInputType keyboardType = TextInputType.text,
+        String? validatorText,
+        String? Function(String?)? validator,
+      }) {
     return Column(
       children: [
         const SizedBox(height: 4),
-        TextField(
+        TextFormField(
           controller: controller,
+          keyboardType: keyboardType,
           style: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 20,
             color: Colors.black,
           ),
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             isDense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.DividerTextBoxLineDivider),
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
             ),
           ),
+          validator: validator ??
+                  (value) {
+                if (value == null || value.isEmpty) {
+                  return validatorText ?? '내용을 입력해주세요';
+                }
+                return null;
+              },
         ),
       ],
     );

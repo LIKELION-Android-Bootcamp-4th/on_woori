@@ -54,7 +54,7 @@ class UserRoleSelectionPage extends StatelessWidget {
                     ),
                   ),
                   onTap: (){
-                    context.go('/auth/signup/common');
+                    context.push('/auth/signup/common');
                   },
                 ),
                 SizedBox(width: 20,),
@@ -81,7 +81,7 @@ class UserRoleSelectionPage extends StatelessWidget {
                     ),
                   ),
                   onTap: (){
-                    context.go('/auth/signup/seller');
+                    context.push('/auth/signup/seller');
                   },
                 ),
               ],

@@ -69,7 +69,7 @@ class _MyPageState extends State<MyPage> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -143,18 +143,18 @@ class _MyPageState extends State<MyPage> {
               ],
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
             const Text(
               '쇼핑',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
-                fontSize: 13,
+                fontSize: 16,
                 color: AppColors.grey,
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
 
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -162,12 +162,12 @@ class _MyPageState extends State<MyPage> {
               title: const Text(
                 '주문 내역',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),
-              trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
               onTap: () {
                 context.push('/orderlist');
               },
@@ -179,31 +179,35 @@ class _MyPageState extends State<MyPage> {
               title: const Text(
                 '위시리스트',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),
-              trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {},
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+              onTap: () {
+                context.push('/wish');
+              },
             ),
 
             const Divider(
               color: AppColors.DividerTextBoxLineDivider,
               thickness: 1,
-              height: 16,
+              height: 20,
             ),
 
+            // 내 정보 섹션 라벨
+            const SizedBox(height: 10,),
             const Text(
               '내 정보',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
-                fontSize: 13,
+                fontSize: 16,
                 color: AppColors.grey,
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
 
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -211,19 +215,21 @@ class _MyPageState extends State<MyPage> {
               title: const Text(
                 '비밀번호 변경',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),
-              trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {},
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+              onTap: () {
+                context.push('/mypage/password');
+              },
             ),
 
             const Divider(
               color: AppColors.DividerTextBoxLineDivider,
               thickness: 1,
-              height: 16,
+              height: 20,
             ),
           ],
         ),

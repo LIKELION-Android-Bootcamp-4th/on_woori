@@ -8,7 +8,7 @@ class ListToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(24, 0, 24, 15),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

@@ -18,7 +18,7 @@ class ProductsListPage extends StatelessWidget {
           centerTitle: true,
           title: Text(
             categoryId ?? l10n!.appTitle,
-            style: TextStyle(
+            style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 24),
           ),
@@ -27,11 +27,14 @@ class ProductsListPage extends StatelessWidget {
                 onPressed: (){
                   context.push('/wish/cart');
                 },
-                icon: Icon(Icons.shopping_bag_outlined)
+                icon: const Icon(Icons.shopping_bag_outlined)
             )
           ],
         ),
-        body: ProductsListScreen()
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          child: ProductsListScreen(),
+        )
     );
   }
 }
@@ -60,13 +63,7 @@ class ProductsListScreen extends StatelessWidget {
         }
 
         final data = snapshot.data?.data?.items ?? [];
-        return Row(
-          children: [
-            SizedBox(width: 24,),
-            Expanded(child: ProductsDoubleGrid(data),),
-            SizedBox(width: 24,)
-          ],
-        );
+        return ProductsDoubleGrid(data);
       },
     );
   }

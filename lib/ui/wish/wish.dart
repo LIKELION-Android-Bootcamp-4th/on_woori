@@ -81,19 +81,25 @@ class WishPageState extends State<WishPage> {
             );
           }).toList();
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CategoryHorizontalScroll(),
-              ListToolbar(productList.length),
-              Expanded(
-                child: productList.isEmpty
-                    ? const Center(child: Text('위시리스트에 추가된 상품이 없습니다.'))
-                    : ProductsDoubleGrid(
-                  productList,
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CategoryHorizontalScroll(),
+                ListToolbar(productList.length),
+                Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: productList.isEmpty
+                          ? const Center(child: Text('위시리스트에 추가된 상품이 없습니다.'))
+                          : ProductsDoubleGrid(
+                        productList,
+                      ),
+                    )
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),

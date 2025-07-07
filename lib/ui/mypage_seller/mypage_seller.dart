@@ -25,7 +25,7 @@ class SellerMyPage extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -46,7 +46,7 @@ class SellerMyPage extends StatelessWidget {
                       ),
                       child: const Icon(Icons.person, color: Colors.pink),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -98,19 +98,19 @@ class SellerMyPage extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
             // 주문 섹션 라벨
             const Text(
               '주문',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
-                fontSize: 13,
+                fontSize: 16,
                 color: AppColors.grey,
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
 
             // 주문 내역
             ListTile(
@@ -119,12 +119,12 @@ class SellerMyPage extends StatelessWidget {
               title: const Text(
                 '주문 내역',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),
-              trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
               onTap: () {},
             ),
 
@@ -132,20 +132,21 @@ class SellerMyPage extends StatelessWidget {
             const Divider(
               color: AppColors.DividerTextBoxLineDivider,
               thickness: 1,
-              height: 16,
+              height: 20,
             ),
 
             // 마이페이지 섹션 라벨
+            const SizedBox(height: 10,),
             const Text(
               '마이페이지',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
-                fontSize: 13,
+                fontSize: 16,
                 color: AppColors.grey,
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
 
             // 프로필 수정
             ListTile(
@@ -154,12 +155,12 @@ class SellerMyPage extends StatelessWidget {
               title: const Text(
                 '프로필 수정',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),
-              trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
               onTap: () {
                 context.go('/mypage/edit-seller');
               },
@@ -172,12 +173,12 @@ class SellerMyPage extends StatelessWidget {
               title: const Text(
                 '비밀번호 변경',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),
-              trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
               onTap: () {
                 context.go('/mypage/password');
               },
@@ -190,12 +191,12 @@ class SellerMyPage extends StatelessWidget {
               title: const Text(
                 '상품 등록',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),
-              trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
               onTap: () {
                 context.go('/mypage/register');
               },
@@ -208,12 +209,12 @@ class SellerMyPage extends StatelessWidget {
               title: const Text(
                 '펀딩 등록',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),
-              trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
               onTap: () {
                 context.push('/funding/register');
               },
@@ -227,12 +228,12 @@ class SellerMyPage extends StatelessWidget {
               title: const Text(
                 '등록 상품 / 펀딩 관리',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
               ),
-              trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
               onTap: () {
                 context.push('/brand/editproduct');
               },

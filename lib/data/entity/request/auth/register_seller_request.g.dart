@@ -28,12 +28,10 @@ StoreRequestData _$StoreRequestDataFromJson(Map<String, dynamic> json) =>
     StoreRequestData(
       name: json['name'] as String,
       description: json['description'] as String,
-      category: json['category'] as String,
     );
 
 Map<String, dynamic> _$StoreRequestDataToJson(StoreRequestData instance) =>
     <String, dynamic>{
       'name': instance.name,
       'description': instance.description,
-      'category': instance.category,
     };

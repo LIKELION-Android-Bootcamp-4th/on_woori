@@ -26,12 +26,10 @@ class RegisterSellerRequest {
 class StoreRequestData {
   final String name;
   final String description;
-  final String category;
 
   const StoreRequestData({
     required this.name,
     required this.description,
-    required this.category,
   });
 
   factory StoreRequestData.fromJson(Map<String, dynamic> json) =>

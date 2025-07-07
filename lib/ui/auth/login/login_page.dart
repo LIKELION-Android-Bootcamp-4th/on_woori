@@ -1,9 +1,15 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/data/client/auth_api_client.dart';
+import 'package:on_woori/data/entity/request/auth/login_request.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 import 'package:on_woori/widgets/login_textfield.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../../data/entity/response/auth/login_response.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,15 +17,57 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageStatus extends State<LoginPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final apiClient = AuthApiClient();
+
+  void _submit() async {
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    try {
+      final response = await apiClient.authLogin(
+        request: LoginRequest(email: email, password: password),
+      );
+
+      if (response.success) {
+        Fluttertoast.showToast(msg: "로그인 되었습니다.");
+        context.go('/');
+      }
+    } on DioException catch (e) {
+      final statusCode = e.response?.statusCode;
+
+      switch (statusCode) {
+        case 400:
+          Fluttertoast.showToast(msg: "요청이 잘못되었습니다.");
+          break;
+        case 401:
+          Fluttertoast.showToast(msg: "이메일 또는 비밀번호가 일치하지 않습니다.");
+          break;
+        case 403:
+          Fluttertoast.showToast(msg: "계정이 비활성화되었거나 인증되지 않았습니다.");
+          break;
+        default:
+          Fluttertoast.showToast(msg: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+          break;
+      }
+
+      print("[LOGIN ERROR] ${e.message} / $statusCode");
+    } catch (e) {
+      Fluttertoast.showToast(msg: "예상치 못한 오류가 발생했습니다.");
+      print("[UNEXPECTED ERROR] ${e.toString()}");
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height * 0.6,
+            minHeight: MediaQuery.of(context).size.height * 0.9,
           ),
           child: IntrinsicHeight(
             child: Column(
@@ -49,23 +97,31 @@ class LoginPageStatus extends State<LoginPage> {
                         ),
                         SizedBox(height: 40),
                         LoginTextField(
+                          controller: emailController,
                           labelText: l10n.loginEmailTitle,
                           hintText: l10n.loginEmailInputHint,
                           inputType: TextInputType.emailAddress,
                         ),
                         SizedBox(height: 15),
                         LoginTextField(
+                          controller: passwordController,
                           labelText: l10n.loginPasswordTitle,
                           hintText: l10n.loginPasswordInputHint,
                           inputType: TextInputType.visiblePassword,
                           isPassword: true,
                         ),
-                        BottomButton(buttonText: l10n.loginTitle, pressedFunc: (){}),
+                        BottomButton(
+                          buttonText: l10n.loginTitle,
+                          pressedFunc: _submit,
+                        ),
                         SizedBox(height: 15),
                         Row(
                           children: [
                             Spacer(),
-                            Text("온우리가 처음이신가요?  ", style: TextStyle(color: AppColors.grey),),
+                            Text(
+                              "온우리가 처음이신가요?  ",
+                              style: TextStyle(color: AppColors.grey),
+                            ),
                             InkWell(
                               child: Text(
                                 l10n.signInTitle,
@@ -81,6 +137,7 @@ class LoginPageStatus extends State<LoginPage> {
                             ),
                           ],
                         ),
+                        SizedBox(height: 50,)
                       ],
                     ),
                   ),

@@ -1,19 +1,19 @@
 import 'package:go_router/go_router.dart';
 
 import 'package:on_woori/main.dart';
-import 'package:on_woori/ui/brand/brand_product_edit.dart';
-import 'package:on_woori/ui/brand/brand_detail.dart';
 import 'package:on_woori/ui/auth/signup/common_signup_page.dart';
 import 'package:on_woori/ui/auth/signup/completed_signup_page.dart';
 import 'package:on_woori/ui/auth/signup/seller_signup_page.dart';
 import 'package:on_woori/ui/auth/signup/user_role_selection_page.dart';
+import 'package:on_woori/ui/brand/brand_detail.dart';
+import 'package:on_woori/ui/brand/brand_product_edit.dart';
 import 'package:on_woori/ui/cart/cart.dart';
 import 'package:on_woori/ui/category/category.dart';
 import 'package:on_woori/ui/home/home.dart';
 import 'package:on_woori/ui/mypage/mypage.dart';
+import 'package:on_woori/ui/mypage_seller/mypage_seller.dart';
 import 'package:on_woori/ui/order/order_detail_page.dart';
 import 'package:on_woori/ui/order/order_list.dart';
-import 'package:on_woori/ui/mypage_seller/mypage_seller.dart';
 import 'package:on_woori/ui/products/products_detail.dart';
 import 'package:on_woori/ui/products/products_list.dart';
 import 'package:on_woori/ui/wish/wish.dart';
@@ -58,8 +58,11 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const OrderListPage(),
         ),
         GoRoute(
-          path: '/orderdetail',
-          builder: (context, state) => const OrderDetailPage(),
+          path: '/orderdetail/:orderId',
+          builder: (context, state) {
+            final String orderId = state.pathParameters['orderId'] ?? "";
+            return OrderDetailPage(orderId);
+          },
         ),
         GoRoute(
           path: '/auth/login',
@@ -71,7 +74,12 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/auth/signup/common',
-          builder: (context, state) => CommonSignupPage(),
+          builder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?;
+            return CommonSignupPage(
+              store: extra?['store'],
+            );
+          },
         ),
         GoRoute(
           path: '/auth/signup/seller',

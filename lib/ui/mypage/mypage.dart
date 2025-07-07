@@ -58,15 +58,13 @@ class _MyPageState extends State<MyPage> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          l10n.bottomNavigationBarMyPage,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-        ),
+          l10n.bottomNavigationBarMyPage, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
         actions: [
           IconButton(
             onPressed: () {
               context.push('/wish/cart');
             },
-            icon: const Icon(Icons.shopping_bag_outlined),
+            icon: Icon(Icons.shopping_bag_outlined),
           ),
         ],
       ),
@@ -124,14 +122,14 @@ class _MyPageState extends State<MyPage> {
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.zero,
                       side: const BorderSide(
                         color: AppColors.grey,
                       ),
                     ),
                   ),
                   onPressed: () {
-                    context.push('/mypage/edit');
+                    // TODO: 프로필 수정 이동
                   },
                   child: const Text(
                     '프로필 수정',
@@ -187,9 +185,7 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {
-                context.push('/wish');
-              },
+              onTap: () {},
             ),
 
             const Divider(
@@ -221,9 +217,7 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
               trailing: const Icon(Icons.chevron_right, size: 16, color: Colors.black),
-              onTap: () {
-                context.push('/mypage/password');
-              },
+              onTap: () {},
             ),
 
             const Divider(

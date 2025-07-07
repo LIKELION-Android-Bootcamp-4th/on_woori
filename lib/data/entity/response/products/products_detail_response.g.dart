@@ -14,6 +14,9 @@ ProductsDetailResponse _$ProductsDetailResponseFromJson(
   data: json['data'] == null
       ? null
       : ProductItem.fromJson(json['data'] as Map<String, dynamic>),
+  timestamp: json['timestamp'] == null
+      ? null
+      : DateTime.parse(json['timestamp'] as String),
 );
 
 Map<String, dynamic> _$ProductsDetailResponseToJson(
@@ -22,4 +25,5 @@ Map<String, dynamic> _$ProductsDetailResponseToJson(
   'success': instance.success,
   'message': instance.message,
   'data': instance.data?.toJson(),
+  'timestamp': instance.timestamp?.toIso8601String(),
 };

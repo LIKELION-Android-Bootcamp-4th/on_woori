@@ -1,22 +1,22 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'fundings_response.g.dart';
+part 'seller_funding_response.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class FundingsResponse {
+class SellerFundingResponse {
   final bool success;
   final String message;
   final FundingData? data;
 
-  const FundingsResponse({
+  const SellerFundingResponse({
     required this.success,
     required this.message,
     this.data,
   });
 
-  factory FundingsResponse.fromJson(Map<String, dynamic> json) =>
-      _$FundingsResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$FundingsResponseToJson(this);
+  factory SellerFundingResponse.fromJson(Map<String, dynamic> json) =>
+      _$SellerFundingResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$SellerFundingResponseToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -28,64 +28,82 @@ class FundingData {
     required this.items,
     required this.pagination,
   });
-
   factory FundingData.fromJson(Map<String, dynamic> json) =>
       _$FundingDataFromJson(json);
   Map<String, dynamic> toJson() => _$FundingDataToJson(this);
 }
-
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable()
 class SellerFundingItem {
   @JsonKey(name: 'id')
   final String id;
+
   final String title;
   final String? imageUrl;
   final String? linkUrl;
-  final String? description;
   final CompanyId? companyId;
+
+  @JsonKey(fromJson: _toInt)
+  final int? targetAmount;
+
+  @JsonKey(fromJson: _toInt)
+  final int? currentAmount;
+
+  @JsonKey(fromJson: _parseDate)
+  final DateTime? endDate;
+
+  @JsonKey(fromJson: _parseDate)
   final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final Map<String, dynamic>? images; // images 필드 추가
 
   const SellerFundingItem({
     required this.id,
     required this.title,
     this.imageUrl,
     this.linkUrl,
-    this.description,
     this.companyId,
+    this.targetAmount,
+    this.currentAmount,
+    this.endDate,
     this.createdAt,
-    this.updatedAt,
-    this.images,
   });
 
   factory SellerFundingItem.fromJson(Map<String, dynamic> json) =>
       _$SellerFundingItemFromJson(json);
+
   Map<String, dynamic> toJson() => _$SellerFundingItemToJson(this);
+
+  // 🔧 커스텀 파서들
+  static int? _toInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is String) return int.tryParse(value);
+    return null;
+  }
+
+  static DateTime? _parseDate(dynamic value) {
+    if (value == null) return null;
+    if (value is String) return DateTime.tryParse(value);
+    return null;
+  }
 }
 
 @JsonSerializable()
 class CompanyId {
-  @JsonKey(name: 'id')
-  final String id;
   final String name;
 
-  const CompanyId({
-    required this.id,
-    required this.name,
-  });
+  const CompanyId({required this.name});
 
   factory CompanyId.fromJson(Map<String, dynamic> json) =>
       _$CompanyIdFromJson(json);
+
   Map<String, dynamic> toJson() => _$CompanyIdToJson(this);
 }
+
 
 @JsonSerializable()
 class Pagination {
   final int currentPage;
   final int totalPages;
   final int totalItems;
-  final int itemsPerPage;
   final bool hasNext;
   final bool hasPrev;
 
@@ -93,11 +111,9 @@ class Pagination {
     required this.currentPage,
     required this.totalPages,
     required this.totalItems,
-    required this.itemsPerPage,
     required this.hasNext,
     required this.hasPrev,
   });
-
   factory Pagination.fromJson(Map<String, dynamic> json) =>
       _$PaginationFromJson(json);
   Map<String, dynamic> toJson() => _$PaginationToJson(this);

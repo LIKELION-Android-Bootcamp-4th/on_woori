@@ -21,7 +21,7 @@ class BuyerProfileResponse {
 
 @JsonSerializable(explicitToJson: true)
 class BuyerProfileData {
-  @JsonKey(name: "_id")
+  @JsonKey(name: "id")
   final String id;
   final String name;
   final String email;

@@ -48,7 +48,7 @@ class CategoryScreenState extends State<CategoryScreen> { //세부카테고리
 
   @override
   Widget build(BuildContext context) {
-    
+
     final li0n = AppLocalizations.of(context);
     List<Widget> screenItem = [];
     screenItem.add(CategoryListSection(setIndex));
@@ -106,7 +106,7 @@ class CategoryScreenState extends State<CategoryScreen> { //세부카테고리
       }
     }
     screenItem.add(SizedBox(width: 24,)); //padding
-    
+
     return SafeArea(
       child: Row(
         children: screenItem,
@@ -131,7 +131,7 @@ class CategoryListSectionState extends State<CategoryListSection> {
   Function(int) onCategorySelected; //부모에게서 함수 받아 실행시킴으로서 update
 
   CategoryListSectionState(this.onCategorySelected);
-  
+
   @override
   Widget build(BuildContext context) {
     final li0n = AppLocalizations.of(context);
@@ -222,7 +222,7 @@ class CategoryDetailSection extends StatelessWidget { //카테고리 버튼 모�
             )
           ),
           onPressed: () {
-            context.push("/productslist/${_itemList[index]}");
+            context.push("/productlist?category=products&q=${_itemList[index]}");
           },
           child: SizedBox(
             height: 32,

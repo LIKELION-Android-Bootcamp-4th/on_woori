@@ -24,7 +24,7 @@ Map<String, dynamic> _$BuyerProfileResponseToJson(
 
 BuyerProfileData _$BuyerProfileDataFromJson(Map<String, dynamic> json) =>
     BuyerProfileData(
-      id: json['_id'] as String,
+      id: json['id'] as String,
       name: json['name'] as String,
       email: json['email'] as String,
       nickName: json['nickName'] as String,
@@ -35,7 +35,7 @@ BuyerProfileData _$BuyerProfileDataFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$BuyerProfileDataToJson(BuyerProfileData instance) =>
     <String, dynamic>{
-      '_id': instance.id,
+      'id': instance.id,
       'name': instance.name,
       'email': instance.email,
       'nickName': instance.nickName,

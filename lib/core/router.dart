@@ -104,8 +104,9 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/productslist/:categoryId',
           builder: (context, state) {
-            final String categoryId = state.pathParameters['categoryId'] ?? "";
-            return ProductsListPage(categoryId: categoryId);
+            final String categoryId = state.uri.queryParameters['category'] ?? '';
+            final String query = state.uri.queryParameters['q'] ?? '';
+            return ProductsListPage(category: categoryId, query: query);
           },
         ),
         GoRoute(

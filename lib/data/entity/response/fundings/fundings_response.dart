@@ -60,8 +60,8 @@ class SellerFundingItem {
   });
 
   factory SellerFundingItem.fromJson(Map<String, dynamic> json) =>
-      _$FundingsItemFromJson(json);
-  Map<String, dynamic> toJson() => _$FundingsItemToJson(this);
+      _$SellerFundingItemFromJson(json);
+  Map<String, dynamic> toJson() => _$SellerFundingItemToJson(this);
 }
 
 @JsonSerializable()

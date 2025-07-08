@@ -35,25 +35,26 @@ Map<String, dynamic> _$FundingDataToJson(FundingData instance) =>
       'pagination': instance.pagination.toJson(),
     };
 
-SellerFundingItem _$FundingsItemFromJson(Map<String, dynamic> json) => SellerFundingItem(
-  id: json['id'] as String,
-  title: json['title'] as String,
-  imageUrl: json['imageUrl'] as String?,
-  linkUrl: json['linkUrl'] as String?,
-  description: json['description'] as String?,
-  companyId: json['companyId'] == null
-      ? null
-      : CompanyId.fromJson(json['companyId'] as Map<String, dynamic>),
-  createdAt: json['createdAt'] == null
-      ? null
-      : DateTime.parse(json['createdAt'] as String),
-  updatedAt: json['updatedAt'] == null
-      ? null
-      : DateTime.parse(json['updatedAt'] as String),
-  images: json['images'] as Map<String, dynamic>?,
-);
+SellerFundingItem _$SellerFundingItemFromJson(Map<String, dynamic> json) =>
+    SellerFundingItem(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      imageUrl: json['imageUrl'] as String?,
+      linkUrl: json['linkUrl'] as String?,
+      description: json['description'] as String?,
+      companyId: json['companyId'] == null
+          ? null
+          : CompanyId.fromJson(json['companyId'] as Map<String, dynamic>),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
+      images: json['images'] as Map<String, dynamic>?,
+    );
 
-Map<String, dynamic> _$FundingsItemToJson(SellerFundingItem instance) =>
+Map<String, dynamic> _$SellerFundingItemToJson(SellerFundingItem instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,

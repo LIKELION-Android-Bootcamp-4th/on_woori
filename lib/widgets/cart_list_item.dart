@@ -56,7 +56,7 @@ class CartListItemState extends State<CartListItem> {
             ),
           ],
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -136,6 +136,7 @@ class CartListItemState extends State<CartListItem> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 10,)
                 ],
               ),
             ),

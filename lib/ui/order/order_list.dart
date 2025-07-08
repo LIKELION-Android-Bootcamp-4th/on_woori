@@ -66,14 +66,21 @@ class _OrderListPageState extends State<OrderListPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                padding: const EdgeInsets.symmetric(horizontal:24),
                 child: Text(
                   '총 주문 내역 ${ordersData.orders.length}개',
                   style: const TextStyle(fontSize: 14, color: Colors.grey),
                 ),
               ),
+              SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:24),
+                child: Divider(color: Colors.black, height: 1.0)
+              ),
+
               Expanded(
                 child: ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
                   itemCount: ordersData.orders.length,
                   itemBuilder: (context, index) {
                     final order = ordersData.orders[index];

@@ -77,7 +77,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -165,7 +165,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
       title,
       style: const TextStyle(
         fontWeight: FontWeight.w600,
-        fontSize: 16,
+        fontSize: 20,
         color: Colors.black,
       ),
     );

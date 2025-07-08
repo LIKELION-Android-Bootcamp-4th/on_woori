@@ -52,7 +52,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
         apiClient.authRegisterSeller(request: request);
         Fluttertoast.showToast(msg: "판매자 회원가입이 완료되었습니다.");
       }
-      context.go('/auth/signup/completed');
+      context.push('/auth/signup/completed');
     }
   }
 
@@ -151,7 +151,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
                           ),
                         ),
 
-                        SizedBox(width: 5),
+                        SizedBox(width: 10),
                         SizedBox(
                           height: 60,
                           width: 60,

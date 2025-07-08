@@ -21,7 +21,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
     if (_formKey.currentState!.validate()) {
       // 모든 유효성 통과
       StoreRequestData store = StoreRequestData(name: nameController.text, description: introController.text);
-      context.go('/auth/signup/common', extra: {
+      context.push('/auth/signup/common', extra: {
         'store': store
       });
     }

@@ -90,7 +90,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -127,7 +127,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
       title,
       style: const TextStyle(
         fontWeight: FontWeight.w600,
-        fontSize: 16,
+        fontSize: 20,
         color: Colors.black,
       ),
     );

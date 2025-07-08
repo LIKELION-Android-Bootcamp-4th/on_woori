@@ -95,7 +95,7 @@ class LoginPageStatus extends State<LoginPage> {
                             fontSize: 24,
                           ),
                         ),
-                        SizedBox(height: 40),
+                        SizedBox(height: 20),
                         LoginTextField(
                           controller: emailController,
                           labelText: l10n.loginEmailTitle,
@@ -110,11 +110,11 @@ class LoginPageStatus extends State<LoginPage> {
                           inputType: TextInputType.visiblePassword,
                           isPassword: true,
                         ),
+                        SizedBox(height: 15,),
                         BottomButton(
                           buttonText: l10n.loginTitle,
                           pressedFunc: _submit,
                         ),
-                        SizedBox(height: 15),
                         Row(
                           children: [
                             Spacer(),

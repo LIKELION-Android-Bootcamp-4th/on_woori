@@ -51,7 +51,7 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/mypage/seller',
-          builder: (context, state) => const SellerMyPage(),
+          builder: (context, state) => SellerMyPage(),
         ),
         GoRoute(
           path: '/orderlist',
@@ -90,18 +90,22 @@ final GoRouter router = GoRouter(
           builder: (context, state) => CompletedSignupPage(),
         ),
         GoRoute(
-          path: '/mypage/edit',
-          builder: (context, state) => const EditProfilePage(),
-        ),
-        GoRoute(
           path: '/mypage/edit-seller',
           builder: (context, state) => const EditProfileSellerPage(),
         ),
         GoRoute(
+          path: '/mypage/edit-buyer/:nickName',
+          builder: (context, state) {
+            final String nickName = state.pathParameters['nickName'] ?? '';
+            return EditProfilePage(nickName: nickName);
+          }
+        ),
+        GoRoute(
           path: '/productslist/:categoryId',
           builder: (context, state) {
-            final String categoryId = state.pathParameters['categoryId'] ?? "";
-            return ProductsListPage(categoryId: categoryId);
+            final String categoryId = state.uri.queryParameters['category'] ?? '';
+            final String query = state.uri.queryParameters['q'] ?? '';
+            return ProductsListPage(category: categoryId, query: query);
           },
         ),
         GoRoute(

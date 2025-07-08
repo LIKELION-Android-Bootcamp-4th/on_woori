@@ -27,6 +27,7 @@ class FundingListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: EdgeInsets.symmetric(horizontal: 0),
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(8.0),
         child: SizedBox(
@@ -84,8 +85,6 @@ class FundingListItem extends StatelessWidget {
           ),
         ],
       ),
-      contentPadding:
-      const EdgeInsets.symmetric(horizontal: 24, vertical: 12.0),
       onTap: () {
         if (linkUrl.isNotEmpty) {
           _launchURL(linkUrl);

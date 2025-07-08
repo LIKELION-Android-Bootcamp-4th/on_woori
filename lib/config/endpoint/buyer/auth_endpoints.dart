@@ -1,7 +1,7 @@
 // 인증 API 엔드포인트
 abstract class AuthEndpoints {
   // 로그인(전체)
-  static String postAuthLogin = '/api/auth/login';
+  static String postAuthLogin = 'static String postAuthLogin = http://git.hansul.kr:3002/api/auth/login';
 
   // 소셜 로그인
   static String postAuthSnsLogin = "/api/auth/sns-login";

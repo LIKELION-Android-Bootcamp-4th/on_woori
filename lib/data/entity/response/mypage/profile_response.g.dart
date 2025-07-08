@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'login_response.dart';
+part of 'profile_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
-    LoginResponse(
+ProfileResponse _$ProfileResponseFromJson(Map<String, dynamic> json) =>
+    ProfileResponse(
       success: json['success'] as bool,
       message: json['message'] as String,
       data: json['data'] == null
           ? null
-          : LoginData.fromJson(json['data'] as Map<String, dynamic>),
+          : ProfileData.fromJson(json['data'] as Map<String, dynamic>),
       timestamp: json['timestamp'] == null
           ? null
           : DateTime.parse(json['timestamp'] as String),
     );
 
-Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
+Map<String, dynamic> _$ProfileResponseToJson(ProfileResponse instance) =>
     <String, dynamic>{
       'success': instance.success,
       'message': instance.message,
@@ -26,73 +26,46 @@ Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
       'timestamp': instance.timestamp?.toIso8601String(),
     };
 
-LoginData _$LoginDataFromJson(Map<String, dynamic> json) => LoginData(
-  accessToken: json['accessToken'] as String,
-  refreshToken: json['refreshToken'] as String,
-  user: UserData.fromJson(json['user'] as Map<String, dynamic>),
-);
-
-Map<String, dynamic> _$LoginDataToJson(LoginData instance) => <String, dynamic>{
-  'accessToken': instance.accessToken,
-  'refreshToken': instance.refreshToken,
-  'user': instance.user.toJson(),
-};
-
-UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
+ProfileData _$ProfileDataFromJson(Map<String, dynamic> json) => ProfileData(
   id: json['id'] as String,
   email: json['email'] as String,
   nickName: json['nickName'] as String?,
-  name: json['name'] as String?,
-  phone: json['phone'] as String?,
-  phoneEncrypted: json['phoneEncrypted'] as String?,
   profile: json['profile'] == null
       ? null
-      : ProfileData.fromJson(json['profile'] as Map<String, dynamic>),
+      : ProfileInfo.fromJson(json['profile'] as Map<String, dynamic>),
   loginRoles: (json['loginRoles'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
-  platformRoles: (json['platformRoles'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
-  isAdmin: json['isAdmin'] as bool?,
-  isSuperAdmin: json['isSuperAdmin'] as bool?,
   isActive: json['isActive'] as bool?,
   needEmailVerification: json['needEmailVerification'] as bool?,
   emailVerified: json['emailVerified'] as bool?,
   isEmailVerified: json['isEmailVerified'] as bool?,
-  companyId: json['companyId'] as String?,
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
-  v: (json['__v'] as num?)?.toInt(),
+  phone: json['phone'] as String?,
 );
 
-Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
-  'id': instance.id,
-  'email': instance.email,
-  'nickName': instance.nickName,
-  'name': instance.name,
-  'phone': instance.phone,
-  'phoneEncrypted': instance.phoneEncrypted,
-  'profile': instance.profile?.toJson(),
-  'loginRoles': instance.loginRoles,
-  'platformRoles': instance.platformRoles,
-  'isAdmin': instance.isAdmin,
-  'isSuperAdmin': instance.isSuperAdmin,
-  'isActive': instance.isActive,
-  'needEmailVerification': instance.needEmailVerification,
-  'emailVerified': instance.emailVerified,
-  'isEmailVerified': instance.isEmailVerified,
-  'companyId': instance.companyId,
-  'createdAt': instance.createdAt?.toIso8601String(),
-  'updatedAt': instance.updatedAt?.toIso8601String(),
-  '__v': instance.v,
-};
+Map<String, dynamic> _$ProfileDataToJson(ProfileData instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'email': instance.email,
+      'nickName': instance.nickName,
+      'profile': instance.profile?.toJson(),
+      'loginRoles': instance.loginRoles,
+      'isActive': instance.isActive,
+      'needEmailVerification': instance.needEmailVerification,
+      'emailVerified': instance.emailVerified,
+      'isEmailVerified': instance.isEmailVerified,
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'updatedAt': instance.updatedAt?.toIso8601String(),
+      'phone': instance.phone,
+    };
 
-ProfileData _$ProfileDataFromJson(Map<String, dynamic> json) => ProfileData(
+ProfileInfo _$ProfileInfoFromJson(Map<String, dynamic> json) => ProfileInfo(
   name: json['name'] as String?,
   birthDate: json['birthDate'] == null
       ? null
@@ -102,7 +75,7 @@ ProfileData _$ProfileDataFromJson(Map<String, dynamic> json) => ProfileData(
       : ProfileImageData.fromJson(json['profileImage'] as Map<String, dynamic>),
 );
 
-Map<String, dynamic> _$ProfileDataToJson(ProfileData instance) =>
+Map<String, dynamic> _$ProfileInfoToJson(ProfileInfo instance) =>
     <String, dynamic>{
       'name': instance.name,
       'birthDate': instance.birthDate?.toIso8601String(),

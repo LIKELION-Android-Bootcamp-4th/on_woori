@@ -7,7 +7,8 @@ import 'package:on_woori/data/entity/response/products/products_detail_response.
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
-// 페이지 진입점 위젯
+import 'package:on_woori/data/entity/response/products/product_toggle_response.dart';
+
 class ProductsDetailPage extends StatelessWidget {
   final String productId;
   const ProductsDetailPage(this.productId, {super.key});
@@ -45,28 +46,61 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   final apiClient = ProductsApiClient();
   late Future<ProductsDetailResponse> _productsFuture;
 
-  // 사용자가 변경하는 상태값들
   int quantity = 1;
   String? selectedColor;
   String? selectedSize;
-  late bool isFavorite;
+
+  // API 응답에 맞춰 변수 이름을 isLiked로 변경
+  late bool isLiked;
 
   @override
   void initState() {
     super.initState();
     _productsFuture = apiClient.productDetail(widget.id).then((response) {
-      // isFavorite 초기값을 API 응답에 따라 설정
-      isFavorite = response.data?.isFavorite ?? false;
+      // isLiked의 초기값을 서버 데이터로 설정
+      isLiked = response.data?.isFavorite ?? false;
       return response;
     });
   }
 
-  // 찜하기 상태를 토글하는 함수
-  void _toggleFavorite() {
-    // TODO: 찜하기 API 호출 로직 추가
+  /// 찜하기 상태를 변경하고 서버에 즉시 반영합니다.
+  Future<void> _toggleFavorite() async {
+    final originalState = isLiked;
     setState(() {
-      isFavorite = !isFavorite;
+      isLiked = !isLiked;
     });
+
+    try {
+      final response = await apiClient.toggleFavorite(productId: widget.id);
+
+      // 새로운 응답 구조에 맞게 상태를 동기화합니다.
+      if (response.success) {
+        setState(() {
+          isLiked = response.message.result.isLiked;
+        });
+      } else {
+        setState(() {
+          isLiked = originalState;
+        });
+        _showSnackBar(response.message.message); // 서버가 주는 메시지 사용
+      }
+    } catch (e) {
+      setState(() {
+        isLiked = originalState;
+      });
+      _showSnackBar('오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  }
+
+  // 오류나 상태 메시지를 보여줄 작은 스낵바 함수
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -121,36 +155,31 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             const Divider(color: Colors.black, thickness: 1, height: 1),
             const SizedBox(height: 10),
 
-            // --- 상품명, 가격, 찜하기 버튼 ---
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(child: ProductsNameSection.fromProduct(product)),
+                // isLiked 변수를 사용하도록 수정
                 IconButton(
-                  icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border, color: Colors.red, size: 30),
+                  icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border, color: Colors.red, size: 30),
                   onPressed: _toggleFavorite,
                 ),
               ],
             ),
-            const Divider(color: Colors.black),
 
-            // --- 브랜드 정보 ---
+            const Divider(color: Colors.black),
             Row(
               children: [
-                const CircleAvatar(backgroundColor: AppColors.primary, radius: 16), //TODO: 스토어 이미지
+                const CircleAvatar(backgroundColor: AppColors.primary, radius: 16),
                 const SizedBox(width: 10),
                 Text(product.store?.name ?? "브랜드 정보 없음")
               ],
             ),
             const Divider(color: Colors.black),
             const SizedBox(height: 20),
-
-            // --- 상품 상세 이미지 ---
             ProductsDetailImageSection(product.images?.detail ?? []),
             const SizedBox(height: 20),
             const Divider(color: Colors.black),
-
-            // --- 옵션 선택 ---
             if (sizeOptions.isNotEmpty) ...[
               OptionDropdown(
                 hint: "사이즈 선택",
@@ -169,8 +198,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               ),
               const SizedBox(height: 5),
             ],
-
-            // --- 하단 수량 및 가격 정보 ---
             Container(
               color: AppColors.optionStateList,
               padding: const EdgeInsets.all(10),
@@ -204,8 +231,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               ),
             ),
             const SizedBox(height: 10),
-
-            // --- 하단 버튼 (장바구니, 구매) ---
             SizedBox(
               width: double.infinity,
               height: 50,

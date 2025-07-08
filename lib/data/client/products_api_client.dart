@@ -10,6 +10,7 @@ import 'package:on_woori/data/entity/response/auth/login_response.dart';
 import 'package:on_woori/data/entity/response/auth/register_response.dart';
 import 'package:on_woori/data/entity/response/auth/verify_email_response.dart';
 import 'package:on_woori/data/entity/response/products/product_register_response.dart';
+import 'package:on_woori/data/entity/response/products/product_toggle_response.dart';
 import 'package:on_woori/data/entity/response/products/products_detail_response.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 
@@ -42,6 +43,13 @@ class ProductsApiClient {
       data: formData
     );
     return ProductRegisterResponse.fromJson(response.data);
+  }
 
+  // 상품 찜 토글 (추가 또는 삭제)
+  Future<ProductToggleResponse> toggleFavorite({required String productId}) async {
+    final response = await _dio.post(
+      ProductsEndpoints.postProductToggleFavorites(productId: productId),
+    );
+    return ProductToggleResponse.fromJson(response.data);
   }
 }

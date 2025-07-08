@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 
 class ProductsGridItem extends StatefulWidget {
-  ProductItem item;
-  ProductsGridItem(this.item);
+  final ProductItem item;
+  const ProductsGridItem(this.item, {super.key});
 
   @override
   State<StatefulWidget> createState() => ProductsGridItemState();
 }
 
 class ProductsGridItemState extends State<ProductsGridItem> {
+  final apiClient = ProductsApiClient();
+
   late int price;
   late String productName;
   late String brandName;
   late String imageUrl;
   late bool isFavorite;
-  var icon = Icons.circle;
 
   @override
   void initState() {
@@ -25,79 +26,122 @@ class ProductsGridItemState extends State<ProductsGridItem> {
     price = widget.item.price;
     productName = widget.item.name;
     brandName = widget.item.store?.name ?? "브랜드";
-    isFavorite = widget.item.isFavorite;
     imageUrl = widget.item.thumbnailImage?.url ?? "";
+    isFavorite = widget.item.isFavorite;
+  }
+
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Future<void> _toggleFavorite() async {
+    final originalState = isFavorite;
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+
+    try {
+      final response = await apiClient.toggleFavorite(productId: widget.item.id);
+
+      if (response.success) {
+        setState(() {
+          isFavorite = response.message.result.isLiked;
+        });
+      } else {
+        setState(() {
+          isFavorite = originalState;
+        });
+        _showSnackBar(response.message.message);
+      }
+    } catch (e) {
+      setState(() {
+        isFavorite = originalState;
+      });
+      _showSnackBar('오류가 발생했습니다. 다시 시도해주세요.');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.zero, // ← 이거 추가
-          minimumSize: Size.zero,   // ← 이것도 같이 쓰면 좋아
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        ),
-        onPressed: () {
-          context.push('/productdetail/${widget.item.id}');
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Stack(
           children: [
-            Stack(
-              children: [
-                SizedBox(
-                  width: 170,
-                  child: AspectRatio(
-                    aspectRatio: 0.8,
-                    child: Image.network(imageUrl, fit: BoxFit.cover,),
-                  ),
+            InkWell(
+              onTap: () {
+                context.push('/productdetail/${widget.item.id}');
+              },
+              child: SizedBox(
+                width: 170,
+                child: AspectRatio(
+                  aspectRatio: 0.8,
+                  child: Image.network(imageUrl, fit: BoxFit.cover),
                 ),
-                Positioned(
-                  right: 5,
-                  top: 5,
-                  child: GestureDetector(
-                    child: Icon(icon),
-                    onTap: () {
-                      setState(() { //TODO: favorite 등록
-                        isFavorite = !isFavorite;
-                        if (isFavorite) {
-                          icon = Icons.circle_outlined;
-                        } else {
-                          icon = Icons.circle;
-                        }
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 5,),
-            Text(
-              "$price",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
               ),
             ),
-            Text(
-              brandName,
-              style: TextStyle(
-                fontSize: 13,
-                color: Color(0xff7D7D7D),
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              productName,
-              style: TextStyle(
-                fontSize: 13,
-                color: Color(0xff7D7D7D),
-                fontWeight: FontWeight.w400,
+            Positioned(
+              right: 5,
+              top: 5,
+              child: GestureDetector(
+                onTap: _toggleFavorite,
+                child: Container(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
+                    size: 24,
+                  ),
+                ),
               ),
             ),
           ],
-        )
+        ),
+        const SizedBox(height: 5),
+        GestureDetector(
+          onTap: () {
+            context.push('/productdetail/${widget.item.id}');
+          },
+          behavior: HitTestBehavior.translucent,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "$price원",
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                brandName,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Color(0xff7D7D7D),
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              Text(
+                productName,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Color(0xff7D7D7D),
+                  fontWeight: FontWeight.w400,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

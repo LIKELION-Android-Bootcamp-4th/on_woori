@@ -11,4 +11,8 @@ abstract class ProductsEndpoints {
 
   // 상품 등록 (동적 필드 지원)
   static String getProductRegister = '/api/seller/products';
+
+  static String postProductToggleFavorites({required String productId}) {
+    return '/api/products/$productId/toggle-favorites';
+  }
 }

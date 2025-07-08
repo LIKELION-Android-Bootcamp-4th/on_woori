@@ -51,6 +51,7 @@ ProductItem _$ProductItemFromJson(Map<String, dynamic> json) => ProductItem(
       ? null
       : ThumbnailImage.fromJson(json['thumbnailImage'] as Map<String, dynamic>),
   images: _imagesFromJson(json['images'] as String?),
+  options: _optionsListFromJson(json['options'] as String?),
 );
 
 Map<String, dynamic> _$ProductItemToJson(ProductItem instance) =>
@@ -66,6 +67,7 @@ Map<String, dynamic> _$ProductItemToJson(ProductItem instance) =>
       'store': instance.store?.toJson(),
       'thumbnailImage': instance.thumbnailImage?.toJson(),
       'images': instance.images?.toJson(),
+      'options': instance.options?.map((e) => e.toJson()).toList(),
     };
 
 ThumbnailImage _$ThumbnailImageFromJson(Map<String, dynamic> json) =>
@@ -82,16 +84,27 @@ Map<String, dynamic> _$ImagesToJson(Images instance) => <String, dynamic>{
   'detail': instance.detail,
 };
 
-ProductOptions _$ProductOptionsFromJson(Map<String, dynamic> json) =>
-    ProductOptions(
-      color: (json['color'] as List<dynamic>?)
-          ?.map((e) => e as String)
+ProductOptionGroup _$ProductOptionGroupFromJson(Map<String, dynamic> json) =>
+    ProductOptionGroup(
+      type: json['type'] as String,
+      name: json['name'] as String,
+      items: (json['items'] as List<dynamic>)
+          .map((e) => ProductOptionItem.fromJson(e as Map<String, dynamic>))
           .toList(),
-      size: (json['size'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$ProductOptionsToJson(ProductOptions instance) =>
-    <String, dynamic>{'color': instance.color, 'size': instance.size};
+Map<String, dynamic> _$ProductOptionGroupToJson(ProductOptionGroup instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'name': instance.name,
+      'items': instance.items.map((e) => e.toJson()).toList(),
+    };
+
+ProductOptionItem _$ProductOptionItemFromJson(Map<String, dynamic> json) =>
+    ProductOptionItem(code: json['code'] as String);
+
+Map<String, dynamic> _$ProductOptionItemToJson(ProductOptionItem instance) =>
+    <String, dynamic>{'code': instance.code};
 
 StoreData _$StoreDataFromJson(Map<String, dynamic> json) => StoreData(
   id: json['id'] as String?,

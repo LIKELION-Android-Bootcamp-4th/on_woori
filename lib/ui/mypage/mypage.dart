@@ -24,11 +24,11 @@ class _MyPageState extends State<MyPage> {
   Future<void> fetchUserProfile() async {
     final dio = Dio(
       BaseOptions(
-        baseUrl: 'http://git.hansul.kr:3000',
+        baseUrl: 'http://git.hansul.kr:3002',
         headers: {
           'Authorization':
           'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY3YzI3YzI0MTBiYmVlMTY4MDFkZDUiLCJjb21wYW55SWQiOiI2ODVmNjlmYzQzOTkyMmMwOWMyMWFlZjAiLCJpc0FkbWluIjp0cnVlLCJpc1N1cGVyQWRtaW4iOnRydWUsImlhdCI6MTc1MTg2Njg0MiwiZXhwIjoxNzUxOTUzMjQyfQ.404gq3LD9UicXvToI6FYQUcxSN4VQemYW9IAMbljO40',
-          'X-Company-Code': '685f69fc439922c09c21aef0',
+          'X-Company-Code': '6866fd115b230f5dc709bdef',
         },
       ),
     );
@@ -129,7 +129,7 @@ class _MyPageState extends State<MyPage> {
                     ),
                   ),
                   onPressed: () {
-                    // TODO: 프로필 수정 이동
+                    context.push('/mypage/edit');
                   },
                   child: const Text(
                     '프로필 수정',

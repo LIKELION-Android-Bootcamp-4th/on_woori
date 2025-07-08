@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:on_woori/config/endpoint/buyer/mypage_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
+import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
 import 'package:on_woori/data/entity/response/mypage/wish_response.dart';
 
 class MypageApiClient {
@@ -14,5 +15,14 @@ class MypageApiClient {
       MyPageEndpoints.getMyPageFavorites,
     );
     return WishResponse.fromJson(response.data);
+  }
+
+  //프로필 정보 조회
+  Future<BuyerProfileResponse> getBuyerProfile()
+  async {
+    final response = await _dio.get(
+      MyPageEndpoints.getMyPageProfile
+    );
+    return BuyerProfileResponse.fromJson(response.data);
   }
 }

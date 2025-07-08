@@ -173,7 +173,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
 
     if (!mounted) return;
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(true);
   }
 
   @override

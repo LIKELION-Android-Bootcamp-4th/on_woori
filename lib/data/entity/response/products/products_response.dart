@@ -4,18 +4,16 @@ import 'package:json_annotation/json_annotation.dart';
 part 'products_response.g.dart';
 
 List<ProductOptionGroup>? _optionsListFromJson(String? jsonString) {
-  if (jsonString == null || jsonString.isEmpty) return null;
+  if (jsonString == null || jsonString.isEmpty) {
+    return null;
+  }
   try {
-    // 문자열 끝에 있는 모든 쉼표(,)와 공백을 정규식으로 제거합니다.
-    final cleanedString = jsonString.replaceAll(RegExp(r',\s*$'), '');
-
-    final validJsonString = '[$cleanedString]';
-    final decoded = jsonDecode(validJsonString) as List<dynamic>;
-    return decoded
+    final List<dynamic> decodedList = jsonDecode(jsonString);
+    return decodedList
         .map((item) => ProductOptionGroup.fromJson(item as Map<String, dynamic>))
         .toList();
   } catch (e) {
-    print('Options parsing error: $e');
+    print('Options parsing error for string "$jsonString": $e');
     return null;
   }
 }

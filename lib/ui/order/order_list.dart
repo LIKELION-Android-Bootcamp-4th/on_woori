@@ -85,7 +85,6 @@ class _OrderListPageState extends State<OrderListPage> {
                   itemBuilder: (context, index) {
                     final order = ordersData.orders[index];
 
-                    // 3. 상품 목록 문자열을 UI에서 직접 생성합니다.
                     final productSummaries = order.products
                         .map((p) => '${p.productName} ${p.quantity}개')
                         .toList();
@@ -93,7 +92,6 @@ class _OrderListPageState extends State<OrderListPage> {
                     return OrderListItem(
                       id: order.id,
                       orderNumber: order.orderNumber,
-                      // 4. 날짜(DateTime)를 문자열로 직접 포맷팅합니다.
                       orderDate: DateFormat('yyyy.MM.dd').format(order.createdAt),
                       totalAmount: order.totalAmount,
                       status: order.status,

@@ -155,6 +155,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       );
     }
     try {
+      // 이 부분에 응답구조 바뀌어야 할 것 같습니다.
       final response = await apiClient.editBuyerProfile(
         nickName: _nicknameController.text,
         phone: _phoneController.text,
@@ -165,8 +166,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ),
         profileImageFile: multipartFile
       );
-      print('닉네임: ${response.data.nickName}');
-      print('전화번호: ${response.data.phone}');
     } catch (e, s) {
       print('수정 실패 $e');
       print(s);

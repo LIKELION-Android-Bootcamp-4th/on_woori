@@ -37,8 +37,7 @@ class MypageApiClient {
     return BuyerProfileResponse.fromJson(response.data);
   }
 
-  //프로필 수정
-  Future<BuyerProfileEditResponse> editBuyerProfile({
+  Future<void> editBuyerProfile({
     required String nickName,
     MultipartFile? profileImageFile,
     String? phone,
@@ -57,6 +56,6 @@ class MypageApiClient {
       options: Options(contentType: 'multipart/form-data'),
     );
 
-    return BuyerProfileEditResponse.fromJson(response.data);
+    return response.data;
   }
 }

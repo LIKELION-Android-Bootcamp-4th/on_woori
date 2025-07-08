@@ -8,13 +8,19 @@ class TokenManager extends Interceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     // 1. 저장된 토큰을 읽어옵니다.
     final token = await _storage.read(key: 'ACCESS_TOKEN');
+    final companyCode = await _storage.read(key: 'COMPANY_CODE');
 
-    // 2. 토큰이 있다면, 헤더에 'Authorization'을 추가합니다.
+    // 2. 토큰이 있으면 Authorization 헤더 추가
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
 
-    // 3. 다음 로직으로 요청을 계속 진행시킵니다.
+    // 3. companyCode가 있으면 X-Company-Code 헤더 추가
+    if (companyCode != null && companyCode.isNotEmpty) {
+      options.headers['X-Company-Code'] = companyCode;
+    }
+
+    // 4. 요청 진행
     super.onRequest(options, handler);
   }
 }

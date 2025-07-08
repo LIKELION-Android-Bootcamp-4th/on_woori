@@ -21,7 +21,7 @@ import 'package:on_woori/ui/mypage/editprofile/editprofile.dart';
 import 'package:on_woori/ui/auth/login/login_page.dart';
 import 'package:on_woori/ui/mypage/change-password.dart';
 import 'package:on_woori/ui/mypage_seller/add_funding.dart';
-import 'package:on_woori/ui/mypage_seller/add_product.dart';
+import 'package:on_woori/ui/mypage_seller/product_register.dart';
 import 'package:on_woori/ui/mypage_seller/edit_brand.dart';
 import 'package:on_woori/ui/mypage_seller/editprofile/edit_profile_seller.dart';
 

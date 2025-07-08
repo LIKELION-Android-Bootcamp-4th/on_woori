@@ -65,8 +65,8 @@ class _HomePageState extends State<HomePage> {
     try {
       final response = await apiClient.authLogin(
         request: LoginRequest(
-          email: 'admin@hanbokmall.com',
-          password: 'qwer1234',
+          email: 'seller@hanbokmall.com',
+          password: 'password123',
         ),
       );
       await storage.delete(key: 'ACCESS_TOKEN');

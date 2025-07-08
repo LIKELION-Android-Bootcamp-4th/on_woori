@@ -33,7 +33,7 @@ class MypageApiClient {
     required BuyerProfileEditRequest request,
   })
   async {
-    final response = await _dio.post(
+    final response = await _dio.patch(
       MyPageEndpoints.putMyPageProfile,
       data: request.toJson(),
     );

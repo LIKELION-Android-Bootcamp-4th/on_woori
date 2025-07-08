@@ -46,14 +46,10 @@ SellerFundingItem _$SellerFundingItemFromJson(Map<String, dynamic> json) =>
       companyId: json['companyId'] == null
           ? null
           : CompanyId.fromJson(json['companyId'] as Map<String, dynamic>),
-      targetAmount: (json['targetAmount'] as num?)?.toInt(),
-      currentAmount: (json['currentAmount'] as num?)?.toInt(),
-      endDate: json['endDate'] == null
-          ? null
-          : DateTime.parse(json['endDate'] as String),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
+      targetAmount: SellerFundingItem._toInt(json['targetAmount']),
+      currentAmount: SellerFundingItem._toInt(json['currentAmount']),
+      endDate: SellerFundingItem._parseDate(json['endDate']),
+      createdAt: SellerFundingItem._parseDate(json['createdAt']),
     );
 
 Map<String, dynamic> _$SellerFundingItemToJson(SellerFundingItem instance) =>
@@ -62,7 +58,7 @@ Map<String, dynamic> _$SellerFundingItemToJson(SellerFundingItem instance) =>
       'title': instance.title,
       'imageUrl': instance.imageUrl,
       'linkUrl': instance.linkUrl,
-      'companyId': instance.companyId?.toJson(),
+      'companyId': instance.companyId,
       'targetAmount': instance.targetAmount,
       'currentAmount': instance.currentAmount,
       'endDate': instance.endDate?.toIso8601String(),
@@ -70,10 +66,9 @@ Map<String, dynamic> _$SellerFundingItemToJson(SellerFundingItem instance) =>
     };
 
 CompanyId _$CompanyIdFromJson(Map<String, dynamic> json) =>
-    CompanyId(id: json['id'] as String, name: json['name'] as String);
+    CompanyId(name: json['name'] as String);
 
 Map<String, dynamic> _$CompanyIdToJson(CompanyId instance) => <String, dynamic>{
-  'id': instance.id,
   'name': instance.name,
 };
 

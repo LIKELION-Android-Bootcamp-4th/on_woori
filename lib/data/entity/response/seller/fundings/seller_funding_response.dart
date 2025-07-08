@@ -32,18 +32,26 @@ class FundingData {
       _$FundingDataFromJson(json);
   Map<String, dynamic> toJson() => _$FundingDataToJson(this);
 }
-
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable()
 class SellerFundingItem {
   @JsonKey(name: 'id')
   final String id;
+
   final String title;
   final String? imageUrl;
   final String? linkUrl;
   final CompanyId? companyId;
+
+  @JsonKey(fromJson: _toInt)
   final int? targetAmount;
+
+  @JsonKey(fromJson: _toInt)
   final int? currentAmount;
+
+  @JsonKey(fromJson: _parseDate)
   final DateTime? endDate;
+
+  @JsonKey(fromJson: _parseDate)
   final DateTime? createdAt;
 
   const SellerFundingItem({
@@ -55,28 +63,41 @@ class SellerFundingItem {
     this.targetAmount,
     this.currentAmount,
     this.endDate,
-    this.createdAt
+    this.createdAt,
   });
 
   factory SellerFundingItem.fromJson(Map<String, dynamic> json) =>
       _$SellerFundingItemFromJson(json);
+
   Map<String, dynamic> toJson() => _$SellerFundingItemToJson(this);
+
+  // 🔧 커스텀 파서들
+  static int? _toInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is String) return int.tryParse(value);
+    return null;
+  }
+
+  static DateTime? _parseDate(dynamic value) {
+    if (value == null) return null;
+    if (value is String) return DateTime.tryParse(value);
+    return null;
+  }
 }
 
 @JsonSerializable()
 class CompanyId {
-  @JsonKey(name: 'id')
-  final String id;
   final String name;
 
-  const CompanyId({
-    required this.id,
-    required this.name,
-  });
+  const CompanyId({required this.name});
+
   factory CompanyId.fromJson(Map<String, dynamic> json) =>
       _$CompanyIdFromJson(json);
+
   Map<String, dynamic> toJson() => _$CompanyIdToJson(this);
 }
+
 
 @JsonSerializable()
 class Pagination {

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:on_woori/config/endpoint/buyer/cart_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
+import 'package:on_woori/data/entity/request/cart/cart_register_request.dart';
 import 'package:on_woori/data/entity/request/cart/cart_request.dart';
 import 'package:on_woori/data/entity/response/cart/cart_response.dart';
 
@@ -27,5 +28,16 @@ class CartApiClient {
       data: request.toJson(),
     );
     return CartResponse.fromJson(response.data);
+  }
+
+  // 장바구니에 상품 추가
+  Future<Response> addToCart({
+    required CartRegisterRequest request,
+  }) async {
+    final response = await _dio.post(
+      CartEndpoints.postCart,
+      data: request.toJson(),
+    );
+    return response.data;
   }
 }

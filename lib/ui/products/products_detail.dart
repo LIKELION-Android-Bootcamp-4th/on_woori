@@ -2,12 +2,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/data/client/cart_api_client.dart';
+import 'package:on_woori/data/entity/request/cart/cart_register_request.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/entity/response/products/products_detail_response.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
-import 'package:on_woori/data/entity/response/products/product_toggle_response.dart';
 
 class ProductsDetailPage extends StatelessWidget {
   final String productId;
@@ -31,7 +32,6 @@ class ProductsDetailPage extends StatelessWidget {
   }
 }
 
-// 실제 상세 내용을 그리는 메인 위젯
 class ProductsDetailScreen extends StatefulWidget {
   final String id;
   const ProductsDetailScreen(this.id, {super.key});
@@ -43,27 +43,27 @@ class ProductsDetailScreen extends StatefulWidget {
 }
 
 class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
-  final apiClient = ProductsApiClient();
+  final productsApiClient = ProductsApiClient();
+  final cartApiClient = CartApiClient();
+
   late Future<ProductsDetailResponse> _productsFuture;
 
   int quantity = 1;
   String? selectedColor;
   String? selectedSize;
 
-  // API 응답에 맞춰 변수 이름을 isLiked로 변경
   late bool isLiked;
 
   @override
   void initState() {
     super.initState();
-    _productsFuture = apiClient.productDetail(widget.id).then((response) {
+    _productsFuture = productsApiClient.productDetail(widget.id).then((response) {
       // isLiked의 초기값을 서버 데이터로 설정
       isLiked = response.data?.isFavorite ?? false;
       return response;
     });
   }
 
-  /// 찜하기 상태를 변경하고 서버에 즉시 반영합니다.
   Future<void> _toggleFavorite() async {
     final originalState = isLiked;
     setState(() {
@@ -71,9 +71,8 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
     });
 
     try {
-      final response = await apiClient.toggleFavorite(productId: widget.id);
+      final response = await productsApiClient.toggleFavorite(productId: widget.id);
 
-      // 새로운 응답 구조에 맞게 상태를 동기화합니다.
       if (response.success) {
         setState(() {
           isLiked = response.message.result.isLiked;
@@ -91,6 +90,56 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
       _showSnackBar('오류가 발생했습니다. 다시 시도해주세요.');
     }
   }
+
+  /// 장바구니에 상품을 추가하는 로직
+  Future<void> _addToCart(ProductItem product, List<String> sizeOptions, List<String> colorOptions) async {
+    // 1. 옵션 선택 유효성 검사
+    if (sizeOptions.isNotEmpty && selectedSize == null) {
+      _showSnackBar('사이즈를 선택해주세요.');
+      return;
+    }
+    if (colorOptions.isNotEmpty && selectedColor == null) {
+      _showSnackBar('색상을 선택해주세요.');
+      return;
+    }
+
+    // 2. 할인 정보 파싱
+    CartDiscount? cartDiscount;
+    if (product.discount != null && product.discount!.isNotEmpty) {
+      try {
+        final discountData = jsonDecode(product.discount!);
+        cartDiscount = CartDiscount(
+          type: discountData['type'] ?? 'percent', // 기본값으로 'percent' 사용
+          amount: discountData['value'] ?? 0,
+        );
+      } catch (e) {
+        // 할인 정보 파싱 실패 시 무시
+      }
+    }
+
+    // 3. API 요청 객체 생성
+    final request = CartRegisterRequest(
+      productId: product.id,
+      quantity: quantity,
+      unitPrice: product.price,
+      options: CartOptions(
+        size: selectedSize,
+      ),
+    );
+
+    // 4. API 호출 및 결과 처리
+    try {
+      final response = await cartApiClient.addToCart(request: request);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _showSnackBar('장바구니에 상품을 추가했습니다.');
+      } else {
+        _showSnackBar('장바구니 추가에 실패했습니다: ${response.data}');
+      }
+    } catch(e) {
+      _showSnackBar('오류가 발생했습니다: $e');
+    }
+  }
+
 
   // 오류나 상태 메시지를 보여줄 작은 스낵바 함수
   void _showSnackBar(String message) {
@@ -235,7 +284,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               width: double.infinity,
               height: 50,
               child: TextButton(
-                onPressed: () { /* TODO: 장바구니 추가 로직 */ },
+                onPressed: () => _addToCart(product, sizeOptions, colorOptions),
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     backgroundColor: AppColors.primary),

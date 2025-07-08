@@ -44,7 +44,7 @@ class ProductRegisterRequest {
       'stockType': 'fixed',
       'status': 'on_sale',
       'discount': discount ?? '',
-      'stock': '',
+      'stock': '1000', // 일단 기본 수량으로 1000개 추가
       'attributes': '',
       'images': jsonEncode(imagesJson),
     };

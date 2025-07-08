@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
@@ -144,18 +145,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     final apiClient = MypageApiClient();
-    final BuyerProfileEditRequest request = BuyerProfileEditRequest (
-      nickName: _nicknameController.text,
-      profileImage: _profileImageFile?.path,
-      phone: _phoneController.text,
-      address: AddressData(
-        zipCode: _zipcodeController.text,
-        address1: _addressController.text,
-        address2: _detailAddressController.text
-      )
-    );
+
+    final String? imagePath = _profileImageFile?.path;
+    MultipartFile? multipartFile;
+    if (imagePath != null && imagePath.isNotEmpty) {
+      multipartFile = await MultipartFile.fromFile(
+        imagePath,
+        filename: imagePath.split('/').last,
+      );
+    }
     try {
-      final response = await apiClient.editBuyerProfile(request: request);
+      final response = await apiClient.editBuyerProfile(
+        nickName: _nicknameController.text,
+        phone: _phoneController.text,
+        address: AddressData(
+          zipCode: _zipcodeController.text,
+          address1: _addressController.text,
+          address2: _detailAddressController.text
+        ),
+        profileImageFile: multipartFile
+      );
       print('닉네임: ${response.data.nickName}');
       print('전화번호: ${response.data.phone}');
     } catch (e, s) {

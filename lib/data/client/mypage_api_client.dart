@@ -30,13 +30,24 @@ class MypageApiClient {
 
   //프로필 수정
   Future<BuyerProfileEditResponse> editBuyerProfile({
-    required BuyerProfileEditRequest request,
-  })
-  async {
+    required String nickName,
+    MultipartFile? profileImageFile,
+    String? phone,
+    AddressData? address,
+  }) async {
+    final formData = FormData.fromMap({
+      'nickName': nickName,
+      if (profileImageFile != null) 'profileImage': profileImageFile,
+      if (phone != null) 'phone': phone,
+      if (address != null) 'address' : address
+    });
+
     final response = await _dio.patch(
       MyPageEndpoints.putMyPageProfile,
-      data: request.toJson(),
+      data: formData,
+      options: Options(contentType: 'multipart/form-data'),
     );
+
     return BuyerProfileEditResponse.fromJson(response.data);
   }
 }

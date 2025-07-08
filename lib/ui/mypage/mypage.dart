@@ -24,6 +24,12 @@ class _MyPageState extends State<MyPage> {
     _profileFuture = apiClient.getBuyerProfile();
   }
 
+  void _refresh() {
+    setState(() {
+      _profileFuture = apiClient.getBuyerProfile();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -41,6 +47,15 @@ class _MyPageState extends State<MyPage> {
 
         if (!snapshot.hasData) {
           return const Center(child: Text('데이터가 없습니다.'));
+        }
+
+        String imagePath = "http://git.hansul.kr:3002";
+
+        if (snapshot.data?.data.profile.profileImage is String) {
+          imagePath = imagePath + ((snapshot.data?.data.profile) as String? ?? "");
+        } else if (snapshot.data?.data.profile.profileImage is Map<String, dynamic>) {
+          final map = ProfileImage.fromJson(snapshot.data?.data.profile.profileImage as Map<String, dynamic>);
+          imagePath += map.path ?? "";
         }
 
         return Scaffold(
@@ -79,8 +94,8 @@ class _MyPageState extends State<MyPage> {
                           child: SizedBox(
                             width: 48,
                             height: 48,
-                            child: Image.asset(
-                              'assets/default_profile.png',
+                            child: Image.network(
+                              imagePath,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -120,8 +135,9 @@ class _MyPageState extends State<MyPage> {
                           ),
                         ),
                       ),
-                      onPressed: () {
-                        context.push('/mypage/edit-buyer/${snapshot.data?.data.nickName}');
+                      onPressed: () async {
+                        await context.push('/mypage/edit-buyer/${snapshot.data?.data.nickName}');
+                        _refresh();
                       },
                       child: const Text(
                         '프로필 수정',

@@ -26,7 +26,7 @@ BuyerProfileData _$BuyerProfileDataFromJson(Map<String, dynamic> json) =>
     BuyerProfileData(
       email: json['email'] as String,
       nickName: json['nickName'] as String,
-      profile: ProfileData.fromJson(json['profile'] as Map<String, dynamic>),
+      profile: BuyerProfile.fromJson(json['profile'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$BuyerProfileDataToJson(BuyerProfileData instance) =>
@@ -34,6 +34,19 @@ Map<String, dynamic> _$BuyerProfileDataToJson(BuyerProfileData instance) =>
       'email': instance.email,
       'nickName': instance.nickName,
       'profile': instance.profile.toJson(),
+    };
+
+BuyerProfile _$BuyerProfileFromJson(Map<String, dynamic> json) => BuyerProfile(
+  name: json['name'] as String,
+  birthDate: json['birthDate'] as String?,
+  profileImage: json['profileImage'],
+);
+
+Map<String, dynamic> _$BuyerProfileToJson(BuyerProfile instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'birthDate': instance.birthDate,
+      'profileImage': instance.profileImage,
     };
 
 BuyerProfileEditResponse _$BuyerProfileEditResponseFromJson(
@@ -55,9 +68,8 @@ Map<String, dynamic> _$BuyerProfileEditResponseToJson(
 BuyerProfileEditedData _$BuyerProfileEditedDataFromJson(
   Map<String, dynamic> json,
 ) => BuyerProfileEditedData(
-  id: json['_id'] as String,
   nickName: json['nickName'] as String,
-  profileImage: json['profileImage'] as String,
+  profileImage: json['profileImage'],
   phone: json['phone'] as String,
   address: AddressData.fromJson(json['address'] as Map<String, dynamic>),
 );
@@ -65,7 +77,6 @@ BuyerProfileEditedData _$BuyerProfileEditedDataFromJson(
 Map<String, dynamic> _$BuyerProfileEditedDataToJson(
   BuyerProfileEditedData instance,
 ) => <String, dynamic>{
-  '_id': instance.id,
   'nickName': instance.nickName,
   'profileImage': instance.profileImage,
   'phone': instance.phone,
@@ -83,4 +94,23 @@ Map<String, dynamic> _$AddressDataToJson(AddressData instance) =>
       'zipCode': instance.zipCode,
       'address1': instance.address1,
       'address2': instance.address2,
+    };
+
+ProfileImage _$ProfileImageFromJson(Map<String, dynamic> json) => ProfileImage(
+  path: json['path'] as String?,
+  realPath: json['realPath'] as String?,
+  filename: json['filename'] as String?,
+  originalName: json['originalName'] as String?,
+  mimeType: json['mimeType'] as String?,
+  size: (json['size'] as num?)?.toInt(),
+);
+
+Map<String, dynamic> _$ProfileImageToJson(ProfileImage instance) =>
+    <String, dynamic>{
+      'path': instance.path,
+      'realPath': instance.realPath,
+      'filename': instance.filename,
+      'originalName': instance.originalName,
+      'mimeType': instance.mimeType,
+      'size': instance.size,
     };

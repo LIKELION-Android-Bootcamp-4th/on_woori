@@ -24,7 +24,7 @@ class BuyerProfileResponse {
 class BuyerProfileData {
   final String email;
   final String nickName;
-  final ProfileData profile;
+  final BuyerProfile profile;
 
   const BuyerProfileData({
     required this.email,
@@ -35,6 +35,23 @@ class BuyerProfileData {
   factory BuyerProfileData.fromJson(Map<String, dynamic> json) =>
       _$BuyerProfileDataFromJson(json);
   Map<String, dynamic> toJson() => _$BuyerProfileDataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class BuyerProfile {
+  final String name;
+  final String? birthDate;
+  final Object? profileImage;
+
+  const BuyerProfile({
+    required this.name,
+    this.birthDate,
+    this.profileImage
+  });
+
+  factory BuyerProfile.fromJson(Map<String, dynamic> json) =>
+      _$BuyerProfileFromJson(json);
+  Map<String, dynamic> toJson() => _$BuyerProfileToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -56,15 +73,12 @@ class BuyerProfileEditResponse {
 
 @JsonSerializable(explicitToJson: true)
 class BuyerProfileEditedData {
-  @JsonKey(name: "_id")
-  final String id;
   final String nickName;
-  final String profileImage;
+  final Object? profileImage;
   final String phone;
   final AddressData address;
 
   const BuyerProfileEditedData({
-    required this.id,
     required this.nickName,
     required this.profileImage,
     required this.phone,
@@ -91,4 +105,27 @@ class AddressData {
   factory AddressData.fromJson(Map<String, dynamic> json) =>
       _$AddressDataFromJson(json);
   Map<String, dynamic> toJson() => _$AddressDataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ProfileImage {
+  final String? path;
+  final String? realPath;
+  final String? filename;
+  final String? originalName;
+  final String? mimeType;
+  final int? size;
+
+  const ProfileImage({
+    this.path,
+    this.realPath,
+    this.filename,
+    this.originalName,
+    this.mimeType,
+    this.size
+  });
+
+  factory ProfileImage.fromJson(Map<String, dynamic> json) =>
+      _$ProfileImageFromJson(json);
+  Map<String, dynamic> toJson() => _$ProfileImageToJson(this);
 }

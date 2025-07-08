@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:on_woori/data/api_client.dart';
 import '../../config/endpoint/buyer/search_endpoints.dart';
 
 class SearchApiClient {
@@ -7,12 +8,7 @@ class SearchApiClient {
   String? _companyCode;
   String? _authToken;
 
-  SearchApiClient()
-      : _dio = Dio(BaseOptions(
-    baseUrl: 'http://git.hansul.kr:3002',
-    connectTimeout: const Duration(seconds: 10),
-    receiveTimeout: const Duration(seconds: 10),
-  ));
+  SearchApiClient() : _dio = ApiClient().dio;
 
   // 로그인 후 한 번만 호출
   void setAuthHeaders({
@@ -26,8 +22,9 @@ class SearchApiClient {
   Map<String, String> _buildHeaders() {
     final headers = <String, String>{};
 
-    // /// TODO: 회사 코드가 없으면 테스트용 코드 주입 (주석처리하면 실제 환경)
-    // headers['X-Company-Code'] = _companyCode ?? '685f69fc439922c09c21aef0'; // 테스트 서버용 코드
+    if (_companyCode != null && _companyCode!.isNotEmpty) {
+      headers['X-Company-Code'] = _companyCode!;
+    }
 
     if (_authToken != null && _authToken!.isNotEmpty) {
       headers['Authorization'] = 'Bearer $_authToken';
@@ -36,17 +33,30 @@ class SearchApiClient {
     return headers;
   }
 
-
   Future<Response> searchByCategory({
     required String category,
     required String query,
-  }) {
-    return _dio.get(
+  }) async {
+    final customHeaders = _buildHeaders();
+    final queryParams = {
+      'q': query,
+    };
+
+    print('🟢 [searchByCategory] 요청');
+    print('🔹 category: $category');
+    print('🔹 query: $query');
+    print('🔹 customHeaders: $customHeaders');
+    print('🔹 queryParameters: $queryParams');
+
+    return await _dio.get(
       SearchEndpoints.byCategory(category),
-      queryParameters: {
-        'q': query,
-      },
-      options: Options(headers: _buildHeaders()),
+      queryParameters: queryParams,
+      options: Options(
+        headers: {
+          ..._dio.options.headers,
+          ...customHeaders,
+        },
+      ),
     );
   }
 }

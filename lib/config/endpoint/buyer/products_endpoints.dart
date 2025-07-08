@@ -8,4 +8,7 @@ abstract class ProductsEndpoints {
   }) {
     return '/api/products/$id';
   }
+
+  // 상품 등록 (동적 필드 지원)
+  static String getProductRegister = '/api/seller/products';
 }

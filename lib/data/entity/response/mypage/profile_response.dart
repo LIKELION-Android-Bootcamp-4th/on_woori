@@ -33,11 +33,11 @@ class ProfileData {
   final bool? isActive;
   final bool? needEmailVerification;
   final bool? emailVerified;
+  final bool? isEmailVerified;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final AddressData? address;
   final String? phone;
-  final String? profileImage;
+  // [수정] 최상위 데이터에 있던 profileImage 필드 제거 (profile 객체 안에 있으므로)
 
   const ProfileData({
     required this.id,
@@ -48,11 +48,10 @@ class ProfileData {
     this.isActive,
     this.needEmailVerification,
     this.emailVerified,
+    this.isEmailVerified,
     this.createdAt,
     this.updatedAt,
-    this.address,
     this.phone,
-    this.profileImage,
   });
 
   factory ProfileData.fromJson(Map<String, dynamic> json) =>
@@ -61,11 +60,13 @@ class ProfileData {
   Map<String, dynamic> toJson() => _$ProfileDataToJson(this);
 }
 
-@JsonSerializable()
+// [수정] ProfileInfo가 ProfileImageData를 포함하므로 explicitToJson: true 추가
+@JsonSerializable(explicitToJson: true)
 class ProfileInfo {
   final String? name;
   final DateTime? birthDate;
-  final String? profileImage;
+  // [수정] profileImage 필드 타입을 String? 에서 ProfileImageData? 로 변경
+  final ProfileImageData? profileImage;
 
   const ProfileInfo({
     this.name,
@@ -79,20 +80,36 @@ class ProfileInfo {
   Map<String, dynamic> toJson() => _$ProfileInfoToJson(this);
 }
 
+// [추가] profileImage 객체를 파싱하기 위한 클래스
 @JsonSerializable()
-class AddressData {
-  final String? zipCode;
-  final String? address1;
-  final String? address2;
+class ProfileImageData {
+  static const String baseUrl = 'http://git.hansul.kr:3002';
 
-  const AddressData({
-    this.zipCode,
-    this.address1,
-    this.address2,
+  final String? path;
+  final String? realPath;
+  final String? filename;
+  final String? originalName;
+  final String? mimeType;
+  final int? size;
+
+  String? get fullUrl {
+    if (path != null && path!.isNotEmpty) {
+      return '$baseUrl$path';
+    }
+    return null;
+  }
+
+  const ProfileImageData({
+    this.path,
+    this.realPath,
+    this.filename,
+    this.originalName,
+    this.mimeType,
+    this.size,
   });
 
-  factory AddressData.fromJson(Map<String, dynamic> json) =>
-      _$AddressDataFromJson(json);
+  factory ProfileImageData.fromJson(Map<String, dynamic> json) =>
+      _$ProfileImageDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$AddressDataToJson(this);
+  Map<String, dynamic> toJson() => _$ProfileImageDataToJson(this);
 }

@@ -13,20 +13,27 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  late Future<ProfileResponse> _apiDataFuture;
+  final apiClient = MypageApiClient();
+  late Future<ProfileResponse> _profileFuture;
 
   @override
   void initState() {
     super.initState();
-    _apiDataFuture = fetchUserProfile();
+    _profileFuture = fetchUserProfile();
   }
 
   Future<ProfileResponse> fetchUserProfile() async {
     try {
-      final profileResponse = await MypageApiClient().getProfile();
+      debugPrint('[MyPage] 프로필 데이터 요청 시작...');
+      final profileResponse = await apiClient.getProfile();
+
+      debugPrint('[MyPage] API 파싱 성공!');
+      debugPrint('[MyPage] 사용자 이름(nickName): ${profileResponse.data?.nickName}');
+      debugPrint('[MyPage] 사용자 프로필(profile): ${profileResponse.data?.profile}');
+
       return profileResponse;
     } catch (e, s) {
-      debugPrint("프로필 조회 오류: $e");
+      debugPrint("[MyPage] fetchUserProfile 함수에서 오류 발생: $e");
       debugPrintStack(stackTrace: s);
       rethrow;
     }
@@ -48,25 +55,37 @@ class _MyPageState extends State<MyPage> {
         ),
         actions: [
           IconButton(
-            onPressed: () => context.push('/wish/cart'),
+            onPressed: () {
+              context.push('/wish/cart');
+            },
             icon: const Icon(Icons.shopping_bag_outlined),
           ),
         ],
       ),
       body: FutureBuilder<ProfileResponse>(
-        future: _apiDataFuture,
+        future: _profileFuture,
         builder: (context, snapshot) {
-          final bool isLoading = snapshot.connectionState == ConnectionState.waiting;
-          String? userName;
-          String? userImage;
+          debugPrint('[FutureBuilder] 빌더 실행! ConnectionState: ${snapshot.connectionState}, hasError: ${snapshot.hasError}, hasData: ${snapshot.hasData}');
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
           if (snapshot.hasError) {
-            userName = "정보 로딩 실패";
-          } else if (snapshot.hasData) {
-            final profileData = snapshot.data?.data;
-            userName = profileData?.nickName ?? profileData?.profile?.name ?? '사용자';
-            userImage = profileData?.profileImage ?? profileData?.profile?.profileImage;
+            return Center(child: Text('오류가 발생했습니다: ${snapshot.error}'));
           }
+
+          if (!snapshot.hasData || snapshot.data?.data == null) {
+            return const Center(child: Text('사용자 정보를 불러올 수 없습니다.'));
+          }
+
+          final profileData = snapshot.data!.data!;
+
+          final userName = profileData.nickName ?? profileData.profile?.name;
+          final imageUrl = profileData.profile?.profileImage?.fullUrl;
+
+          debugPrint('[FutureBuilder] 최종 userName: $userName (타입: ${userName.runtimeType})');
+          debugPrint('[FutureBuilder] 최종 imageUrl: $imageUrl (타입: ${imageUrl.runtimeType})');
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -74,9 +93,9 @@ class _MyPageState extends State<MyPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _UserInfoRow(
-                  isLoading: isLoading,
+                  isLoading: false,
                   userName: userName,
-                  imageUrl: userImage,
+                  imageUrl: imageUrl,
                 ),
                 const SizedBox(height: 20),
                 const _SectionLabel(label: '쇼핑'),
@@ -105,6 +124,8 @@ class _MyPageState extends State<MyPage> {
     );
   }
 }
+
+// --- 아래 서브 위젯들은 수정할 필요가 없습니다. ---
 
 class _UserInfoRow extends StatelessWidget {
   final bool isLoading;
@@ -188,7 +209,6 @@ class _UserInfoRow extends StatelessWidget {
 
 class _SectionLabel extends StatelessWidget {
   final String label;
-
   const _SectionLabel({required this.label});
 
   @override

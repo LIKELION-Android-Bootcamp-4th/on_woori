@@ -39,17 +39,14 @@ ProfileData _$ProfileDataFromJson(Map<String, dynamic> json) => ProfileData(
   isActive: json['isActive'] as bool?,
   needEmailVerification: json['needEmailVerification'] as bool?,
   emailVerified: json['emailVerified'] as bool?,
+  isEmailVerified: json['isEmailVerified'] as bool?,
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
-  address: json['address'] == null
-      ? null
-      : AddressData.fromJson(json['address'] as Map<String, dynamic>),
   phone: json['phone'] as String?,
-  profileImage: json['profileImage'] as String?,
 );
 
 Map<String, dynamic> _$ProfileDataToJson(ProfileData instance) =>
@@ -62,11 +59,10 @@ Map<String, dynamic> _$ProfileDataToJson(ProfileData instance) =>
       'isActive': instance.isActive,
       'needEmailVerification': instance.needEmailVerification,
       'emailVerified': instance.emailVerified,
+      'isEmailVerified': instance.isEmailVerified,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
-      'address': instance.address?.toJson(),
       'phone': instance.phone,
-      'profileImage': instance.profileImage,
     };
 
 ProfileInfo _$ProfileInfoFromJson(Map<String, dynamic> json) => ProfileInfo(
@@ -74,25 +70,34 @@ ProfileInfo _$ProfileInfoFromJson(Map<String, dynamic> json) => ProfileInfo(
   birthDate: json['birthDate'] == null
       ? null
       : DateTime.parse(json['birthDate'] as String),
-  profileImage: json['profileImage'] as String?,
+  profileImage: json['profileImage'] == null
+      ? null
+      : ProfileImageData.fromJson(json['profileImage'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ProfileInfoToJson(ProfileInfo instance) =>
     <String, dynamic>{
       'name': instance.name,
       'birthDate': instance.birthDate?.toIso8601String(),
-      'profileImage': instance.profileImage,
+      'profileImage': instance.profileImage?.toJson(),
     };
 
-AddressData _$AddressDataFromJson(Map<String, dynamic> json) => AddressData(
-  zipCode: json['zipCode'] as String?,
-  address1: json['address1'] as String?,
-  address2: json['address2'] as String?,
-);
+ProfileImageData _$ProfileImageDataFromJson(Map<String, dynamic> json) =>
+    ProfileImageData(
+      path: json['path'] as String?,
+      realPath: json['realPath'] as String?,
+      filename: json['filename'] as String?,
+      originalName: json['originalName'] as String?,
+      mimeType: json['mimeType'] as String?,
+      size: (json['size'] as num?)?.toInt(),
+    );
 
-Map<String, dynamic> _$AddressDataToJson(AddressData instance) =>
+Map<String, dynamic> _$ProfileImageDataToJson(ProfileImageData instance) =>
     <String, dynamic>{
-      'zipCode': instance.zipCode,
-      'address1': instance.address1,
-      'address2': instance.address2,
+      'path': instance.path,
+      'realPath': instance.realPath,
+      'filename': instance.filename,
+      'originalName': instance.originalName,
+      'mimeType': instance.mimeType,
+      'size': instance.size,
     };

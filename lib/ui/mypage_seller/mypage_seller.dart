@@ -45,7 +45,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
 
       final dio = Dio(
         BaseOptions(
-          baseUrl: 'http://git.hansul.kr:3000',
+          baseUrl: 'http://git.hansul.kr:3002',
           headers: {
             'Authorization': 'Bearer $token',
             'X-Company-Code': companyCode,
@@ -107,23 +107,97 @@ class _SellerMyPageState extends State<SellerMyPage> {
               height: 20,
             ),
             const SizedBox(height: 10),
-            const SectionLabel(title: '마이페이지'),
-            const SizedBox(height: 10),
-            _buildListTile('프로필 수정', () {
-              context.go('/mypage/edit-seller');
-            }),
-            _buildListTile('비밀번호 변경', () {
-              context.go('/mypage/password');
-            }),
-            _buildListTile('상품 등록', () {
-              context.go('/mypage/register');
-            }),
-            _buildListTile('펀딩 등록', () {
-              context.push('/funding/register');
-            }),
-            _buildListTile('등록 상품 / 펀딩 관리', () {
-              context.push('/brand/editproduct');
-            }),
+
+            // 프로필 수정
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: const Text(
+                '프로필 수정',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+              onTap: () {
+                context.push('/mypage/edit-seller');
+              },
+            ),
+
+            // 비밀번호 변경
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: const Text(
+                '비밀번호 변경',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+              onTap: () {
+                context.push('/mypage/password');
+              },
+            ),
+
+            // 상품 등록
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: const Text(
+                '상품 등록',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+              onTap: () {
+                context.push('/mypage/register');
+              },
+            ),
+
+            // 펀딩 등록
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: const Text(
+                '펀딩 등록',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+              onTap: () {
+                context.push('/funding/register');
+              },
+            ),
+
+
+            // 등록 상품 / 펀딩 관리
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: const Text(
+                '등록 상품 / 펀딩 관리',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
+              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+              onTap: () {
+                context.push('/brand/editproduct');
+              },
+            ),
             const Divider(
               color: AppColors.DividerTextBoxLineDivider,
               thickness: 1,

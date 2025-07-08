@@ -3,9 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
-class SellerMyPage extends StatelessWidget {
-  const SellerMyPage({super.key});
+class SellerMyPage extends StatefulWidget {
+  @override
+  State<SellerMyPage> createState() => _SellerMyPageState();
+}
 
+class _SellerMyPageState extends State<SellerMyPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;

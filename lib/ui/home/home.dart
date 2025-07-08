@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
     try {
       final response = await apiClient.authLogin(
         request: LoginRequest(
-          email: 'buyer@hanbokmall.com',
+          email: 'admin@hanbokmall.com',
           password: 'qwer1234',
         ),
       );

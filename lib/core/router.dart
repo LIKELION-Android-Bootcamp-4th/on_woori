@@ -51,7 +51,7 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/mypage/seller',
-          builder: (context, state) => const SellerMyPage(),
+          builder: (context, state) => SellerMyPage(),
         ),
         GoRoute(
           path: '/orderlist',

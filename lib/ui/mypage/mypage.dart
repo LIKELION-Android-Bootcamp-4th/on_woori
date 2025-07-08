@@ -52,7 +52,7 @@ class _MyPageState extends State<MyPage> {
         String imagePath = "http://git.hansul.kr:3002";
 
         if (snapshot.data?.data.profile.profileImage is String) {
-          imagePath = imagePath + ((snapshot.data?.data.profile) as String? ?? "");
+          imagePath = imagePath + ((snapshot.data?.data.profile.profileImage) as String? ?? "");
         } else if (snapshot.data?.data.profile.profileImage is Map<String, dynamic>) {
           final map = ProfileImage.fromJson(snapshot.data?.data.profile.profileImage as Map<String, dynamic>);
           imagePath += map.path ?? "";

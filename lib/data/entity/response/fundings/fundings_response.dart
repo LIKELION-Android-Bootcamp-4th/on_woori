@@ -21,7 +21,7 @@ class FundingsResponse {
 
 @JsonSerializable(explicitToJson: true)
 class FundingData {
-  final List<FundingsItem> items;
+  final List<SellerFundingItem> items;
   final Pagination pagination;
 
   const FundingData({
@@ -35,7 +35,7 @@ class FundingData {
 }
 
 @JsonSerializable(explicitToJson: true)
-class FundingsItem {
+class SellerFundingItem {
   @JsonKey(name: 'id')
   final String id;
   final String title;
@@ -47,7 +47,7 @@ class FundingsItem {
   final DateTime? updatedAt;
   final Map<String, dynamic>? images; // images 필드 추가
 
-  const FundingsItem({
+  const SellerFundingItem({
     required this.id,
     required this.title,
     this.imageUrl,
@@ -59,7 +59,7 @@ class FundingsItem {
     this.images,
   });
 
-  factory FundingsItem.fromJson(Map<String, dynamic> json) =>
+  factory SellerFundingItem.fromJson(Map<String, dynamic> json) =>
       _$FundingsItemFromJson(json);
   Map<String, dynamic> toJson() => _$FundingsItemToJson(this);
 }

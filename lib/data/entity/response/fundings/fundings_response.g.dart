@@ -24,7 +24,7 @@ Map<String, dynamic> _$FundingsResponseToJson(FundingsResponse instance) =>
 
 FundingData _$FundingDataFromJson(Map<String, dynamic> json) => FundingData(
   items: (json['items'] as List<dynamic>)
-      .map((e) => FundingsItem.fromJson(e as Map<String, dynamic>))
+      .map((e) => SellerFundingItem.fromJson(e as Map<String, dynamic>))
       .toList(),
   pagination: Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
 );
@@ -35,7 +35,7 @@ Map<String, dynamic> _$FundingDataToJson(FundingData instance) =>
       'pagination': instance.pagination.toJson(),
     };
 
-FundingsItem _$FundingsItemFromJson(Map<String, dynamic> json) => FundingsItem(
+SellerFundingItem _$FundingsItemFromJson(Map<String, dynamic> json) => SellerFundingItem(
   id: json['id'] as String,
   title: json['title'] as String,
   imageUrl: json['imageUrl'] as String?,
@@ -53,7 +53,7 @@ FundingsItem _$FundingsItemFromJson(Map<String, dynamic> json) => FundingsItem(
   images: json['images'] as Map<String, dynamic>?,
 );
 
-Map<String, dynamic> _$FundingsItemToJson(FundingsItem instance) =>
+Map<String, dynamic> _$FundingsItemToJson(SellerFundingItem instance) =>
     <String, dynamic>{
       'id': instance.id,
       'title': instance.title,

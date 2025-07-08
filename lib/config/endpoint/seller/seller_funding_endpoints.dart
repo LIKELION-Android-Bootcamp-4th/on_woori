@@ -5,6 +5,6 @@ abstract class SellerFundingEndpoints {
   static String getFundingDetail({
     required String id
   }) {
-    return '/api/stores/fundings/$id';
+    return '/api/seller/fundings/$id';
   }
 }

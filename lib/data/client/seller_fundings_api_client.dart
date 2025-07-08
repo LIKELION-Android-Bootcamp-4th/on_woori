@@ -5,6 +5,8 @@ import 'package:on_woori/data/api_client.dart';
 import 'package:on_woori/data/entity/response/seller/fundings/seller_funding_response.dart';
 import 'package:on_woori/data/entity/response/stores/stores_response.dart';
 
+import '../entity/response/ApiBasicResponse.dart';
+
 class SellerFundingsApiClient {
   final Dio _dio;
 
@@ -21,7 +23,7 @@ class SellerFundingsApiClient {
 
   Future<SellerFundingResponse> createFunding()
   async {
-    final response = await _dio.get(
+    final response = await _dio.post(
       SellerFundingEndpoints.getFunding,
     );
     return SellerFundingResponse.fromJson(response.data);
@@ -37,18 +39,18 @@ class SellerFundingsApiClient {
 
   Future<SellerFundingResponse> updateFunding({required String id})
   async {
-    final response = await _dio.get(
+    final response = await _dio.patch(
       SellerFundingEndpoints.getFundingDetail(id: id),
     );
     return SellerFundingResponse.fromJson(response.data);
   }
 
-  Future<SellerFundingResponse> deleteFunding({required String id})
-  async {
-    final response = await _dio.get(
+  Future<ApiBasicResponse> deleteFunding({required String id}) async {
+    final response = await _dio.delete(
       SellerFundingEndpoints.getFundingDetail(id: id),
+      queryParameters: {'hard': true},
     );
-    return SellerFundingResponse.fromJson(response.data);
+    return ApiBasicResponse.fromJson(response.data);
   }
 
 }

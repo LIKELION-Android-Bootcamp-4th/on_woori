@@ -27,74 +27,74 @@ Map<String, dynamic> _$WishResponseToJson(WishResponse instance) =>
 
 WishData _$WishDataFromJson(Map<String, dynamic> json) => WishData(
   items: (json['items'] as List<dynamic>?)
-      ?.map((e) => WishlistItem.fromJson(e as Map<String, dynamic>))
+      ?.map((e) => WishItem.fromJson(e as Map<String, dynamic>))
       .toList(),
+  pagination: json['pagination'] == null
+      ? null
+      : PaginationData.fromJson(json['pagination'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$WishDataToJson(WishData instance) => <String, dynamic>{
   'items': instance.items?.map((e) => e.toJson()).toList(),
+  'pagination': instance.pagination?.toJson(),
 };
 
-WishlistItem _$WishlistItemFromJson(Map<String, dynamic> json) => WishlistItem(
-  product: json['productId'] == null
+WishItem _$WishItemFromJson(Map<String, dynamic> json) => WishItem(
+  id: json['id'] as String,
+  entityType: json['entityType'] as String,
+  entityId: json['entityId'] as String,
+  entity: json['entity'] == null
       ? null
-      : Product.fromJson(json['productId'] as Map<String, dynamic>),
+      : WishProductEntity.fromJson(json['entity'] as Map<String, dynamic>),
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
   store: json['store'] == null
       ? null
-      : Store.fromJson(json['store'] as Map<String, dynamic>),
+      : StoreData.fromJson(json['store'] as Map<String, dynamic>),
 );
 
-Map<String, dynamic> _$WishlistItemToJson(WishlistItem instance) =>
+Map<String, dynamic> _$WishItemToJson(WishItem instance) => <String, dynamic>{
+  'id': instance.id,
+  'entityType': instance.entityType,
+  'entityId': instance.entityId,
+  'entity': instance.entity?.toJson(),
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'store': instance.store?.toJson(),
+};
+
+WishProductEntity _$WishProductEntityFromJson(Map<String, dynamic> json) =>
+    WishProductEntity(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      price: (json['price'] as num).toInt(),
+      images: _wishImagesFromJson(json['images'] as String?),
+    );
+
+Map<String, dynamic> _$WishProductEntityToJson(WishProductEntity instance) =>
     <String, dynamic>{
-      'productId': instance.product?.toJson(),
-      'store': instance.store?.toJson(),
+      'id': instance.id,
+      'name': instance.name,
+      'price': instance.price,
+      'images': instance.images,
     };
 
-Product _$ProductFromJson(Map<String, dynamic> json) => Product(
-  id: json['id'] as String,
-  name: json['name'] as String,
-  price: (json['price'] as num).toInt(),
-  isFavorite: json['isFavorite'] as bool?,
-  stock: (json['stock'] as num?)?.toInt(),
-  stockType: json['stockType'] as String?,
-  discount: _discountToStringJson(json['discount']),
-  status: json['status'] as String?,
-  thumbnailImage: json['thumbnailImage'] == null
-      ? null
-      : ThumbnailImage.fromJson(json['thumbnailImage'] as Map<String, dynamic>),
-  images: _imagesFromJson(json['images'] as String?),
-);
+PaginationData _$PaginationDataFromJson(Map<String, dynamic> json) =>
+    PaginationData(
+      currentPage: (json['currentPage'] as num).toInt(),
+      totalPages: (json['totalPages'] as num).toInt(),
+      totalItems: (json['totalItems'] as num).toInt(),
+      itemsPerPage: (json['itemsPerPage'] as num).toInt(),
+      hasNextPage: json['hasNextPage'] as bool,
+      hasPrevPage: json['hasPrevPage'] as bool,
+    );
 
-Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
-  'id': instance.id,
-  'name': instance.name,
-  'price': instance.price,
-  'isFavorite': instance.isFavorite,
-  'stock': instance.stock,
-  'stockType': instance.stockType,
-  'discount': instance.discount,
-  'status': instance.status,
-  'thumbnailImage': instance.thumbnailImage?.toJson(),
-  'images': instance.images?.toJson(),
-};
-
-ThumbnailImage _$ThumbnailImageFromJson(Map<String, dynamic> json) =>
-    ThumbnailImage(id: json['id'] as String, url: json['url'] as String);
-
-Map<String, dynamic> _$ThumbnailImageToJson(ThumbnailImage instance) =>
-    <String, dynamic>{'id': instance.id, 'url': instance.url};
-
-Images _$ImagesFromJson(Map<String, dynamic> json) => Images(
-  detail: (json['detail'] as List<dynamic>?)?.map((e) => e as String).toList(),
-);
-
-Map<String, dynamic> _$ImagesToJson(Images instance) => <String, dynamic>{
-  'detail': instance.detail,
-};
-
-Store _$StoreFromJson(Map<String, dynamic> json) =>
-    Store(name: json['name'] as String);
-
-Map<String, dynamic> _$StoreToJson(Store instance) => <String, dynamic>{
-  'name': instance.name,
-};
+Map<String, dynamic> _$PaginationDataToJson(PaginationData instance) =>
+    <String, dynamic>{
+      'currentPage': instance.currentPage,
+      'totalPages': instance.totalPages,
+      'totalItems': instance.totalItems,
+      'itemsPerPage': instance.itemsPerPage,
+      'hasNextPage': instance.hasNextPage,
+      'hasPrevPage': instance.hasPrevPage,
+    };

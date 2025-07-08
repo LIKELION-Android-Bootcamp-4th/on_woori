@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:on_woori/data/entity/response/products/products_response.dart';
 
 part 'wish_response.g.dart';
 
-
-/// 'images' 필드(문자열화된 JSON)를 파싱하기 위한 함수
-Images? _imagesFromJson(String? jsonString) {
+Images? _wishImagesFromJson(String? jsonString) {
   if (jsonString == null || jsonString.isEmpty) return null;
   try {
     final decoded = jsonDecode(jsonString);
@@ -13,15 +12,6 @@ Images? _imagesFromJson(String? jsonString) {
   } catch (e) {
     return null;
   }
-}
-
-/// 'discount' 필드를 안전하게 String? 타입으로 변환하는 함수
-String? _discountToStringJson(dynamic json) {
-  if (json == null || (json is String && json.isEmpty)) return null;
-  if (json is num) return json.toString();
-  if (json is String) return json;
-  if (json is Map) return jsonEncode(json);
-  return json.toString();
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -40,108 +30,86 @@ class WishResponse {
 
   factory WishResponse.fromJson(Map<String, dynamic> json) =>
       _$WishResponseFromJson(json);
-
   Map<String, dynamic> toJson() => _$WishResponseToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class WishData {
-  final List<WishlistItem>? items;
+  final List<WishItem>? items;
+  final PaginationData? pagination;
 
-  const WishData({
-    this.items,
-  });
+  const WishData({this.items, this.pagination});
 
   factory WishData.fromJson(Map<String, dynamic> json) =>
       _$WishDataFromJson(json);
-
   Map<String, dynamic> toJson() => _$WishDataToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class WishlistItem {
-  @JsonKey(name: 'productId')
-  final Product? product;
-  final Store? store;
+class WishItem {
+  final String id;
+  final String entityType;
+  final String entityId;
+  final WishProductEntity? entity;
+  final DateTime? createdAt;
 
-  const WishlistItem({
-    this.product,
+  final StoreData? store;
+
+
+  const WishItem({
+    required this.id,
+    required this.entityType,
+    required this.entityId,
+    this.entity,
+    this.createdAt,
     this.store,
   });
 
-  factory WishlistItem.fromJson(Map<String, dynamic> json) =>
-      _$WishlistItemFromJson(json);
-
-  Map<String, dynamic> toJson() => _$WishlistItemToJson(this);
+  factory WishItem.fromJson(Map<String, dynamic> json) =>
+      _$WishItemFromJson(json);
+  Map<String, dynamic> toJson() => _$WishItemToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
-class Product {
-  @JsonKey(name: 'id')
+@JsonSerializable()
+class WishProductEntity {
   final String id;
   final String name;
   final int price;
-  final bool? isFavorite;
-  final int? stock;
-  final String? stockType;
 
-  @JsonKey(fromJson: _discountToStringJson)
-  final String? discount;
-
-  final String? status;
-
-  final ThumbnailImage? thumbnailImage;
-  @JsonKey(fromJson: _imagesFromJson)
+  @JsonKey(fromJson: _wishImagesFromJson)
   final Images? images;
 
-  const Product({
+  const WishProductEntity({
     required this.id,
     required this.name,
     required this.price,
-    this.isFavorite,
-    this.stock,
-    this.stockType,
-    this.discount,
-    this.status,
-    this.thumbnailImage,
     this.images,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) =>
-      _$ProductFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ProductToJson(this);
+  factory WishProductEntity.fromJson(Map<String, dynamic> json) =>
+      _$WishProductEntityFromJson(json);
+  Map<String, dynamic> toJson() => _$WishProductEntityToJson(this);
 }
 
 @JsonSerializable()
-class ThumbnailImage {
-  final String id;
-  final String url;
+class PaginationData {
+  final int currentPage;
+  final int totalPages;
+  final int totalItems;
+  final int itemsPerPage;
+  final bool hasNextPage;
+  final bool hasPrevPage;
 
-  const ThumbnailImage({required this.id, required this.url});
+  const PaginationData({
+    required this.currentPage,
+    required this.totalPages,
+    required this.totalItems,
+    required this.itemsPerPage,
+    required this.hasNextPage,
+    required this.hasPrevPage,
+  });
 
-  factory ThumbnailImage.fromJson(Map<String, dynamic> json) =>
-      _$ThumbnailImageFromJson(json);
-  Map<String, dynamic> toJson() => _$ThumbnailImageToJson(this);
-}
-
-@JsonSerializable()
-class Images {
-  final List<String>? detail;
-  const Images({this.detail});
-
-  factory Images.fromJson(Map<String, dynamic> json) => _$ImagesFromJson(json);
-  Map<String, dynamic> toJson() => _$ImagesToJson(this);
-}
-
-@JsonSerializable()
-class Store {
-  final String name;
-
-  const Store({required this.name});
-
-  factory Store.fromJson(Map<String, dynamic> json) =>
-      _$StoreFromJson(json);
-
-  Map<String, dynamic> toJson() => _$StoreToJson(this);
+  factory PaginationData.fromJson(Map<String, dynamic> json) =>
+      _$PaginationDataFromJson(json);
+  Map<String, dynamic> toJson() => _$PaginationDataToJson(this);
 }

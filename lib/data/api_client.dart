@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:on_woori/data/token_manager.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ApiClient {
   final Dio dio;
+  final _secureStorage = const FlutterSecureStorage();
 
-  // 싱글톤 패턴으로 구현
   ApiClient._privateConstructor() : dio = Dio() {
     dio.options = BaseOptions(
       baseUrl: 'http://git.hansul.kr:3002/',
@@ -16,6 +17,19 @@ class ApiClient {
         'X-Company-Code' : '6866fd115b230f5dc709bdef'
       }
     );
+
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        // companyId 읽어서 헤더에 추가
+        final companyId = await _secureStorage.read(key: 'companyId');
+        if (companyId != null) {
+          options.headers['X-Company-Code'] = companyId;
+        }
+
+        // tokenManager로 추가 처리
+        return handler.next(options);
+      },
+    ));
 
     dio.interceptors.add(TokenManager());
     dio.interceptors.add(

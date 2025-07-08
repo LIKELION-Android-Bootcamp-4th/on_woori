@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:dio/dio.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/data/client/mypage_api_client.dart';
+import 'package:on_woori/data/entity/response/mypage/profile_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
 class MyPage extends StatefulWidget {
@@ -12,38 +13,22 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  String? userName;
-  bool isLoading = true;
+  late Future<ProfileResponse> _apiDataFuture;
 
   @override
   void initState() {
     super.initState();
-    fetchUserProfile();
+    _apiDataFuture = fetchUserProfile();
   }
 
-  Future<void> fetchUserProfile() async {
-    final dio = Dio(
-      BaseOptions(
-        baseUrl: 'http://git.hansul.kr:3002',
-        headers: {
-          'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY3YzI3YzI0MTBiYmVlMTY4MDFkZDUiLCJjb21wYW55SWQiOiI2ODVmNjlmYzQzOTkyMmMwOWMyMWFlZjAiLCJpc0FkbWluIjp0cnVlLCJpc1N1cGVyQWRtaW4iOnRydWUsImlhdCI6MTc1MTg2Njg0MiwiZXhwIjoxNzUxOTUzMjQyfQ.404gq3LD9UicXvToI6FYQUcxSN4VQemYW9IAMbljO40',
-          'X-Company-Code': '6866fd115b230f5dc709bdef',
-        },
-      ),
-    );
-
+  Future<ProfileResponse> fetchUserProfile() async {
     try {
-      final response = await dio.get('/api/mypage/profile');
-      setState(() {
-        userName = response.data['data']['name'];
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        userName = '정보 없음';
-        isLoading = false;
-      });
+      final profileResponse = await MypageApiClient().getProfile();
+      return profileResponse;
+    } catch (e, s) {
+      debugPrint("프로필 조회 오류: $e");
+      debugPrintStack(stackTrace: s);
+      rethrow;
     }
   }
 
@@ -58,182 +43,190 @@ class _MyPageState extends State<MyPage> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          l10n.bottomNavigationBarMyPage, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+          l10n.bottomNavigationBarMyPage,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
         actions: [
           IconButton(
-            onPressed: () {
-              context.push('/wish/cart');
-            },
-            icon: Icon(Icons.shopping_bag_outlined),
+            onPressed: () => context.push('/wish/cart'),
+            icon: const Icon(Icons.shopping_bag_outlined),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 사용자 정보 Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    ClipOval(
-                      child: SizedBox(
-                        width: 48,
-                        height: 48,
-                        child: Image.asset(
-                          'assets/default_profile.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+      body: FutureBuilder<ProfileResponse>(
+        future: _apiDataFuture,
+        builder: (context, snapshot) {
+          final bool isLoading = snapshot.connectionState == ConnectionState.waiting;
+          String? userName;
+          String? userImage;
 
-                    const SizedBox(width: 8),
-                    Text(
-                      isLoading ? '로딩 중...' : (userName ?? '사용자'),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    const Text(
-                      '고객님',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
-                        color: AppColors.grey,
-                      ),
-                    ),
-                  ],
+          if (snapshot.hasError) {
+            userName = "정보 로딩 실패";
+          } else if (snapshot.hasData) {
+            final profileData = snapshot.data?.data;
+            userName = profileData?.nickName ?? profileData?.profile?.name ?? '사용자';
+            userImage = profileData?.profileImage ?? profileData?.profile?.profileImage;
+          }
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _UserInfoRow(
+                  isLoading: isLoading,
+                  userName: userName,
+                  imageUrl: userImage,
                 ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                      side: const BorderSide(
-                        color: AppColors.grey,
-                      ),
-                    ),
-                  ),
-                  onPressed: () {
-                    context.push('/mypage/edit');
-                  },
-                  child: const Text(
-                    '프로필 수정',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: Colors.black,
-                    ),
-                  ),
+                const SizedBox(height: 20),
+                const _SectionLabel(label: '쇼핑'),
+                const SizedBox(height: 10),
+                _LinkTile(label: '주문 내역', route: '/orderlist'),
+                _LinkTile(label: '위시리스트', route: '/wish'),
+                const Divider(
+                  color: AppColors.DividerTextBoxLineDivider,
+                  thickness: 1,
+                  height: 20,
+                ),
+                const SizedBox(height: 10),
+                const _SectionLabel(label: '내 정보'),
+                const SizedBox(height: 10),
+                _LinkTile(label: '비밀번호 변경', route: '/mypage/password'),
+                const Divider(
+                  color: AppColors.DividerTextBoxLineDivider,
+                  thickness: 1,
+                  height: 20,
                 ),
               ],
             ),
+          );
+        },
+      ),
+    );
+  }
+}
 
-            const SizedBox(height: 20),
+class _UserInfoRow extends StatelessWidget {
+  final bool isLoading;
+  final String? userName;
+  final String? imageUrl;
 
+  const _UserInfoRow({
+    required this.isLoading,
+    this.userName,
+    this.imageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const defaultAssetImage = 'assets/default_profile.png';
+    final hasNetworkImage = imageUrl != null && imageUrl!.isNotEmpty;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            ClipOval(
+              child: SizedBox(
+                width: 48,
+                height: 48,
+                child: hasNetworkImage
+                    ? Image.network(
+                  imageUrl!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(defaultAssetImage, fit: BoxFit.cover);
+                  },
+                )
+                    : Image.asset(defaultAssetImage, fit: BoxFit.cover),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              isLoading ? '로딩 중...' : (userName ?? '사용자'),
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(width: 6),
             const Text(
-              '쇼핑',
+              '님',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
-                fontSize: 16,
+                fontSize: 13,
                 color: AppColors.grey,
               ),
-            ),
-
-            const SizedBox(height: 10),
-
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              title: const Text(
-                '주문 내역',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
-              onTap: () {
-                context.push('/orderlist');
-              },
-            ),
-
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              title: const Text(
-                '위시리스트',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
-              onTap: () {
-                context.push('/wish');
-              },
-            ),
-
-            const Divider(
-              color: AppColors.DividerTextBoxLineDivider,
-              thickness: 1,
-              height: 20,
-            ),
-
-            // 내 정보 섹션 라벨
-            const SizedBox(height: 10,),
-            const Text(
-              '내 정보',
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 16,
-                color: AppColors.grey,
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              title: const Text(
-                '비밀번호 변경',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-              trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
-              onTap: () {
-                context.push('/mypage/password');
-              },
-            ),
-
-            const Divider(
-              color: AppColors.DividerTextBoxLineDivider,
-              thickness: 1,
-              height: 20,
             ),
           ],
         ),
+        TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+              side: const BorderSide(color: AppColors.grey),
+            ),
+          ),
+          onPressed: () => context.push('/mypage/edit'),
+          child: const Text('프로필 수정', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13, color: Colors.black)),
+        ),
+      ],
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  final String label;
+
+  const _SectionLabel({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      label,
+      style: const TextStyle(
+        fontWeight: FontWeight.w400,
+        fontSize: 16,
+        color: AppColors.grey,
       ),
+    );
+  }
+}
+
+class _LinkTile extends StatelessWidget {
+  final String label;
+  final String route;
+
+  const _LinkTile({required this.label, required this.route});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      dense: true,
+      title: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      ),
+      trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+      onTap: () {
+        context.push(route);
+      },
     );
   }
 }

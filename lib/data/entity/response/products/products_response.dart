@@ -3,6 +3,23 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'products_response.g.dart';
 
+List<ProductOptionGroup>? _optionsListFromJson(String? jsonString) {
+  if (jsonString == null || jsonString.isEmpty) return null;
+  try {
+    // 문자열 끝에 있는 모든 쉼표(,)와 공백을 정규식으로 제거합니다.
+    final cleanedString = jsonString.replaceAll(RegExp(r',\s*$'), '');
+
+    final validJsonString = '[$cleanedString]';
+    final decoded = jsonDecode(validJsonString) as List<dynamic>;
+    return decoded
+        .map((item) => ProductOptionGroup.fromJson(item as Map<String, dynamic>))
+        .toList();
+  } catch (e) {
+    print('Options parsing error: $e');
+    return null;
+  }
+}
+
 Images? _imagesFromJson(String? jsonString) {
   if (jsonString == null || jsonString.isEmpty) return null;
   try {
@@ -68,6 +85,9 @@ class ProductItem {
   @JsonKey(fromJson: _imagesFromJson)
   final Images? images;
 
+  @JsonKey(fromJson: _optionsListFromJson)
+  final List<ProductOptionGroup>? options;
+
   const ProductItem({
     required this.id,
     required this.name,
@@ -80,7 +100,7 @@ class ProductItem {
     this.store,
     this.thumbnailImage,
     this.images,
-    // this.options,
+    this.options,
   });
 
   factory ProductItem.fromJson(Map<String, dynamic> json) =>
@@ -110,16 +130,32 @@ class Images {
   Map<String, dynamic> toJson() => _$ImagesToJson(this);
 }
 
+@JsonSerializable(explicitToJson: true)
+class ProductOptionGroup {
+  final String type;
+  final String name;
+  final List<ProductOptionItem> items;
+
+  const ProductOptionGroup({
+    required this.type,
+    required this.name,
+    required this.items,
+  });
+
+  factory ProductOptionGroup.fromJson(Map<String, dynamic> json) =>
+      _$ProductOptionGroupFromJson(json);
+  Map<String, dynamic> toJson() => _$ProductOptionGroupToJson(this);
+}
+
 @JsonSerializable()
-class ProductOptions {
-  final List<String>? color;
-  final List<String>? size;
+class ProductOptionItem {
+  final String code;
 
-  const ProductOptions({this.color, this.size});
+  const ProductOptionItem({required this.code});
 
-  factory ProductOptions.fromJson(Map<String, dynamic> json) =>
-      _$ProductOptionsFromJson(json);
-  Map<String, dynamic> toJson() => _$ProductOptionsToJson(this);
+  factory ProductOptionItem.fromJson(Map<String, dynamic> json) =>
+      _$ProductOptionItemFromJson(json);
+  Map<String, dynamic> toJson() => _$ProductOptionItemToJson(this);
 }
 
 @JsonSerializable()

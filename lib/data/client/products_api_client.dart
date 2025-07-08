@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:on_woori/config/endpoint/auth_endpoints.dart';
 import 'package:on_woori/config/endpoint/buyer/products_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
 import 'package:on_woori/data/entity/request/auth/login_request.dart';

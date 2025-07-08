@@ -177,7 +177,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         child: Form(
           key: _formKey,
           child: Column(
@@ -218,15 +218,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               const SizedBox(height: 24),
               _buildLabel('닉네임'),
+              const SizedBox(height: 5,),
               _buildTextFormField(_nicknameController, validatorText: '닉네임을 입력해주세요'),
 
               const SizedBox(height: 16),
               _buildLabel('성함'),
+              const SizedBox(height: 5,),
               _buildTextFormField(_nameController, validatorText: '성함을 입력해주세요'),
 
               const SizedBox(height: 16),
               _buildLabel('성별'),
-              const SizedBox(height: 8),
+              const SizedBox(height: 5),
               CustomDropdown(
                 selectedValue: _selectedGender,
                 items: ['여성', '남성', '선택하지않음'],
@@ -239,6 +241,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
               const SizedBox(height: 16),
               _buildLabel('전화번호'),
+              const SizedBox(height: 5,),
               _buildTextFormField(
                 _phoneController,
                 keyboardType: TextInputType.phone,
@@ -247,6 +250,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
               const SizedBox(height: 16),
               _buildLabel('우편번호'),
+              const SizedBox(height: 5,),
               _buildTextFormField(
                 _zipcodeController,
                 keyboardType: TextInputType.number,
@@ -263,10 +267,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
               const SizedBox(height: 16),
               _buildLabel('주소'),
+              const SizedBox(height: 5,),
               _buildTextFormField(_addressController, validatorText: '주소를 입력해주세요'),
 
               const SizedBox(height: 16),
               _buildLabel('상세주소'),
+              const SizedBox(height: 5,),
               _buildTextFormField(_detailAddressController, validatorText: '상세주소를 입력해주세요'),
 
               const SizedBox(height: 32),
@@ -311,7 +317,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           keyboardType: keyboardType,
           style: const TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 20,
+            fontSize: 16,
             color: Colors.black,
           ),
           decoration: InputDecoration(

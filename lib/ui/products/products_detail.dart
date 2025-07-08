@@ -25,13 +25,7 @@ class ProductsDetailPage extends StatelessWidget {
           }, icon: const Icon(Icons.shopping_bag_outlined))
         ],
       ),
-      body: Row(
-        children: [
-          const SizedBox(width: 24),
-          Expanded(child: ProductsDetailScreen(productId)),
-          const SizedBox(width: 24),
-        ],
-      ),
+      body: ProductsDetailScreen(productId),
     );
   }
 }
@@ -53,12 +47,16 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   int quantity = 1;
   String? selectedColor;
   String? selectedSize;
-  bool isFavorite = false;
+  late bool isFavorite;
 
   @override
   void initState() {
     super.initState();
-    _productsFuture = apiClient.productDetail(widget.id);
+    _productsFuture = apiClient.productDetail(widget.id).then((response) {
+      final data = response.data;
+      isFavorite = data?.isFavorite ?? false;
+      return response;
+    });
   }
 
   void _toggleFavorite() {
@@ -86,8 +84,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
 
         final product = snapshot.data!.data!;
 
-        isFavorite = product.isFavorite;
-
         // 옵션 응답이 다 달라서 더미로 대체
         // final sizeOptions = product.options?.size ?? [];
         // final colorOptions = product.options?.color ?? [];
@@ -100,6 +96,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
         const placeholderImage = 'https://via.placeholder.com/400';
 
         return ListView(
+          padding: EdgeInsets.symmetric(horizontal: 24),
           children: [
             AspectRatio(
               aspectRatio: 1,
@@ -137,11 +134,11 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               ],
             ),
             const Divider(color: Colors.black),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
 
             // --- 상품 상세 이미지 ---
             ProductsDetailImageSection(product.images?.detail ?? []),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             const Divider(color: Colors.black),
 
             // --- 옵션 선택 ---
@@ -287,7 +284,7 @@ class ProductsNameSection extends StatelessWidget {
     bool hasDiscount = false;
     int finalPrice = product.price;
 
-    if (product.discount != null && product.discount!.isNotEmpty) {
+    if (product.discount != null && product.discount! != 0) {
       try {
         final discountData = jsonDecode(product.discount!);
         rate = discountData['value'];

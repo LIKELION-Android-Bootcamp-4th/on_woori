@@ -46,7 +46,7 @@ class _BrandEditPageState extends State<BrandEditPage> {
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -70,7 +70,7 @@ class _BrandEditPageState extends State<BrandEditPage> {
 
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(24.0),
           child: BottomButton(
             buttonText: '저장',
             pressedFunc: () {
@@ -87,7 +87,7 @@ class _BrandEditPageState extends State<BrandEditPage> {
       title,
       style: const TextStyle(
         fontWeight: FontWeight.w600,
-        fontSize: 16,
+        fontSize: 20,
         color: Colors.black,
       ),
     );

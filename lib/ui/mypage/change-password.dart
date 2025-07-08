@@ -94,6 +94,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildLabel('현재 비밀번호'),
+            const SizedBox(height: 5,),
             _buildPasswordField(currentPasswordController, _obscureCurrent, () {
               setState(() {
                 _obscureCurrent = !_obscureCurrent;
@@ -101,9 +102,10 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
               });
             }),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             _buildLabel('새 비밀번호'),
+            const SizedBox(height: 5,),
             _buildPasswordField(newPasswordController, _obscureNew, () {
               setState(() {
                 _obscureNew = !_obscureNew;
@@ -111,9 +113,10 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
               });
             }),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             _buildLabel('비밀번호 확인'),
+            const SizedBox(height: 5,),
             _buildPasswordField(confirmPasswordController, _obscureConfirm, () {
               setState(() {
                 _obscureConfirm = !_obscureConfirm;
@@ -130,7 +133,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
                 ),
               ),
 
-            const SizedBox(height: 32),
+            const SizedBox(height: 30),
 
             BottomButton(
               buttonText: '비밀번호 변경',

@@ -1,5 +1,6 @@
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 
 class ProductRegisterRequest {
@@ -10,6 +11,7 @@ class ProductRegisterRequest {
   final Set<String> sizes;
   final int? discount;
   final File? thumbnailImage;
+  final List<String>? detailImageUrls;
 
   const ProductRegisterRequest({
     required this.name,
@@ -19,6 +21,7 @@ class ProductRegisterRequest {
     required this.sizes,
     this.discount,
     this.thumbnailImage,
+    this.detailImageUrls,
   });
 
   Future<FormData> toFormData() async {
@@ -27,20 +30,23 @@ class ProductRegisterRequest {
       "name": "사이즈",
       "items": sizes.map((size) => {"code": size}).toList(),
     };
-    final optionsString = jsonEncode(optionsJson);
+
+    final imagesJson = {
+      "detail": detailImageUrls ?? [],
+    };
 
     final Map<String, dynamic> formDataMap = {
       'name': name,
       'price': price,
       'description': description,
       'category': category,
-      'options': optionsString,
+      'options': jsonEncode([optionsJson]),
       'stockType': 'fixed',
       'status': 'on_sale',
-      'discount': discount,
+      'discount': discount ?? '',
       'stock': '',
       'attributes': '',
-      'images': '',
+      'images': jsonEncode(imagesJson),
     };
 
     if (thumbnailImage != null) {

@@ -5,6 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/entity/request/products/product_register_request.dart';
+
+import 'package:on_woori/data/client/upload_api_client.dart';
+import 'package:on_woori/data/entity/request/upload/upload_files_request.dart';
+
 import '../../core/styles/app_colors.dart';
 import '../../widgets/bottom_button.dart';
 import '../../widgets/choice_chip.dart';
@@ -31,6 +35,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
   final Set<String> _selectedSizes = {};
   File? _thumbnailImageFile;
 
+  final List<XFile> _detailImages = [];
   bool _isLoading = false;
 
   @override
@@ -54,39 +59,40 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
-    await showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.photo_camera),
-                title: const Text('카메라로 촬영'),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final XFile? picked = await picker.pickImage(source: ImageSource.camera);
-                  if (picked != null) setState(() => _thumbnailImageFile = File(picked.path));
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('갤러리에서 선택'),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
-                  if (picked != null) setState(() => _thumbnailImageFile = File(picked.path));
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
+    final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) setState(() => _thumbnailImageFile = File(picked.path));
   }
 
+  Future<void> _pickDetailImages() async {
+    if (_detailImages.length >= 5) {
+      _showSnackBar('이미지는 최대 5개까지 등록할 수 있습니다.');
+      return;
+    }
+    final ImagePicker picker = ImagePicker();
+    final List<XFile> pickedImages = await picker.pickMultiImage();
+    if (pickedImages.isNotEmpty) {
+      final combinedImages = _detailImages + pickedImages;
+      setState(() {
+        if (combinedImages.length > 5) {
+          _detailImages.clear();
+          _detailImages.addAll(combinedImages.take(5));
+          _showSnackBar('이미지는 최대 5개까지만 등록할 수 있습니다.');
+        } else {
+          _detailImages.addAll(pickedImages);
+        }
+      });
+    }
+  }
+
+  void _removeDetailImage(int index) {
+    setState(() {
+      _detailImages.removeAt(index);
+    });
+  }
+
+  // --- 🚀 여기가 핵심: 2단계 통신 로직으로 수정 ---
   Future<void> _registerProduct() async {
+    // 1단계 유효성 검사
     if (_thumbnailImageFile == null) {
       _showSnackBar('대표 이미지를 등록해주세요.');
       return;
@@ -103,7 +109,25 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
     setState(() => _isLoading = true);
 
     try {
-      final request = ProductRegisterRequest(
+      // Step 1: 상세 이미지가 있으면 먼저 업로드
+      List<String> detailImageUrls = [];
+      if (_detailImages.isNotEmpty) {
+        final uploadRequest = UploadFilesRequest(files: _detailImages);
+        final uploadResponse = await UploadApiClient().uploadFiles(uploadRequest);
+
+        if (uploadResponse.success && uploadResponse.data != null) {
+          // 성공 시, URL 리스트를 추출
+          detailImageUrls = uploadResponse.data!.files.map((file) => file.url).toList();
+        } else {
+          // 파일 업로드 실패 시, 프로세스 중단
+          _showSnackBar('상세 이미지 업로드에 실패했습니다: ${uploadResponse.message}');
+          setState(() => _isLoading = false);
+          return;
+        }
+      }
+
+      // Step 2: 상품 정보와 함께 최종 등록 요청
+      final productRequest = ProductRegisterRequest(
         name: _nameController.text,
         price: int.tryParse(_priceController.text) ?? 0,
         description: _descriptionController.text,
@@ -111,15 +135,16 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         sizes: _selectedSizes,
         discount: int.tryParse(_discountController.text),
         thumbnailImage: _thumbnailImageFile,
+        detailImageUrls: detailImageUrls, // 업로드된 이미지 URL 리스트 전달
       );
 
-      final response = await ProductsApiClient().productRegister(await request.toFormData());
+      final productResponse = await ProductsApiClient().productRegister(await productRequest.toFormData());
 
-      if (mounted && response.success) {
-        _showSnackBar(response.message, isError: false);
+      if (mounted && productResponse.success) {
+        _showSnackBar('상품이 성공적으로 등록되었습니다.', isError: false);
         context.pop();
       } else if (mounted) {
-        _showSnackBar(response.message);
+        _showSnackBar('상품 등록에 실패했습니다: ${productResponse.message}');
       }
     } catch (e) {
       _showSnackBar('상품 등록 중 오류가 발생했습니다: $e');
@@ -141,6 +166,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    // build 메소드는 수정할 필요 없음 (이하 생략)
     final price = int.tryParse(_priceController.text) ?? 0;
     final discount = int.tryParse(_discountController.text) ?? 0;
     final displayPrice = (price * (100 - discount) / 100).round();
@@ -189,7 +215,6 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
                   const SizedBox(height: 16),
                   _sectionTitle('표시 가격 (할인율 반영)'),
                   const SizedBox(height: 8),
-                  // 표시 가격 필드는 자동으로 계산되므로 읽기 전용으로 설정
                   _textField('Ex : 180,000', TextEditingController(text: '$displayPrice'), isEnabled: false),
 
                   const SizedBox(height: 16),
@@ -231,7 +256,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
                   const SizedBox(height: 24),
                   _centeredSectionTitle('상품 소개 이미지 (선택)'),
                   const SizedBox(height: 8),
-                  Center(child: _imagePreviewWithButton()), // TODO: 상세 이미지 여러장 선택 기능 구현
+                  _buildDetailImagePicker(),
 
                   const SizedBox(height: 32),
                   Center(
@@ -314,16 +339,69 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
     );
   }
 
-  Widget _imagePreviewWithButton() {
-    // TODO: 상세 이미지 여러 장 선택 및 미리보기 기능 구현
-    return GestureDetector(
-      onTap: () { /* 상세 이미지 선택 로직 */ },
-      child: Container(
-        width: double.infinity,
-        height: 160,
-        decoration: BoxDecoration(color: AppColors.optionStateList, borderRadius: BorderRadius.circular(12)),
-        child: const Center(child: Icon(Icons.add_photo_alternate_outlined, color: AppColors.grey, size: 40)),
-      ),
+  Widget _buildDetailImagePicker() {
+    return Column(
+      children: [
+        if (_detailImages.isNotEmpty)
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+            ),
+            itemCount: _detailImages.length,
+            itemBuilder: (context, index) {
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: FileImage(File(_detailImages[index].path)),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: -12,
+                    right: -12,
+                    child: IconButton(
+                      icon: const Icon(Icons.remove_circle),
+                      onPressed: () => _removeDetailImage(index),
+                      color: Colors.redAccent,
+                      iconSize: 28,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        const SizedBox(height: 16),
+
+        if (_detailImages.length < 5)
+          GestureDetector(
+            onTap: _pickDetailImages,
+            child: Container(
+              width: double.infinity,
+              height: 80,
+              decoration: BoxDecoration(
+                color: AppColors.optionStateList,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add_photo_alternate_outlined, color: AppColors.grey, size: 30),
+                  SizedBox(height: 4),
+                  Text('상세 이미지 추가', style: TextStyle(color: AppColors.grey)),
+                ],
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

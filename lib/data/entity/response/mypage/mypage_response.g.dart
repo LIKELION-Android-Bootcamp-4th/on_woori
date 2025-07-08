@@ -24,25 +24,53 @@ Map<String, dynamic> _$BuyerProfileResponseToJson(
 
 BuyerProfileData _$BuyerProfileDataFromJson(Map<String, dynamic> json) =>
     BuyerProfileData(
-      id: json['_id'] as String,
-      name: json['name'] as String,
       email: json['email'] as String,
       nickName: json['nickName'] as String,
-      profileImage: json['profileImage'] as String,
-      phone: json['phone'] as String,
-      address: AddressData.fromJson(json['address'] as Map<String, dynamic>),
+      profile: ProfileData.fromJson(json['profile'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$BuyerProfileDataToJson(BuyerProfileData instance) =>
     <String, dynamic>{
-      '_id': instance.id,
-      'name': instance.name,
       'email': instance.email,
       'nickName': instance.nickName,
-      'profileImage': instance.profileImage,
-      'phone': instance.phone,
-      'address': instance.address.toJson(),
+      'profile': instance.profile.toJson(),
     };
+
+BuyerProfileEditResponse _$BuyerProfileEditResponseFromJson(
+  Map<String, dynamic> json,
+) => BuyerProfileEditResponse(
+  success: json['success'] as bool,
+  message: json['message'] as String,
+  data: BuyerProfileEditedData.fromJson(json['data'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$BuyerProfileEditResponseToJson(
+  BuyerProfileEditResponse instance,
+) => <String, dynamic>{
+  'success': instance.success,
+  'message': instance.message,
+  'data': instance.data.toJson(),
+};
+
+BuyerProfileEditedData _$BuyerProfileEditedDataFromJson(
+  Map<String, dynamic> json,
+) => BuyerProfileEditedData(
+  id: json['_id'] as String,
+  nickName: json['nickName'] as String,
+  profileImage: json['profileImage'] as String,
+  phone: json['phone'] as String,
+  address: AddressData.fromJson(json['address'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$BuyerProfileEditedDataToJson(
+  BuyerProfileEditedData instance,
+) => <String, dynamic>{
+  '_id': instance.id,
+  'nickName': instance.nickName,
+  'profileImage': instance.profileImage,
+  'phone': instance.phone,
+  'address': instance.address.toJson(),
+};
 
 AddressData _$AddressDataFromJson(Map<String, dynamic> json) => AddressData(
   zipCode: json['zipCode'] as String,

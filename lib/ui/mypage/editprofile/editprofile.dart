@@ -2,11 +2,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/data/client/mypage_api_client.dart';
+import 'package:on_woori/data/entity/request/mypage/mypage_request.dart';
+import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 import 'package:on_woori/widgets/dropdown.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key});
+  String nickName;
+  EditProfilePage({super.key, required this.nickName});
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
@@ -16,13 +20,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _nicknameController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _zipcodeController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _detailAddressController = TextEditingController();
 
-  String _selectedGender = '여성';
   File? _profileImageFile;
   String? _profileImageUrl;
 
@@ -37,7 +39,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void dispose() {
     _nicknameController.dispose();
-    _nameController.dispose();
     _phoneController.dispose();
     _zipcodeController.dispose();
     _addressController.dispose();
@@ -45,15 +46,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.dispose();
   }
 
-  Future<void> _fetchProfile() async {
-    // TODO: 서버에서 사용자 프로필 조회 후 데이터 세팅
+  void _fetchProfile() {
     setState(() {
-      _nicknameController.text = '사용자닉네임';
-      _nameController.text = '홍길동';
-      _phoneController.text = '010-1234-5678';
-      _zipcodeController.text = '12345';
-      _addressController.text = '서울시 강남구 테헤란로';
-      _detailAddressController.text = '123번길 45';
+      _nicknameController.text = widget.nickName;
+      _phoneController.text = '';
+      _zipcodeController.text = '';
+      _addressController.text = '';
+      _detailAddressController.text = '';
       _profileImageUrl = null;
     });
   }
@@ -144,16 +143,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-
-    // TODO: 서버로 수정 내용 전송
-    print('저장할 닉네임: ${_nicknameController.text}');
-    print('저장할 이름: ${_nameController.text}');
-    print('저장할 전화번호: ${_phoneController.text}');
-    print('저장할 우편번호: ${_zipcodeController.text}');
-    print('저장할 주소: ${_addressController.text}');
-    print('저장할 상세주소: ${_detailAddressController.text}');
-    print('선택된 성별: $_selectedGender');
-    print('프로필 이미지 파일: $_profileImageFile');
+    final apiClient = MypageApiClient();
+    final BuyerProfileEditRequest request = BuyerProfileEditRequest (
+      nickName: _nicknameController.text,
+      profileImage: _profileImageFile?.path,
+      phone: _phoneController.text,
+      address: AddressData(
+        zipCode: _zipcodeController.text,
+        address1: _addressController.text,
+        address2: _detailAddressController.text
+      )
+    );
+    try {
+      final response = await apiClient.editBuyerProfile(request: request);
+      print('닉네임: ${response.data.nickName}');
+      print('전화번호: ${response.data.phone}');
+    } catch (e, s) {
+      print('수정 실패 $e');
+      print(s);
+    }
 
     if (!mounted) return;
     Navigator.of(context).pop();
@@ -220,24 +228,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
               _buildLabel('닉네임'),
               const SizedBox(height: 5,),
               _buildTextFormField(_nicknameController, validatorText: '닉네임을 입력해주세요'),
+              //
+              // const SizedBox(height: 16),
+              // _buildLabel('성함'),
+              // const SizedBox(height: 5,),
+              // _buildTextFormField(_nameController, validatorText: '성함을 입력해주세요'),
 
-              const SizedBox(height: 16),
-              _buildLabel('성함'),
-              const SizedBox(height: 5,),
-              _buildTextFormField(_nameController, validatorText: '성함을 입력해주세요'),
-
-              const SizedBox(height: 16),
-              _buildLabel('성별'),
-              const SizedBox(height: 5),
-              CustomDropdown(
-                selectedValue: _selectedGender,
-                items: ['여성', '남성', '선택하지않음'],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedGender = value!;
-                  });
-                },
-              ),
+              // const SizedBox(height: 16),
+              // _buildLabel('성별'),
+              // const SizedBox(height: 5),
+              // CustomDropdown(
+              //   selectedValue: _selectedGender,
+              //   items: ['여성', '남성', '선택하지않음'],
+              //   onChanged: (value) {
+              //     setState(() {
+              //       _selectedGender = value!;
+              //     });
+              //   },
+              // ),
 
               const SizedBox(height: 16),
               _buildLabel('전화번호'),

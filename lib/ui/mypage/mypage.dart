@@ -15,7 +15,6 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  String? userName;
   final apiClient = MypageApiClient();
   late Future<BuyerProfileResponse> _profileFuture;
 
@@ -25,32 +24,6 @@ class _MyPageState extends State<MyPage> {
     _profileFuture = apiClient.getBuyerProfile();
   }
 
-  // Future<void> fetchUserProfile() async {
-  //   final dio = Dio(
-  //     BaseOptions(
-  //       baseUrl: 'http://git.hansul.kr:3000',
-  //       headers: {
-  //         'Authorization':
-  //         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY3YzI3YzI0MTBiYmVlMTY4MDFkZDUiLCJjb21wYW55SWQiOiI2ODVmNjlmYzQzOTkyMmMwOWMyMWFlZjAiLCJpc0FkbWluIjp0cnVlLCJpc1N1cGVyQWRtaW4iOnRydWUsImlhdCI6MTc1MTg2Njg0MiwiZXhwIjoxNzUxOTUzMjQyfQ.404gq3LD9UicXvToI6FYQUcxSN4VQemYW9IAMbljO40',
-  //         'X-Company-Code': '6866fd115b230f5dc709bdef',
-  //       },
-  //     ),
-  //   );
-  //
-  //   try {
-  //     final response = await dio.get('/api/mypage/profile');
-  //     setState(() {
-  //       userName = response.data['data']['name'];
-  //       isLoading = false;
-  //     });
-  //   } catch (e) {
-  //     setState(() {
-  //       userName = '정보 없음';
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -58,7 +31,7 @@ class _MyPageState extends State<MyPage> {
     return FutureBuilder(
       future: _profileFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
 
@@ -115,7 +88,7 @@ class _MyPageState extends State<MyPage> {
 
                         const SizedBox(width: 8),
                         Text(
-                          snapshot.data?.data.name ?? '사용자',
+                          snapshot.data?.data.nickName ?? '사용자',
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 20,
@@ -148,7 +121,7 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                       onPressed: () {
-                        context.push('/mypage/edit-buyer');
+                        context.push('/mypage/edit-buyer/${snapshot.data?.data.nickName}');
                       },
                       child: const Text(
                         '프로필 수정',

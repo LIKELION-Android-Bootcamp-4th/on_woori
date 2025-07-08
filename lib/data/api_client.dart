@@ -8,12 +8,12 @@ class ApiClient {
   // 싱글톤 패턴으로 구현
   ApiClient._privateConstructor() : dio = Dio() {
     dio.options = BaseOptions(
-      baseUrl: 'http://git.hansul.kr:3000/',
+      baseUrl: 'http://git.hansul.kr:3002/',
       connectTimeout: const Duration(milliseconds: 5000),
       receiveTimeout: const Duration(milliseconds: 3000),
       headers: {
         'Content-Type' : 'application/json',
-        'X-Company-Code' : '685f69fc439922c09c21aef0'
+        'X-Company-Code' : '6866fd115b230f5dc709bdef'
       }
     );
 

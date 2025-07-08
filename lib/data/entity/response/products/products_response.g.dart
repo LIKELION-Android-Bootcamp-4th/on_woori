@@ -44,10 +44,13 @@ ProductItem _$ProductItemFromJson(Map<String, dynamic> json) => ProductItem(
   stockType: json['stockType'] as String?,
   discount: _discountToStringJson(json['discount']),
   status: json['status'] as String?,
-  images: _productImagesFromJson(json['images']),
   store: json['store'] == null
       ? null
       : StoreData.fromJson(json['store'] as Map<String, dynamic>),
+  thumbnailImage: json['thumbnailImage'] == null
+      ? null
+      : ThumbnailImage.fromJson(json['thumbnailImage'] as Map<String, dynamic>),
+  images: _imagesFromJson(json['images'] as String?),
 );
 
 Map<String, dynamic> _$ProductItemToJson(ProductItem instance) =>
@@ -60,20 +63,24 @@ Map<String, dynamic> _$ProductItemToJson(ProductItem instance) =>
       'stockType': instance.stockType,
       'discount': instance.discount,
       'status': instance.status,
-      'images': instance.images?.toJson(),
       'store': instance.store?.toJson(),
+      'thumbnailImage': instance.thumbnailImage?.toJson(),
+      'images': instance.images?.toJson(),
     };
 
-ProductImages _$ProductImagesFromJson(Map<String, dynamic> json) =>
-    ProductImages(
-      main: json['main'] as String,
-      detail: (json['detail'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-    );
+ThumbnailImage _$ThumbnailImageFromJson(Map<String, dynamic> json) =>
+    ThumbnailImage(id: json['id'] as String, url: json['url'] as String);
 
-Map<String, dynamic> _$ProductImagesToJson(ProductImages instance) =>
-    <String, dynamic>{'main': instance.main, 'detail': instance.detail};
+Map<String, dynamic> _$ThumbnailImageToJson(ThumbnailImage instance) =>
+    <String, dynamic>{'id': instance.id, 'url': instance.url};
+
+Images _$ImagesFromJson(Map<String, dynamic> json) => Images(
+  detail: (json['detail'] as List<dynamic>?)?.map((e) => e as String).toList(),
+);
+
+Map<String, dynamic> _$ImagesToJson(Images instance) => <String, dynamic>{
+  'detail': instance.detail,
+};
 
 ProductOptions _$ProductOptionsFromJson(Map<String, dynamic> json) =>
     ProductOptions(

@@ -103,7 +103,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                 child: Image.network(
-                  product.images?.main ?? placeholderImage,
+                  product.thumbnailImage?.url ?? placeholderImage,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Image.network(placeholderImage, fit: BoxFit.cover),
                 ),
@@ -142,7 +142,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             const Divider(color: Colors.black),
 
             // --- 옵션 선택 ---
-            // [핵심] 옵션 목록이 있을 때만 드롭다운 UI를 보여줍니다.
             if (sizeOptions.isNotEmpty) ...[
               OptionDropdown(
                 hint: "사이즈 선택",

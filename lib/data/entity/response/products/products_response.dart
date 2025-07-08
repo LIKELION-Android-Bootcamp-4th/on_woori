@@ -3,25 +3,19 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'products_response.g.dart';
 
-ProductImages? _productImagesFromJson(dynamic json) {
-  if (json == null) return null;
-
-  if (json is Map<String, dynamic>) {
-    return ProductImages.fromJson(json);
+Images? _imagesFromJson(String? jsonString) {
+  if (jsonString == null || jsonString.isEmpty) return null;
+  try {
+    final decoded = jsonDecode(jsonString);
+    return Images.fromJson(decoded as Map<String, dynamic>);
+  } catch (e) {
+    return null;
   }
-
-  if (json is String) {
-    if (json.isEmpty) return null;
-    // jsonDecode 대신, 문자열을 main 이미지 URL로 직접 사용하여 객체 생성
-    return ProductImages(main: json, detail: null);
-  }
-
-  return null;
 }
 
 String? _discountToStringJson(dynamic json) {
-  if (json == null) return null;
-  if (json is int) return json.toString();
+  if (json == null || (json is String && json.isEmpty)) return null;
+  if (json is num) return json.toString();
   if (json is String) return json;
   if (json is Map) return jsonEncode(json);
   return json.toString();
@@ -65,16 +59,14 @@ class ProductItem {
   final bool isFavorite;
   final int? stock;
   final String? stockType;
-
   @JsonKey(fromJson: _discountToStringJson)
   final String? discount;
-
   final String? status;
-
-  @JsonKey(fromJson: _productImagesFromJson)
-  final ProductImages? images;
-
   final StoreData? store;
+  final ThumbnailImage? thumbnailImage;
+
+  @JsonKey(fromJson: _imagesFromJson)
+  final Images? images;
 
   const ProductItem({
     required this.id,
@@ -85,8 +77,10 @@ class ProductItem {
     this.stockType,
     this.discount,
     this.status,
-    this.images,
     this.store,
+    this.thumbnailImage,
+    this.images,
+    // this.options,
   });
 
   factory ProductItem.fromJson(Map<String, dynamic> json) =>
@@ -95,15 +89,25 @@ class ProductItem {
 }
 
 @JsonSerializable()
-class ProductImages {
-  final String main;
+class ThumbnailImage {
+  final String id;
+  final String url;
+
+  const ThumbnailImage({required this.id, required this.url});
+
+  factory ThumbnailImage.fromJson(Map<String, dynamic> json) =>
+      _$ThumbnailImageFromJson(json);
+  Map<String, dynamic> toJson() => _$ThumbnailImageToJson(this);
+}
+
+@JsonSerializable()
+class Images {
   final List<String>? detail;
 
-  const ProductImages({required this.main, this.detail});
+  const Images({this.detail});
 
-  factory ProductImages.fromJson(Map<String, dynamic> json) =>
-      _$ProductImagesFromJson(json);
-  Map<String, dynamic> toJson() => _$ProductImagesToJson(this);
+  factory Images.fromJson(Map<String, dynamic> json) => _$ImagesFromJson(json);
+  Map<String, dynamic> toJson() => _$ImagesToJson(this);
 }
 
 @JsonSerializable()

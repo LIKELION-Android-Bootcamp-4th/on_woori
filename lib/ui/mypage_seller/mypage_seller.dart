@@ -162,7 +162,7 @@ class SellerMyPage extends StatelessWidget {
               ),
               trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
               onTap: () {
-                context.go('/mypage/edit-seller');
+                context.push('/mypage/edit-seller');
               },
             ),
 
@@ -180,7 +180,7 @@ class SellerMyPage extends StatelessWidget {
               ),
               trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
               onTap: () {
-                context.go('/mypage/password');
+                context.push('/mypage/password');
               },
             ),
 
@@ -198,7 +198,7 @@ class SellerMyPage extends StatelessWidget {
               ),
               trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
               onTap: () {
-                context.go('/mypage/register');
+                context.push('/mypage/register');
               },
             ),
 

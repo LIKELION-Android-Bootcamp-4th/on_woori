@@ -129,7 +129,7 @@ class _MyPageState extends State<MyPage> {
                     ),
                   ),
                   onPressed: () {
-                    // TODO: 프로필 수정 이동
+                    context.push('/mypage/edit-buyer');
                   },
                   child: const Text(
                     '프로필 수정',

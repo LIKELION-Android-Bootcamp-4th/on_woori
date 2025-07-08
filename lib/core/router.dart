@@ -98,6 +98,10 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const EditProfileSellerPage(),
         ),
         GoRoute(
+          path: '/mypage/edit-buyer',
+          builder: (context, state) => const EditProfilePage(),
+        ),
+        GoRoute(
           path: '/productslist/:categoryId',
           builder: (context, state) {
             final String categoryId = state.pathParameters['categoryId'] ?? "";

@@ -1,8 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/data/client/seller_fundings_api_client.dart';
 import 'package:on_woori/data/client/seller_store_api.dart';
+import 'package:on_woori/data/entity/response/upload/upload_files_response.dart';
 import '../../core/styles/app_colors.dart';
+import '../../data/client/upload_api_client.dart';
+import '../../data/entity/request/upload/upload_files_request.dart';
 import '../../widgets/bottom_button.dart';
 
 class FundingRegisterPage extends StatefulWidget {
@@ -16,10 +21,76 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
   final _nameController = TextEditingController();
   final _linkController = TextEditingController();
   final fundingApiClient = SellerFundingsApiClient();
-  File? _selectedImage;
+  File? _profileImageFile;
+  String? _profileImageUrl;
+  bool _isPickingImage = false;
 
-  Future<void> _onAddImagePressed() async {
-    // TODO: 이미지 선택 로직
+  Future<void> _pickImage() async {
+    if (_isPickingImage) {
+      print('이미 이미지 선택 중입니다.');
+      return;
+    }
+
+    setState(() {
+      _isPickingImage = true;
+    });
+
+    final ImagePicker picker = ImagePicker();
+
+    await showModalBottomSheet(
+      context: context,
+      isDismissible: true,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('카메라로 촬영'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? picked = await picker.pickImage(
+                    source: ImageSource.camera,
+                    imageQuality: 85,
+                  );
+                  if (!mounted) return;
+                  setState(() {
+                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageUrl = picked != null ? null : _profileImageUrl;
+                    _isPickingImage = false;
+                  });
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('갤러리에서 선택'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? picked = await picker.pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: 85,
+                  );
+                  if (!mounted) return;
+                  setState(() {
+                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageUrl = picked != null ? null : _profileImageUrl;
+                    _isPickingImage = false;
+                  });
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    ).whenComplete(() {
+      // BottomSheet 닫힐 때 플래그 해제
+      if (mounted) {
+        setState(() {
+          _isPickingImage = false;
+        });
+      }
+    });
   }
 
   Future<String?> getStoreId() async {
@@ -30,7 +101,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
       print("storemessage : ${response.message}");
 
       if (response.success) {
-        final storeId = response.data.ownerId;
+        final storeId = response.data?.owner?.id;
         return storeId;
       } else {
         print('스토어 정보 불러오기 실패: ${response.message}');
@@ -52,11 +123,32 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
   void submit() async {
     final storeId = await getStoreId();
     if (storeId != null) {
+      String? imageUrl = _profileImageUrl;
+
+      // 이미지 선택된 경우 업로드
+      if (_profileImageFile != null) {
+        try {
+          final uploadClient = UploadApiClient();
+          final request = UploadFilesRequest(files: [XFile(_profileImageFile!.path)]);
+          final UploadFilesResponse uploadResponse = await uploadClient.uploadFiles(request);
+
+          if (uploadResponse.success && uploadResponse.data!.files.first.url.isNotEmpty) {
+            imageUrl = uploadResponse.data?.files.first.url;
+            print('업로드된 이미지 URL: $imageUrl');
+          } else {
+            print('파일 업로드 실패 또는 URL 없음');
+            return;
+          }
+        } catch (e) {
+          print('이미지 업로드 중 오류 발생: $e');
+          return;
+        }
+      }
       final res = await fundingApiClient.createFunding(
         storeId: storeId,
         title: _nameController.text,
         linkUrl: _linkController.text,
-        imageUrl: "",
+        imageUrl: imageUrl,
       );
       print("storeId: $storeId");
 
@@ -68,6 +160,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
           print('생성 실패: ${res.message}');
         }
       });
+
     }
   }
 
@@ -170,12 +263,12 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
             color: AppColors.optionStateList,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: _selectedImage == null
+          child: _profileImageFile == null
               ? const SizedBox.shrink()
               : ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.file(
-                    _selectedImage!,
+                    _profileImageFile!,
                     fit: BoxFit.cover,
                     width: 160,
                     height: 160,
@@ -190,7 +283,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
             shape: const CircleBorder(),
             child: InkWell(
               customBorder: const CircleBorder(),
-              onTap: _onAddImagePressed,
+              onTap: _pickImage,
               child: SizedBox(
                 width: 44,
                 height: 44,

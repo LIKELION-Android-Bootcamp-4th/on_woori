@@ -90,7 +90,6 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
     });
   }
 
-  // --- 🚀 여기가 핵심: 2단계 통신 로직으로 수정 ---
   Future<void> _registerProduct() async {
     // 1단계 유효성 검사
     if (_thumbnailImageFile == null) {
@@ -109,24 +108,20 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
     setState(() => _isLoading = true);
 
     try {
-      // Step 1: 상세 이미지가 있으면 먼저 업로드
       List<String> detailImageUrls = [];
       if (_detailImages.isNotEmpty) {
         final uploadRequest = UploadFilesRequest(files: _detailImages);
         final uploadResponse = await UploadApiClient().uploadFiles(uploadRequest);
 
         if (uploadResponse.success && uploadResponse.data != null) {
-          // 성공 시, URL 리스트를 추출
           detailImageUrls = uploadResponse.data!.files.map((file) => file.url).toList();
         } else {
-          // 파일 업로드 실패 시, 프로세스 중단
           _showSnackBar('상세 이미지 업로드에 실패했습니다: ${uploadResponse.message}');
           setState(() => _isLoading = false);
           return;
         }
       }
 
-      // Step 2: 상품 정보와 함께 최종 등록 요청
       final productRequest = ProductRegisterRequest(
         name: _nameController.text,
         price: int.tryParse(_priceController.text) ?? 0,
@@ -135,7 +130,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         sizes: _selectedSizes,
         discount: int.tryParse(_discountController.text),
         thumbnailImage: _thumbnailImageFile,
-        detailImageUrls: detailImageUrls, // 업로드된 이미지 URL 리스트 전달
+        detailImageUrls: detailImageUrls,
       );
 
       final productResponse = await ProductsApiClient().productRegister(await productRequest.toFormData());

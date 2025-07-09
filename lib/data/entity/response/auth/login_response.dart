@@ -2,11 +2,19 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'login_response.g.dart';
 
+ProfileImageData? _profileImageFromJson(dynamic json) {
+  if (json is Map<String, dynamic>) {
+    return ProfileImageData.fromJson(json);
+  }
+  return null;
+}
+
+
 @JsonSerializable(explicitToJson: true)
 class LoginResponse {
   final bool success;
   final String message;
-  final LoginData? data; // API 응답에 data가 없을 경우를 대비해 nullable 처리
+  final LoginData? data;
   final DateTime? timestamp;
 
   const LoginResponse({
@@ -40,17 +48,13 @@ class LoginData {
   Map<String, dynamic> toJson() => _$LoginDataToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson:true)
 class UserData {
-  // [추가] API 응답에 있는 필드들을 추가합니다.
   @JsonKey(name: 'id')
   final String id;
   final String email;
   final String? nickName;
-  final String? name;
-  final String? phone;
-  final String? phoneEncrypted;
-  final ProfileData? profile;
+  final ProfileData profile;
   final List<String>? loginRoles;
   final List<String>? platformRoles;
   final bool? isAdmin;
@@ -58,21 +62,15 @@ class UserData {
   final bool? isActive;
   final bool? needEmailVerification;
   final bool? emailVerified;
-  final bool? isEmailVerified;
   final String? companyId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  @JsonKey(name: '__v')
-  final int? v;
 
   const UserData({
     required this.id,
     required this.email,
+    required this.profile,
     this.nickName,
-    this.name,
-    this.phone,
-    this.phoneEncrypted,
-    this.profile,
     this.loginRoles,
     this.platformRoles,
     this.isAdmin,
@@ -80,11 +78,9 @@ class UserData {
     this.isActive,
     this.needEmailVerification,
     this.emailVerified,
-    this.isEmailVerified,
     this.companyId,
     this.createdAt,
     this.updatedAt,
-    this.v,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) =>
@@ -93,11 +89,12 @@ class UserData {
   Map<String, dynamic> toJson() => _$UserDataToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable()
 class ProfileData {
   final String? name;
   final DateTime? birthDate;
-  // [수정] profileImage 필드 타입을 String? 에서 ProfileImageData? 로 변경합니다.
+
+  @JsonKey(fromJson: _profileImageFromJson)
   final ProfileImageData? profileImage;
 
   const ProfileData({
@@ -112,7 +109,6 @@ class ProfileData {
   Map<String, dynamic> toJson() => _$ProfileDataToJson(this);
 }
 
-// [추가] profileImage 객체를 파싱하기 위한 클래스
 @JsonSerializable()
 class ProfileImageData {
   final String? path;

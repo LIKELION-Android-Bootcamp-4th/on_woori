@@ -10,18 +10,33 @@ StoresResponse _$StoresResponseFromJson(Map<String, dynamic> json) =>
     StoresResponse(
       success: json['success'] as bool,
       message: json['message'] as String,
-      data: (json['data'] as List<dynamic>)
-          .map((e) => StoreItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      timestamp: DateTime.parse(json['timestamp'] as String),
+      data: json['data'] == null
+          ? null
+          : StoresData.fromJson(json['data'] as Map<String, dynamic>),
+      timestamp: json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String),
     );
 
 Map<String, dynamic> _$StoresResponseToJson(StoresResponse instance) =>
     <String, dynamic>{
       'success': instance.success,
       'message': instance.message,
-      'data': instance.data,
-      'timestamp': instance.timestamp.toIso8601String(),
+      'data': instance.data?.toJson(),
+      'timestamp': instance.timestamp?.toIso8601String(),
+    };
+
+StoresData _$StoresDataFromJson(Map<String, dynamic> json) => StoresData(
+  items: (json['items'] as List<dynamic>)
+      .map((e) => StoreItem.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  pagination: json['pagination'] as String?,
+);
+
+Map<String, dynamic> _$StoresDataToJson(StoresData instance) =>
+    <String, dynamic>{
+      'items': instance.items.map((e) => e.toJson()).toList(),
+      'pagination': instance.pagination,
     };
 
 StoreItem _$StoreItemFromJson(Map<String, dynamic> json) => StoreItem(
@@ -29,6 +44,28 @@ StoreItem _$StoreItemFromJson(Map<String, dynamic> json) => StoreItem(
   name: json['name'] as String,
   description: json['description'] as String?,
   owner: json['owner'] as String,
+  companyId: json['companyId'] as String,
+  status: json['status'] as String,
+  isDeleted: json['isDeleted'] as bool,
+  category: json['category'] as String?,
+  shippingPolicy: json['shippingPolicy'] == null
+      ? null
+      : ShippingPolicy.fromJson(json['shippingPolicy'] as Map<String, dynamic>),
+  contact: json['contact'] == null
+      ? null
+      : Contact.fromJson(json['contact'] as Map<String, dynamic>),
+  address: json['address'] == null
+      ? null
+      : Address.fromJson(json['address'] as Map<String, dynamic>),
+  thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
+  coverImageUrl: json['coverImageUrl'] as String?,
+  bannerImageUrl: json['bannerImageUrl'] as String?,
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
 );
 
 Map<String, dynamic> _$StoreItemToJson(StoreItem instance) => <String, dynamic>{
@@ -36,6 +73,58 @@ Map<String, dynamic> _$StoreItemToJson(StoreItem instance) => <String, dynamic>{
   'name': instance.name,
   'description': instance.description,
   'owner': instance.owner,
+  'companyId': instance.companyId,
+  'status': instance.status,
+  'isDeleted': instance.isDeleted,
+  'category': instance.category,
+  'shippingPolicy': instance.shippingPolicy?.toJson(),
+  'contact': instance.contact?.toJson(),
+  'address': instance.address?.toJson(),
+  'thumbnailImageUrl': instance.thumbnailImageUrl,
+  'coverImageUrl': instance.coverImageUrl,
+  'bannerImageUrl': instance.bannerImageUrl,
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
+};
+
+ShippingPolicy _$ShippingPolicyFromJson(Map<String, dynamic> json) =>
+    ShippingPolicy(
+      defaultShippingCost: (json['defaultShippingCost'] as num?)?.toInt(),
+      freeShippingThreshold: (json['freeShippingThreshold'] as num?)?.toInt(),
+      freeShippingEnabled: json['freeShippingEnabled'] as bool?,
+    );
+
+Map<String, dynamic> _$ShippingPolicyToJson(ShippingPolicy instance) =>
+    <String, dynamic>{
+      'defaultShippingCost': instance.defaultShippingCost,
+      'freeShippingThreshold': instance.freeShippingThreshold,
+      'freeShippingEnabled': instance.freeShippingEnabled,
+    };
+
+Contact _$ContactFromJson(Map<String, dynamic> json) => Contact(
+  kakaoTalk: json['kakaoTalk'] as String?,
+  phone: json['phone'] as String?,
+  email: json['email'] as String?,
+  website: json['website'] as String?,
+);
+
+Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
+  'kakaoTalk': instance.kakaoTalk,
+  'phone': instance.phone,
+  'email': instance.email,
+  'website': instance.website,
+};
+
+Address _$AddressFromJson(Map<String, dynamic> json) => Address(
+  street: json['street'] as String?,
+  detail: json['detail'] as String?,
+  zipCode: json['zipCode'] as String?,
+);
+
+Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
+  'street': instance.street,
+  'detail': instance.detail,
+  'zipCode': instance.zipCode,
 };
 
 StoreOwner _$StoreOwnerFromJson(Map<String, dynamic> json) => StoreOwner(

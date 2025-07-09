@@ -25,11 +25,21 @@ class ProductRegisterRequest {
   });
 
   Future<FormData> toFormData() async {
-    final optionsJson = {
+    final sizeOptionsJson = {
       "type": "size",
       "name": "사이즈",
       "items": sizes.map((size) => {"code": size}).toList(),
     };
+
+    // 2. '기본' 값을 가진 컬러 옵션 그룹 생성
+    final colorOptionsJson = {
+      "type": "color",
+      "name": "컬러",
+      "items": [{"code": "기본"}],
+    };
+
+    // 3. 두 옵션 그룹을 하나의 리스트로 합치기
+    final optionsList = [sizeOptionsJson, colorOptionsJson];
 
     final imagesJson = {
       "detail": detailImageUrls ?? [],
@@ -40,11 +50,11 @@ class ProductRegisterRequest {
       'price': price,
       'description': description,
       'category': category,
-      'options': jsonEncode([optionsJson]),
+      'options': jsonEncode(optionsList),
       'stockType': 'fixed',
       'status': 'on_sale',
       'discount': discount ?? '',
-      'stock': '1000', // 일단 기본 수량으로 1000개 추가
+      'stock': '1000',
       'attributes': '',
       'images': jsonEncode(imagesJson),
     };

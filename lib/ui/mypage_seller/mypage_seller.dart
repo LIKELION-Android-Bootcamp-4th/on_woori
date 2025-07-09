@@ -239,7 +239,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
                     ),
                     trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
                     onTap: () async {
-                      final result = await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName ?? ""}');
+                      final result = await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName ?? ""}/${snapshot.data?.data?.profile.profileImage ?? ""} ');
                       if (result == true) {
                         _refresh();
                       }

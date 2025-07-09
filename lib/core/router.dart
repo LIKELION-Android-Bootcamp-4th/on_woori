@@ -94,17 +94,11 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const EditProfileSellerPage(),
         ),
         GoRoute(
-          path: '/mypage/edit-buyer/:nickName',
+          path: '/mypage/edit-buyer/:nickName/:profileUrl',
           builder: (context, state) {
             final String nickName = state.pathParameters['nickName'] ?? '';
-            return EditProfilePage(nickName: nickName);
-          }
-        ),
-        GoRoute(
-          path: '/productslist/:categoryId',
-          builder: (context, state) {
-            final String nickName = state.pathParameters['nickName'] ?? '';
-            return EditProfilePage(nickName: nickName);
+            final String profileUrl = state.pathParameters['profileUrl'] ?? '';
+            return EditProfilePage(nickName: nickName, profileUrl: profileUrl);
           }
         ),
         GoRoute(

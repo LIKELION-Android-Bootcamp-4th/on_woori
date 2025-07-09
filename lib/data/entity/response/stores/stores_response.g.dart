@@ -30,13 +30,13 @@ StoresData _$StoresDataFromJson(Map<String, dynamic> json) => StoresData(
   items: (json['items'] as List<dynamic>)
       .map((e) => StoreItem.fromJson(e as Map<String, dynamic>))
       .toList(),
-  pagination: json['pagination'] as String?,
+  pagination: _paginationFromJson(json['pagination']),
 );
 
 Map<String, dynamic> _$StoresDataToJson(StoresData instance) =>
     <String, dynamic>{
       'items': instance.items.map((e) => e.toJson()).toList(),
-      'pagination': instance.pagination,
+      'pagination': instance.pagination?.toJson(),
     };
 
 StoreItem _$StoreItemFromJson(Map<String, dynamic> json) => StoreItem(
@@ -51,12 +51,9 @@ StoreItem _$StoreItemFromJson(Map<String, dynamic> json) => StoreItem(
   shippingPolicy: json['shippingPolicy'] == null
       ? null
       : ShippingPolicy.fromJson(json['shippingPolicy'] as Map<String, dynamic>),
-  contact: json['contact'] == null
-      ? null
-      : Contact.fromJson(json['contact'] as Map<String, dynamic>),
-  address: json['address'] == null
-      ? null
-      : Address.fromJson(json['address'] as Map<String, dynamic>),
+  contact: _contactFromJson(json['contact']),
+  address: _addressFromJson(json['address']),
+  thumbnailImage: _thumbnailImageFromJson(json['thumbnailImage']),
   thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
   coverImageUrl: json['coverImageUrl'] as String?,
   bannerImageUrl: json['bannerImageUrl'] as String?,
@@ -80,6 +77,7 @@ Map<String, dynamic> _$StoreItemToJson(StoreItem instance) => <String, dynamic>{
   'shippingPolicy': instance.shippingPolicy?.toJson(),
   'contact': instance.contact?.toJson(),
   'address': instance.address?.toJson(),
+  'thumbnailImage': instance.thumbnailImage?.toJson(),
   'thumbnailImageUrl': instance.thumbnailImageUrl,
   'coverImageUrl': instance.coverImageUrl,
   'bannerImageUrl': instance.bannerImageUrl,
@@ -126,6 +124,25 @@ Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
   'detail': instance.detail,
   'zipCode': instance.zipCode,
 };
+
+Pagination _$PaginationFromJson(Map<String, dynamic> json) => Pagination(
+  currentPage: (json['currentPage'] as num).toInt(),
+  totalPages: (json['totalPages'] as num).toInt(),
+  totalItems: (json['total'] as num).toInt(),
+  itemsPerPage: (json['limit'] as num).toInt(),
+  hasNextPage: json['hasNext'] as bool,
+  hasPrevPage: json['hasPrev'] as bool,
+);
+
+Map<String, dynamic> _$PaginationToJson(Pagination instance) =>
+    <String, dynamic>{
+      'currentPage': instance.currentPage,
+      'totalPages': instance.totalPages,
+      'total': instance.totalItems,
+      'limit': instance.itemsPerPage,
+      'hasNext': instance.hasNextPage,
+      'hasPrev': instance.hasPrevPage,
+    };
 
 StoreOwner _$StoreOwnerFromJson(Map<String, dynamic> json) => StoreOwner(
   id: json['id'] as String,

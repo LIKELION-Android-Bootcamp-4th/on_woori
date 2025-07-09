@@ -1,7 +1,36 @@
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 
 part 'stores_response.g.dart';
+
+Contact? _contactFromJson(dynamic json) {
+  if (json is Map<String, dynamic>) {
+    return Contact.fromJson(json);
+  }
+  return null;
+}
+
+Address? _addressFromJson(dynamic json) {
+  if (json is Map<String, dynamic>) {
+    return Address.fromJson(json);
+  }
+  return null;
+}
+
+ThumbnailImage? _thumbnailImageFromJson(dynamic json) {
+  if (json is Map<String, dynamic>) {
+    return ThumbnailImage.fromJson(json);
+  }
+  return null;
+}
+
+Pagination? _paginationFromJson(dynamic json) {
+  if (json is Map<String, dynamic>) {
+    return Pagination.fromJson(json);
+  }
+  return null;
+}
 
 @JsonSerializable(explicitToJson: true)
 class StoresResponse {
@@ -14,7 +43,7 @@ class StoresResponse {
     required this.success,
     required this.message,
     this.data,
-    required this.timestamp,
+    this.timestamp,
   });
 
   factory StoresResponse.fromJson(Map<String, dynamic> json) =>
@@ -22,11 +51,11 @@ class StoresResponse {
   Map<String, dynamic> toJson() => _$StoresResponseToJson(this);
 }
 
-// 🚀 [추가] data 객체를 위한 StoresData 클래스
 @JsonSerializable(explicitToJson: true)
 class StoresData {
   final List<StoreItem> items;
-  final String? pagination;
+  @JsonKey(fromJson: _paginationFromJson)
+  final Pagination? pagination;
 
   const StoresData({
     required this.items,
@@ -51,8 +80,16 @@ class StoreItem {
   final bool isDeleted;
   final String? category;
   final ShippingPolicy? shippingPolicy;
+
+  @JsonKey(fromJson: _contactFromJson)
   final Contact? contact;
+
+  @JsonKey(fromJson: _addressFromJson)
   final Address? address;
+
+  @JsonKey(fromJson: _thumbnailImageFromJson)
+  final ThumbnailImage? thumbnailImage;
+
   final String? thumbnailImageUrl;
   final String? coverImageUrl;
   final String? bannerImageUrl;
@@ -72,6 +109,7 @@ class StoreItem {
     this.shippingPolicy,
     this.contact,
     this.address,
+    this.thumbnailImage,
     this.thumbnailImageUrl,
     this.coverImageUrl,
     this.bannerImageUrl,
@@ -129,8 +167,32 @@ class Address {
   Map<String, dynamic> toJson() => _$AddressToJson(this);
 }
 
+@JsonSerializable()
+class Pagination {
+  final int currentPage;
+  final int totalPages;
+  @JsonKey(name: 'total')
+  final int totalItems;
+  @JsonKey(name: 'limit')
+  final int itemsPerPage;
+  @JsonKey(name: 'hasNext')
+  final bool hasNextPage;
+  @JsonKey(name: 'hasPrev')
+  final bool hasPrevPage;
 
-// --- 아래 클래스들은 기존 파일에 있었으므로 그대로 유지 ---
+  const Pagination({
+    required this.currentPage,
+    required this.totalPages,
+    required this.totalItems,
+    required this.itemsPerPage,
+    required this.hasNextPage,
+    required this.hasPrevPage,
+  });
+
+  factory Pagination.fromJson(Map<String, dynamic> json) =>
+      _$PaginationFromJson(json);
+  Map<String, dynamic> toJson() => _$PaginationToJson(this);
+}
 
 @JsonSerializable()
 class StoreOwner {

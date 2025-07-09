@@ -85,7 +85,7 @@ import 'package:on_woori/data/client/fundings_api_client.dart';
              BrandNameSection(
                false,
                data?.name ?? "브랜드 이름",
-               data?.owner.profile.profileImage ?? ""
+               data?.thumbnailImageUrl ?? ""
              ),
              SizedBox(height: 15,),
              Text(data?.description ?? "브랜드 소개",
@@ -143,7 +143,7 @@ import 'package:on_woori/data/client/fundings_api_client.dart';
        future: _storesProductFuture,
        builder: (context, snapshot) {
          final data = snapshot.data?.data;
-         final dataList = data ?? [];
+         final dataList = data?.items ?? [];
          final li0n = AppLocalizations.of(context);
 
          return ListView(

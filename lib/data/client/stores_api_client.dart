@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:on_woori/config/endpoint/buyer/stores_endpoints.dart';
 import 'package:on_woori/config/endpoint/seller/seller_store_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
+import 'package:on_woori/data/entity/response/products/products_response.dart';
 import 'package:on_woori/data/entity/response/stores/stores_response.dart';
 
 class StoresApiClient {

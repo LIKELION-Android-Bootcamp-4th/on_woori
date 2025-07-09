@@ -107,6 +107,8 @@ class _BrandEditPageState extends State<BrandEditPage> {
     } else {
       multipartFile = null;
     }
+    if (_nameController.text.isEmpty) _nameController.text = data.name;
+    if (_introController.text.isEmpty) _introController.text = data.description ?? "";
     try {
       final response = await apiClient.editSellerStore(
         name: _nameController.text,

@@ -176,18 +176,18 @@ Map<String, dynamic> _$StoreDetailResponseToJson(
 
 StoreDetailItem _$StoreDetailItemFromJson(Map<String, dynamic> json) =>
     StoreDetailItem(
-      id: json['id'] as String,
       name: json['name'] as String,
       owner: StoreOwner.fromJson(json['owner'] as Map<String, dynamic>),
       description: json['description'] as String,
+      thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
     );
 
 Map<String, dynamic> _$StoreDetailItemToJson(StoreDetailItem instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'name': instance.name,
       'owner': instance.owner,
       'description': instance.description,
+      'thumbnailImageUrl': instance.thumbnailImageUrl,
     };
 
 StoreOwnerProfile _$StoreOwnerProfileFromJson(Map<String, dynamic> json) =>
@@ -207,9 +207,7 @@ StoreProductsResponse _$StoreProductsResponseFromJson(
 ) => StoreProductsResponse(
   success: json['success'] as bool,
   message: json['message'] as String,
-  data: (json['data'] as List<dynamic>)
-      .map((e) => ProductItem.fromJson(e as Map<String, dynamic>))
-      .toList(),
+  data: ProductItemList.fromJson(json['data'] as Map<String, dynamic>),
   timestamp: DateTime.parse(json['timestamp'] as String),
 );
 
@@ -221,6 +219,16 @@ Map<String, dynamic> _$StoreProductsResponseToJson(
   'data': instance.data,
   'timestamp': instance.timestamp.toIso8601String(),
 };
+
+ProductItemList _$ProductItemListFromJson(Map<String, dynamic> json) =>
+    ProductItemList(
+      items: (json['items'] as List<dynamic>)
+          .map((e) => ProductItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$ProductItemListToJson(ProductItemList instance) =>
+    <String, dynamic>{'items': instance.items};
 
 SellerStoreResponse _$SellerStoreResponseFromJson(Map<String, dynamic> json) =>
     SellerStoreResponse(

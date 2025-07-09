@@ -233,17 +233,16 @@ class StoreDetailResponse {
 
 @JsonSerializable()
 class StoreDetailItem {
-  @JsonKey(name: 'id')
-  final String id;
   final String name;
   final StoreOwner owner;
   final String description;
+  final String? thumbnailImageUrl;
 
   StoreDetailItem({
-    required this.id,
     required this.name,
     required this.owner,
     required this.description,
+    this.thumbnailImageUrl
   });
 
   factory StoreDetailItem.fromJson(Map<String, dynamic> json) =>
@@ -270,7 +269,7 @@ class StoreOwnerProfile {
 class StoreProductsResponse {
   final bool success;
   final String message;
-  final List<ProductItem> data;
+  final ProductItemList data;
   final DateTime timestamp;
 
   StoreProductsResponse({
@@ -283,6 +282,17 @@ class StoreProductsResponse {
   factory StoreProductsResponse.fromJson(Map<String, dynamic> json) =>
       _$StoreProductsResponseFromJson(json);
   Map<String, dynamic> toJson() => _$StoreProductsResponseToJson(this);
+}
+
+@JsonSerializable()
+class ProductItemList {
+  final List<ProductItem> items;
+
+  ProductItemList({required this.items});
+
+  factory ProductItemList.fromJson(Map<String, dynamic> json) =>
+      _$ProductItemListFromJson(json);
+  Map<String, dynamic> toJson() => _$ProductItemListToJson(this);
 }
 
 // seller 조회 관련

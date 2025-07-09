@@ -51,6 +51,10 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^6.9.5
   build_runner: ^2.5.4
+  integration_test:
+    sdk: flutter
+  flutter_driver:
+    sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

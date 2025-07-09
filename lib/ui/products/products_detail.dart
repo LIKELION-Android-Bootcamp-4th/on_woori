@@ -383,7 +383,7 @@ class ProductsNameSection extends StatelessWidget {
     }
 
     return ProductsNameSection(
-      category: product.stockType ?? "카테고리",
+      category: product.category ?? "카테고리",
       productName: product.name,
       originalPrice: product.price,
       discountRate: rate,

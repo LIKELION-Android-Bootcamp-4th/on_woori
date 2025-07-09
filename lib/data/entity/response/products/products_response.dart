@@ -73,6 +73,7 @@ class ProductItem {
   final int price;
   final bool isFavorite;
   final int? stock;
+  final String? category;
   final String? stockType;
   @JsonKey(fromJson: _discountToStringJson)
   final String? discount;
@@ -91,6 +92,7 @@ class ProductItem {
     required this.name,
     required this.price,
     required this.isFavorite,
+    this.category,
     this.stock,
     this.stockType,
     this.discount,

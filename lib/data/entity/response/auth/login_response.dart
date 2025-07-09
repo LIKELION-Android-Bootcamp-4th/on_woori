@@ -2,18 +2,26 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'login_response.g.dart';
 
+ProfileImageData? _profileImageFromJson(dynamic json) {
+  if (json is Map<String, dynamic>) {
+    return ProfileImageData.fromJson(json);
+  }
+  return null;
+}
+
+
 @JsonSerializable(explicitToJson: true)
 class LoginResponse {
   final bool success;
   final String message;
-  final LoginData data;
-  final DateTime timestamp;
+  final LoginData? data;
+  final DateTime? timestamp;
 
   const LoginResponse({
     required this.success,
     required this.message,
-    required this.data,
-    required this.timestamp,
+    this.data,
+    this.timestamp,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>
@@ -40,36 +48,39 @@ class LoginData {
   Map<String, dynamic> toJson() => _$LoginDataToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson:true)
 class UserData {
+  @JsonKey(name: 'id')
+  final String id;
   final String email;
   final String? nickName;
-  final ProfileData? profile;
+  final ProfileData profile;
+  final List<String>? loginRoles;
   final List<String>? platformRoles;
   final bool? isAdmin;
+  final bool? isSuperAdmin;
   final bool? isActive;
-  final bool? isEmailVerified;
+  final bool? needEmailVerification;
+  final bool? emailVerified;
   final String? companyId;
-  final String? name;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  @JsonKey(name: '__v')
-  final int? v;
-
   const UserData({
+    required this.id,
     required this.email,
+    required this.profile,
     this.nickName,
-    this.profile,
+    this.loginRoles,
     this.platformRoles,
     this.isAdmin,
+    this.isSuperAdmin,
     this.isActive,
-    this.isEmailVerified,
+    this.needEmailVerification,
+    this.emailVerified,
     this.companyId,
-    this.name,
     this.createdAt,
     this.updatedAt,
-    this.v,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) =>
@@ -82,7 +93,9 @@ class UserData {
 class ProfileData {
   final String? name;
   final DateTime? birthDate;
-  final String? profileImage;
+
+  @JsonKey(fromJson: _profileImageFromJson)
+  final ProfileImageData? profileImage;
 
   const ProfileData({
     this.name,
@@ -94,4 +107,28 @@ class ProfileData {
       _$ProfileDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProfileDataToJson(this);
+}
+
+@JsonSerializable()
+class ProfileImageData {
+  final String? path;
+  final String? realPath;
+  final String? filename;
+  final String? originalName;
+  final String? mimeType;
+  final int? size;
+
+  const ProfileImageData({
+    this.path,
+    this.realPath,
+    this.filename,
+    this.originalName,
+    this.mimeType,
+    this.size,
+  });
+
+  factory ProfileImageData.fromJson(Map<String, dynamic> json) =>
+      _$ProfileImageDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ProfileImageDataToJson(this);
 }

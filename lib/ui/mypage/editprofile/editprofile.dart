@@ -156,14 +156,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
     try {
       final response = await apiClient.editBuyerProfile(
-        nickName: _nicknameController.text,
-        phone: _phoneController.text,
-        address: AddressData(
-          zipCode: _zipcodeController.text,
-          address1: _addressController.text,
-          address2: _detailAddressController.text
-        ),
-        profileImageFile: multipartFile
+          nickName: _nicknameController.text,
+          phone: _phoneController.text,
+          address: AddressData(
+              zipCode: _zipcodeController.text,
+              address1: _addressController.text,
+              address2: _detailAddressController.text
+          ),
+          profileImageFile: multipartFile
       );
       print('닉네임: ${response.data.nickName}');
       print('전화번호: ${response.data.phone}');

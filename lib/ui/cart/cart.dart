@@ -122,7 +122,6 @@ class _CartPageState extends State<CartPage> {
                     BottomButton(
                       buttonText: "${cartResponse.grandTotal}원 결제하기",
                       pressedFunc: () {
-                        // TODO: 주문 목록 페이지로 이동
                         context.go('/orderlist');
                       },
                     ),

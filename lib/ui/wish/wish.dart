@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/data/client/wishes_api_client.dart';
-import 'package:on_woori/data/entity/response/products/products_response.dart';
+import 'package:on_woori/data/entity/response/products/products_response.dart' as P;
 import 'package:on_woori/data/entity/response/mypage/wish_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/category_horizontal_scroll.dart';
@@ -12,10 +12,10 @@ class WishPage extends StatefulWidget {
   const WishPage({super.key});
 
   @override
-  State<WishPage> createState() => WishPageState();
+  State<WishPage> createState() => _WishPageState();
 }
 
-class WishPageState extends State<WishPage> {
+class _WishPageState extends State<WishPage> {
   late Future<WishResponse> _apiDataFuture;
 
   @override
@@ -25,8 +25,7 @@ class WishPageState extends State<WishPage> {
   }
 
   Future<WishResponse> _initializeData() async {
-    final response = await WishesApiClient().getWishList();
-    return response;
+    return await WishesApiClient().getWishList();
   }
 
   @override
@@ -38,7 +37,8 @@ class WishPageState extends State<WishPage> {
         centerTitle: true,
         title: Text(
           l10n.bottomNavigationBarWish,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black),
         ),
         actions: [
           IconButton(
@@ -46,57 +46,70 @@ class WishPageState extends State<WishPage> {
               context.push('/wish/cart');
             },
             icon: const Icon(Icons.shopping_bag_outlined),
-          ),
+          )
         ],
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: FutureBuilder<WishResponse>(
         future: _apiDataFuture,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text("오류가 발생했습니다: ${snapshot.error}"));
+          }
+          if (!snapshot.hasData || (snapshot.data!.data?.items?.isEmpty ?? true)) {
             return const Center(child: Text('위시리스트에 추가된 상품이 없습니다.'));
           }
 
-          // API 응답(WishlistItem)을 위젯이 필요로 하는 데이터(ProductItem)로 변환합니다.
-          // 값이 달라서 일단 어쩔 수 없이 채울 수 없는 정보는 빈 칸으로 임시 적용합니다.
-          final List<WishlistItem> wishListItems = snapshot.data!.data.items;
-          final List<ProductItem> productList = wishListItems.map((wishItem) {
-            final product = wishItem.productId;
-            final store = wishItem.store;
+          final wishListItems = snapshot.data!.data!.items!;
 
-            return ProductItem(
-              id: product.id,
-              name: product.name,
-              price: product.price,
-              stock: product.stockQuantity,
-              images: ProductImages(main: product.imageUrl),
-              discount: product.discountRate,
-              store: StoreData(
-                name: store.name,
-                owner: '',
-                companyId: '',
-              ),
-              isFavorite: true,
-              stockType: 'normal',
-              status: 'approved',
+          final List<P.ProductItem> productList = wishListItems.map((wishItem) {
+            final productEntity = wishItem.entity;
+            if (productEntity == null) {
+              return null;
+            }
+
+            P.ThumbnailImage? thumbnail;
+            final detailImages = productEntity.images?.detail;
+            if (detailImages != null && detailImages.isNotEmpty) {
+              thumbnail = P.ThumbnailImage(
+                id: productEntity.id,
+                url: detailImages.first,
+              );
+            }
+
+            return P.ProductItem(
+              id: productEntity.id,
+              name: productEntity.name,
+              price: productEntity.price,
+              isFavorite: true, // 위시리스트의 모든 상품은 isFavorite가 true
+              // WishResponse에 없는 데이터는 null 또는 기본값 처리
+              stock: null,
+              stockType: null,
+              discount: null,
+              status: null,
+              store: wishItem.store != null ? P.StoreData(name: wishItem.store!.name) : null,
+              thumbnailImage: thumbnail, // 추출한 썸네일 할당
+              images: productEntity.images,
             );
-          }).toList();
+          })
+              .whereType<P.ProductItem>()
+              .toList();
 
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CategoryHorizontalScroll(),
                 ListToolbar(productList.length),
                 Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      child: productList.isEmpty
-                          ? const Center(child: Text('위시리스트에 추가된 상품이 없습니다.'))
-                          : ProductsDoubleGrid(
-                        productList,
-                      ),
-                    )
+                  child: productList.isEmpty
+                      ? const Center(child: Text('표시할 상품이 없습니다.'))
+                      : ProductsDoubleGrid(productList),
                 ),
               ],
             ),

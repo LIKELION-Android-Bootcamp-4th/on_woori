@@ -1,12 +1,14 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/data/client/cart_api_client.dart';
+import 'package:on_woori/data/entity/request/cart/cart_register_request.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/entity/response/products/products_detail_response.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
+
 
 class ProductsDetailPage extends StatelessWidget {
   final String productId;
@@ -41,29 +43,114 @@ class ProductsDetailScreen extends StatefulWidget {
 }
 
 class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
-  final apiClient = ProductsApiClient();
+  final productsApiClient = ProductsApiClient();
+  final cartApiClient = CartApiClient();
+
   late Future<ProductsDetailResponse> _productsFuture;
 
   int quantity = 1;
   String? selectedColor;
   String? selectedSize;
-  late bool isFavorite;
+
+  late bool isLiked;
 
   @override
   void initState() {
     super.initState();
-    _productsFuture = apiClient.productDetail(widget.id).then((response) {
-      final data = response.data;
-      isFavorite = data?.isFavorite ?? false;
+    _productsFuture = productsApiClient.productDetail(widget.id).then((response) {
+      // isLiked의 초기값을 서버 데이터로 설정
+      isLiked = response.data?.isFavorite ?? false;
       return response;
     });
   }
 
-  void _toggleFavorite() {
-    // TODO: 찜하기 API 호출 로직 추가
+  Future<void> _toggleFavorite() async {
+    final originalState = isLiked;
     setState(() {
-      isFavorite = !isFavorite;
+      isLiked = !isLiked;
     });
+
+    try {
+      final response = await productsApiClient.toggleFavorite(productId: widget.id);
+
+      if (response.success) {
+        setState(() {
+          isLiked = response.message.result.isLiked;
+        });
+      } else {
+        setState(() {
+          isLiked = originalState;
+        });
+        _showSnackBar(response.message.message); // 서버가 주는 메시지 사용
+      }
+    } catch (e) {
+      setState(() {
+        isLiked = originalState;
+      });
+      _showSnackBar('오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  }
+
+  /// 장바구니에 상품을 추가하는 로직
+  Future<void> _addToCart(ProductItem product, List<String> sizeOptions, List<String> colorOptions) async {
+    // 1. 옵션 선택 유효성 검사
+    if (sizeOptions.isNotEmpty && selectedSize == null) {
+      _showSnackBar('사이즈를 선택해주세요.');
+      return;
+    }
+    if (colorOptions.isNotEmpty && selectedColor == null) {
+      _showSnackBar('색상을 선택해주세요.');
+      return;
+    }
+
+    // 2. 할인 정보 파싱
+    CartDiscount? cartDiscount;
+    if (product.discount != null && product.discount!.isNotEmpty) {
+      try {
+        final discountData = jsonDecode(product.discount!);
+        cartDiscount = CartDiscount(
+          type: discountData['type'] ?? 'percent', // 기본값으로 'percent' 사용
+          amount: discountData['value'] ?? 0,
+        );
+      } catch (e) {
+        // 할인 정보 파싱 실패 시 무시
+      }
+    }
+
+    // 3. API 요청 객체 생성
+    final request = CartRegisterRequest(
+      productId: product.id,
+      quantity: quantity,
+      unitPrice: product.price,
+      // options: CartOptions(
+      //   size: selectedSize,
+      //   color:selectedColor ?? '기본'
+      // ),
+    );
+
+    // 4. API 호출 및 결과 처리
+    try {
+      final response = await cartApiClient.addToCart(request: request);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _showSnackBar('장바구니에 상품을 추가했습니다.');
+      } else {
+        _showSnackBar('장바구니 추가에 실패했습니다: ${response.data}');
+      }
+    } catch(e) {
+      _showSnackBar('오류가 발생했습니다: $e');
+    }
+  }
+
+
+  // 오류나 상태 메시지를 보여줄 작은 스낵바 함수
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -84,26 +171,32 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
 
         final product = snapshot.data!.data!;
 
-        // 옵션 응답이 다 달라서 더미로 대체
-        // final sizeOptions = product.options?.size ?? [];
-        // final colorOptions = product.options?.color ?? [];
-
-        // 더미 데이터로 옵션 목록을 설정합니다.
-        final List<String> sizeOptions = ['S', 'M', 'L', 'XL'];
-        final List<String> colorOptions = ['블랙', '화이트', '네이비', '카키'];
+        // 파싱된 옵션 그룹 리스트에서 사이즈와 컬러를 분리합니다.
+        List<String> sizeOptions = [];
+        List<String> colorOptions = [];
+        if (product.options != null) {
+          for (final optionGroup in product.options!) {
+            if (optionGroup.name == '사이즈') {
+              sizeOptions = optionGroup.items.map((item) => item.code).toList();
+            } else if (optionGroup.name == '컬러') {
+              colorOptions = optionGroup.items.map((item) => item.code).toList();
+            }
+          }
+        }
 
         final totalPrice = product.price * quantity;
         const placeholderImage = 'https://via.placeholder.com/400';
 
         return ListView(
-          padding: EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           children: [
+            // --- 상품 대표 이미지 ---
             AspectRatio(
               aspectRatio: 1,
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                 child: Image.network(
-                  product.images?.main ?? placeholderImage,
+                  product.thumbnailImage?.url ?? placeholderImage,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Image.network(placeholderImage, fit: BoxFit.cover),
                 ),
@@ -112,20 +205,19 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             const Divider(color: Colors.black, thickness: 1, height: 1),
             const SizedBox(height: 10),
 
-            // --- 상품명, 가격, 찜하기 버튼 ---
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(child: ProductsNameSection.fromProduct(product)),
+                // isLiked 변수를 사용하도록 수정
                 IconButton(
-                  icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border, color: Colors.red, size: 30),
+                  icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border, color: Colors.red, size: 30),
                   onPressed: _toggleFavorite,
                 ),
               ],
             ),
-            const Divider(color: Colors.black),
 
-            // --- 브랜드 정보 ---
+            const Divider(color: Colors.black),
             Row(
               children: [
                 const CircleAvatar(backgroundColor: AppColors.primary, radius: 16),
@@ -134,15 +226,10 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               ],
             ),
             const Divider(color: Colors.black),
-            const SizedBox(height: 5),
-
-            // --- 상품 상세 이미지 ---
+            const SizedBox(height: 20),
             ProductsDetailImageSection(product.images?.detail ?? []),
-            const SizedBox(height: 5),
+            const SizedBox(height: 20),
             const Divider(color: Colors.black),
-
-            // --- 옵션 선택 ---
-            // [핵심] 옵션 목록이 있을 때만 드롭다운 UI를 보여줍니다.
             if (sizeOptions.isNotEmpty) ...[
               OptionDropdown(
                 hint: "사이즈 선택",
@@ -161,8 +248,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               ),
               const SizedBox(height: 5),
             ],
-
-            // --- 하단 수량 및 가격 정보 ---
             Container(
               color: AppColors.optionStateList,
               padding: const EdgeInsets.all(10),
@@ -196,12 +281,11 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               ),
             ),
             const SizedBox(height: 10),
-
             SizedBox(
               width: double.infinity,
               height: 50,
               child: TextButton(
-                onPressed: () { /* TODO: 장바구니 추가 로직 */ },
+                onPressed: () => _addToCart(product, sizeOptions, colorOptions),
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     backgroundColor: AppColors.primary),
@@ -284,7 +368,7 @@ class ProductsNameSection extends StatelessWidget {
     bool hasDiscount = false;
     int finalPrice = product.price;
 
-    if (product.discount != null && product.discount! != 0) {
+    if (product.discount != null && product.discount!.isNotEmpty) {
       try {
         final discountData = jsonDecode(product.discount!);
         rate = discountData['value'];

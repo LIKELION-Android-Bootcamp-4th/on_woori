@@ -4,6 +4,7 @@ import 'package:on_woori/data/entity/response/fundings/fundings_response.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/brand_product_edit_item.dart';
+import 'package:on_woori/widgets/funding_list_item.dart';
 
 class BrandProductEditPage extends StatelessWidget {
   @override
@@ -178,7 +179,7 @@ class BrandFundingEditScreen extends StatefulWidget {
 
 class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
   final tempIndex = 3;
-  List<FundingsItem> tempList = [];
+  List<FundingListItem> tempList = [];
   List<bool> selectionList = [];
   bool selecting = false;
 
@@ -186,7 +187,12 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
   void initState() {
     super.initState();
     for (int i = 0; i < tempIndex; i++) {
-      tempList.add(FundingsItem(id: "id", title: "펀딩 이름", imageUrl: "imageUrl", linkUrl: "linkUrl"));
+      tempList.add(FundingsItem(
+          id: "id",
+          title: "펀딩 이름",
+          imageUrl: "imageUrl",
+          linkUrl: "linkUrl")
+      );
       selectionList.add(false);
     }
   }

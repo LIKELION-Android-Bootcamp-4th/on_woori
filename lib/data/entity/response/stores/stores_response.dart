@@ -1,20 +1,19 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 
 part 'stores_response.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class StoresResponse {
   final bool success;
   final String message;
-  final List<StoreItem> data;
-  final DateTime timestamp;
+  final StoresData? data;
+  final DateTime? timestamp;
 
   StoresResponse({
     required this.success,
     required this.message,
-    required this.data,
+    this.data,
     required this.timestamp,
   });
 
@@ -23,19 +22,61 @@ class StoresResponse {
   Map<String, dynamic> toJson() => _$StoresResponseToJson(this);
 }
 
-@JsonSerializable()
+// 🚀 [추가] data 객체를 위한 StoresData 클래스
+@JsonSerializable(explicitToJson: true)
+class StoresData {
+  final List<StoreItem> items;
+  final String? pagination;
+
+  const StoresData({
+    required this.items,
+    this.pagination,
+  });
+
+  factory StoresData.fromJson(Map<String, dynamic> json) =>
+      _$StoresDataFromJson(json);
+  Map<String, dynamic> toJson() => _$StoresDataToJson(this);
+}
+
+
+@JsonSerializable(explicitToJson: true)
 class StoreItem {
   @JsonKey(name: 'id')
   final String id;
   final String name;
   final String? description;
   final String owner;
+  final String companyId;
+  final String status;
+  final bool isDeleted;
+  final String? category;
+  final ShippingPolicy? shippingPolicy;
+  final Contact? contact;
+  final Address? address;
+  final String? thumbnailImageUrl;
+  final String? coverImageUrl;
+  final String? bannerImageUrl;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
 
   StoreItem({
     required this.id,
     required this.name,
     this.description,
     required this.owner,
+    required this.companyId,
+    required this.status,
+    required this.isDeleted,
+    this.category,
+    this.shippingPolicy,
+    this.contact,
+    this.address,
+    this.thumbnailImageUrl,
+    this.coverImageUrl,
+    this.bannerImageUrl,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory StoreItem.fromJson(Map<String, dynamic> json) =>
@@ -43,6 +84,53 @@ class StoreItem {
 
   Map<String, dynamic> toJson() => _$StoreItemToJson(this);
 }
+
+@JsonSerializable()
+class ShippingPolicy {
+  final int? defaultShippingCost;
+  final int? freeShippingThreshold;
+  final bool? freeShippingEnabled;
+
+  const ShippingPolicy({
+    this.defaultShippingCost,
+    this.freeShippingThreshold,
+    this.freeShippingEnabled,
+  });
+
+  factory ShippingPolicy.fromJson(Map<String, dynamic> json) =>
+      _$ShippingPolicyFromJson(json);
+  Map<String, dynamic> toJson() => _$ShippingPolicyToJson(this);
+}
+
+@JsonSerializable()
+class Contact {
+  final String? kakaoTalk;
+  final String? phone;
+  final String? email;
+  final String? website;
+
+  const Contact({this.kakaoTalk, this.phone, this.email, this.website});
+
+  factory Contact.fromJson(Map<String, dynamic> json) =>
+      _$ContactFromJson(json);
+  Map<String, dynamic> toJson() => _$ContactToJson(this);
+}
+
+@JsonSerializable()
+class Address {
+  final String? street;
+  final String? detail;
+  final String? zipCode;
+
+  const Address({this.street, this.detail, this.zipCode});
+
+  factory Address.fromJson(Map<String, dynamic> json) =>
+      _$AddressFromJson(json);
+  Map<String, dynamic> toJson() => _$AddressToJson(this);
+}
+
+
+// --- 아래 클래스들은 기존 파일에 있었으므로 그대로 유지 ---
 
 @JsonSerializable()
 class StoreOwner {

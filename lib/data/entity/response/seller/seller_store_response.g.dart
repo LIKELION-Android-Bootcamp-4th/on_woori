@@ -10,7 +10,10 @@ SellerStoreResponse _$SellerStoreResponseFromJson(Map<String, dynamic> json) =>
     SellerStoreResponse(
       success: json['success'] as bool,
       message: json['message'] as String,
-      data: StoreData.fromJson(json['data'] as Map<String, dynamic>),
+      data: json['data'] == null
+          ? null
+          : StoreData.fromJson(json['data'] as Map<String, dynamic>),
+      timestamp: json['timestamp'] as String?,
     );
 
 Map<String, dynamic> _$SellerStoreResponseToJson(
@@ -18,76 +21,120 @@ Map<String, dynamic> _$SellerStoreResponseToJson(
 ) => <String, dynamic>{
   'success': instance.success,
   'message': instance.message,
-  'data': instance.data.toJson(),
+  'data': instance.data?.toJson(),
+  'timestamp': instance.timestamp,
 };
 
 StoreData _$StoreDataFromJson(Map<String, dynamic> json) => StoreData(
-  id: json['id'] as String,
-  name: json['name'] as String,
-  description: json['description'] as String,
-  contact: Contact.fromJson(json['contact'] as Map<String, dynamic>),
-  address: Address.fromJson(json['address'] as Map<String, dynamic>),
-  images: Images.fromJson(json['images'] as Map<String, dynamic>),
-  deliveryFee: (json['deliveryFee'] as num).toInt(),
-  companyId: json['companyId'] as String,
-  ownerId: json['ownerId'] as String,
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  updatedAt: DateTime.parse(json['updatedAt'] as String),
+  id: json['id'] as String?,
+  name: json['name'] as String?,
+  description: json['description'] as String?,
+  owner: json['owner'] == null
+      ? null
+      : OwnerData.fromJson(json['owner'] as Map<String, dynamic>),
+  companyId: json['companyId'] as String?,
+  shippingPolicy: json['shippingPolicy'] == null
+      ? null
+      : ShippingPolicy.fromJson(json['shippingPolicy'] as Map<String, dynamic>),
+  status: json['status'] as String?,
+  isDeleted: json['isDeleted'] as bool?,
+  category: json['category'] as String?,
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
+  thumbnailImage: json['thumbnailImage'],
+  thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
+  coverImage: json['coverImage'],
+  coverImageUrl: json['coverImageUrl'] as String?,
+  bannerImage: json['bannerImage'],
+  bannerImageUrl: json['bannerImageUrl'] as String?,
 );
 
 Map<String, dynamic> _$StoreDataToJson(StoreData instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
   'description': instance.description,
-  'contact': instance.contact.toJson(),
-  'address': instance.address.toJson(),
-  'images': instance.images.toJson(),
-  'deliveryFee': instance.deliveryFee,
+  'owner': instance.owner?.toJson(),
   'companyId': instance.companyId,
-  'ownerId': instance.ownerId,
-  'createdAt': instance.createdAt.toIso8601String(),
-  'updatedAt': instance.updatedAt.toIso8601String(),
+  'shippingPolicy': instance.shippingPolicy?.toJson(),
+  'status': instance.status,
+  'isDeleted': instance.isDeleted,
+  'category': instance.category,
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
+  'thumbnailImage': instance.thumbnailImage,
+  'thumbnailImageUrl': instance.thumbnailImageUrl,
+  'coverImage': instance.coverImage,
+  'coverImageUrl': instance.coverImageUrl,
+  'bannerImage': instance.bannerImage,
+  'bannerImageUrl': instance.bannerImageUrl,
 };
 
-Contact _$ContactFromJson(Map<String, dynamic> json) => Contact(
-  phone: json['phone'] as String,
-  email: json['email'] as String,
-  kakaoTalk: json['kakaoTalk'] as String,
+OwnerData _$OwnerDataFromJson(Map<String, dynamic> json) => OwnerData(
+  id: json['id'] as String?,
+  email: json['email'] as String?,
+  nickName: json['nickName'] as String?,
+  profile: json['profile'] == null
+      ? null
+      : Profile.fromJson(json['profile'] as Map<String, dynamic>),
+  loginRoles: (json['loginRoles'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  platformRoles: (json['platformRoles'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  isActive: json['isActive'] as bool?,
+  needEmailVerification: json['needEmailVerification'] as bool?,
+  emailVerified: json['emailVerified'] as bool?,
+  companyId: json['companyId'] as String?,
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
 );
 
-Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
-  'phone': instance.phone,
+Map<String, dynamic> _$OwnerDataToJson(OwnerData instance) => <String, dynamic>{
+  'id': instance.id,
   'email': instance.email,
-  'kakaoTalk': instance.kakaoTalk,
+  'nickName': instance.nickName,
+  'profile': instance.profile?.toJson(),
+  'loginRoles': instance.loginRoles,
+  'platformRoles': instance.platformRoles,
+  'isActive': instance.isActive,
+  'needEmailVerification': instance.needEmailVerification,
+  'emailVerified': instance.emailVerified,
+  'companyId': instance.companyId,
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
 };
 
-Address _$AddressFromJson(Map<String, dynamic> json) => Address(
-  street: json['street'] as String,
-  city: json['city'] as String,
-  zipCode: json['zipCode'] as String,
-  coordinates: Coordinates.fromJson(
-    json['coordinates'] as Map<String, dynamic>,
-  ),
+Profile _$ProfileFromJson(Map<String, dynamic> json) => Profile(
+  name: json['name'] as String?,
+  profileImage: json['profileImage'] as String?,
+  birthDate: json['birthDate'] as String?,
 );
 
-Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
-  'street': instance.street,
-  'city': instance.city,
-  'zipCode': instance.zipCode,
-  'coordinates': instance.coordinates.toJson(),
+Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{
+  'name': instance.name,
+  'profileImage': instance.profileImage,
+  'birthDate': instance.birthDate,
 };
 
-Coordinates _$CoordinatesFromJson(Map<String, dynamic> json) => Coordinates(
-  lat: (json['lat'] as num).toDouble(),
-  lng: (json['lng'] as num).toDouble(),
-);
+ShippingPolicy _$ShippingPolicyFromJson(Map<String, dynamic> json) =>
+    ShippingPolicy(
+      defaultShippingCost: (json['defaultShippingCost'] as num?)?.toInt(),
+      freeShippingThreshold: (json['freeShippingThreshold'] as num?)?.toInt(),
+      freeShippingEnabled: json['freeShippingEnabled'] as bool?,
+    );
 
-Map<String, dynamic> _$CoordinatesToJson(Coordinates instance) =>
-    <String, dynamic>{'lat': instance.lat, 'lng': instance.lng};
-
-Images _$ImagesFromJson(Map<String, dynamic> json) =>
-    Images(logo: json['logo'] as String);
-
-Map<String, dynamic> _$ImagesToJson(Images instance) => <String, dynamic>{
-  'logo': instance.logo,
-};
+Map<String, dynamic> _$ShippingPolicyToJson(ShippingPolicy instance) =>
+    <String, dynamic>{
+      'defaultShippingCost': instance.defaultShippingCost,
+      'freeShippingThreshold': instance.freeShippingThreshold,
+      'freeShippingEnabled': instance.freeShippingEnabled,
+    };

@@ -103,13 +103,6 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/productslist/:categoryId',
           builder: (context, state) {
-            final String nickName = state.pathParameters['nickName'] ?? '';
-            return EditProfilePage(nickName: nickName);
-          }
-        ),
-        GoRoute(
-          path: '/productslist/:categoryId',
-          builder: (context, state) {
             final String categoryId = state.pathParameters['categoryId'] ?? "";
             return ProductsListPage(categoryId: categoryId);
           },

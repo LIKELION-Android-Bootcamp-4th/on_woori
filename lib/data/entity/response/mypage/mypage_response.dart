@@ -2,16 +2,23 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'mypage_response.g.dart';
 
+ProfileImageData? _profileImageFromJson(dynamic json) {
+  if (json is Map<String, dynamic>) {
+    return ProfileImageData.fromJson(json);
+  }
+  return null;
+}
+
 @JsonSerializable(explicitToJson: true)
 class BuyerProfileResponse {
   final bool success;
   final String message;
-  final BuyerProfileData data;
+  final BuyerProfileData? data;
 
   const BuyerProfileResponse({
     required this.success,
     required this.message,
-    required this.data,
+    this.data,
   });
 
   factory BuyerProfileResponse.fromJson(Map<String, dynamic> json) =>
@@ -21,14 +28,30 @@ class BuyerProfileResponse {
 
 @JsonSerializable(explicitToJson: true)
 class BuyerProfileData {
+  @JsonKey(name: 'id')
+  final String id;
   final String email;
-  final String nickName;
+  final String? nickName;
   final ProfileData profile;
+  final List<String>? loginRoles;
+  final bool? isActive;
+  final bool? needEmailVerification;
+  final bool? emailVerified;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
 
   const BuyerProfileData({
+    required this.id,
     required this.email,
-    required this.nickName,
-    required this.profile
+    required this.profile,
+    this.nickName,
+    this.loginRoles,
+    this.isActive,
+    this.needEmailVerification,
+    this.emailVerified,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory BuyerProfileData.fromJson(Map<String, dynamic> json) =>
@@ -36,12 +59,18 @@ class BuyerProfileData {
   Map<String, dynamic> toJson() => _$BuyerProfileDataToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable()
 class ProfileData {
-  final String profileImageUrl;
+  final String? name;
+  final DateTime? birthDate;
+
+  @JsonKey(fromJson: _profileImageFromJson)
+  final ProfileImageData? profileImage;
 
   const ProfileData({
-    required this.profileImageUrl
+    this.name,
+    this.birthDate,
+    this.profileImage,
   });
 
   factory ProfileData.fromJson(Map<String, dynamic> json) =>
@@ -102,8 +131,8 @@ class AddressData {
   Map<String, dynamic> toJson() => _$AddressDataToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
-class ProfileImage {
+@JsonSerializable()
+class ProfileImageData {
   final String? path;
   final String? realPath;
   final String? filename;
@@ -111,7 +140,7 @@ class ProfileImage {
   final String? mimeType;
   final int? size;
 
-  const ProfileImage({
+  const ProfileImageData({
     this.path,
     this.realPath,
     this.filename,
@@ -120,7 +149,7 @@ class ProfileImage {
     this.size
   });
 
-  factory ProfileImage.fromJson(Map<String, dynamic> json) =>
-      _$ProfileImageFromJson(json);
-  Map<String, dynamic> toJson() => _$ProfileImageToJson(this);
+  factory ProfileImageData.fromJson(Map<String, dynamic> json) =>
+      _$ProfileImageDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ProfileImageDataToJson(this);
 }

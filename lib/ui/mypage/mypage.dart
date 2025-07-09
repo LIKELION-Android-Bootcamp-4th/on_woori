@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:dio/dio.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
-import 'package:on_woori/data/api_client.dart';
 import 'package:on_woori/data/client/mypage_api_client.dart';
 import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
@@ -86,7 +84,7 @@ class _MyPageState extends State<MyPage> {
                             width: 48,
                             height: 48,
                             child: Image.network(
-                              snapshot.data?.data.profile.profileImageUrl ?? "",
+                              snapshot.data?.data?.profile.profileImage?.path ?? "",
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -94,7 +92,7 @@ class _MyPageState extends State<MyPage> {
 
                         const SizedBox(width: 8),
                         Text(
-                          snapshot.data?.data.nickName ?? '사용자',
+                          snapshot.data?.data?.nickName ?? '사용자',
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 20,
@@ -127,7 +125,7 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                       onPressed: () async {
-                        await context.push('/mypage/edit-buyer/${snapshot.data?.data.nickName}');
+                        await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName}');
                         _refresh();
                       },
                       child: const Text(

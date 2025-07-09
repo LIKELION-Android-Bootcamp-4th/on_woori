@@ -85,7 +85,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
                                 width: 48,
                                 height: 48,
                                 child: Image.network(
-                                  snapshot.data?.data.profile.profileImageUrl ?? "",
+                                  snapshot.data?.data?.profile.profileImage?.path ?? "",
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -96,7 +96,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                snapshot.data?.data.nickName ?? "",
+                                snapshot.data?.data?.nickName ?? "",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 20,
@@ -207,7 +207,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
                     ),
                     trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
                     onTap: () async {
-                      final result = await context.push('/mypage/edit-buyer/${snapshot.data?.data.nickName ?? ""}');
+                      final result = await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName ?? ""}');
                       if (result == true) {
                         _refresh();
                       }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 
-/// 기본 모드에서 사용하는 단일 항목 위젯 (수정/삭제 버튼 포함)
 class BrandProductEditListItem extends StatelessWidget {
   final String name;
   final String? imageUrl;
@@ -22,6 +21,8 @@ class BrandProductEditListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasImage = imageUrl != null && imageUrl!.isNotEmpty;
+
     return Column(
       children: [
         const SizedBox(height: 10),
@@ -30,10 +31,8 @@ class BrandProductEditListItem extends StatelessWidget {
             CircleAvatar(
               radius: 36,
               backgroundColor: AppColors.grey.withOpacity(0.2),
-              backgroundImage: (imageUrl != null && imageUrl!.isNotEmpty)
-                  ? NetworkImage(imageUrl!)
-                  : null,
-              child: (imageUrl == null || imageUrl!.isEmpty)
+              backgroundImage: hasImage ? NetworkImage(imageUrl!) : null,
+              child: !hasImage
                   ? const Icon(Icons.storefront, color: AppColors.grey)
                   : null,
             ),
@@ -62,7 +61,7 @@ class BrandProductEditListItem extends StatelessWidget {
   }
 }
 
-/// 다중 선택 모드에서 사용하는 단일 항목 위젯 (체크박스 포함)
+// 다중 선택 위젯도 동일하게 수정합니다.
 class BrandProductMultiSelectItem extends StatelessWidget {
   final String name;
   final String? imageUrl;
@@ -81,6 +80,8 @@ class BrandProductMultiSelectItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasImage = imageUrl != null && imageUrl!.isNotEmpty;
+
     return Column(
       children: [
         const SizedBox(height: 10),
@@ -89,10 +90,8 @@ class BrandProductMultiSelectItem extends StatelessWidget {
             CircleAvatar(
               radius: 36,
               backgroundColor: AppColors.grey.withOpacity(0.2),
-              backgroundImage: (imageUrl != null && imageUrl!.isNotEmpty)
-                  ? NetworkImage(imageUrl!)
-                  : null,
-              child: (imageUrl == null || imageUrl!.isEmpty)
+              backgroundImage: hasImage ? NetworkImage(imageUrl!) : null,
+              child: !hasImage
                   ? const Icon(Icons.storefront, color: AppColors.grey)
                   : null,
             ),

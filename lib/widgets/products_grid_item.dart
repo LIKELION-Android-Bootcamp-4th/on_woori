@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
+import 'package:on_woori/l10n/app_localizations.dart';
 
 class ProductsGridItem extends StatefulWidget {
   final ProductItem item;
@@ -69,6 +70,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

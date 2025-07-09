@@ -25,7 +25,6 @@ class AuthApiClient {
     return LoginResponse.fromJson(response.data);
   }
 
-
   // 판매자 회원가입
   Future<RegisterResponse> authRegisterSeller({
     required RegisterSellerRequest request,

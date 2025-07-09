@@ -103,9 +103,15 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/productslist/:categoryId',
           builder: (context, state) {
-            final String categoryId = state.uri.queryParameters['category'] ?? '';
-            final String query = state.uri.queryParameters['q'] ?? '';
-            return ProductsListPage(category: categoryId, query: query);
+            final String nickName = state.pathParameters['nickName'] ?? '';
+            return EditProfilePage(nickName: nickName);
+          }
+        ),
+        GoRoute(
+          path: '/productslist/:categoryId',
+          builder: (context, state) {
+            final String categoryId = state.pathParameters['categoryId'] ?? "";
+            return ProductsListPage(categoryId: categoryId);
           },
         ),
         GoRoute(
@@ -138,10 +144,10 @@ final GoRouter router = GoRouter(
           path: '/mypage/register',
           builder: (context, state) => const ProductRegisterPage(),
         ),
-        GoRoute(
-          path: '/brand/editproduct',
-          builder: (context, state) => BrandProductEditPage(),
-        ),
+        // GoRoute(
+        //   path: '/brand/editproduct',
+        //   builder: (context, state) => BrandProductEditPage(),
+        // ),
         GoRoute(
           path: '/brand/edit',
           builder: (context, state) => const BrandEditPage(),

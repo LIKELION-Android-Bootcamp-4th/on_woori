@@ -1,83 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:on_woori/data/client/search_api_client.dart';
+import 'package:on_woori/data/api_client.dart';
+import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/products_double_grid.dart';
 
 class ProductsListPage extends StatelessWidget {
-  final String category;
-  final String query;
-
-  ProductsListPage({
-    required this.category,
-    required this.query,
-    super.key,
-  });
+  String? categoryId;
+  ProductsListPage({this.categoryId});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          query.isNotEmpty ? query : l10n!.appTitle,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.push('/wish/cart');
-            },
-            icon: const Icon(Icons.shopping_bag_outlined),
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            categoryId ?? l10n!.appTitle,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24),
           ),
-        ],
-      ),
-      body: ProductsListScreen(category: category, query: query),
+          actions: [
+            IconButton(
+                onPressed: (){
+                  context.push('/wish/cart');
+                },
+                icon: const Icon(Icons.shopping_bag_outlined)
+            )
+          ],
+        ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          child: ProductsListScreen(),
+        )
     );
   }
 }
 
 class ProductsListScreen extends StatelessWidget {
-  final String category;
-  final String query;
-  final apiClient = SearchApiClient();
-
-  ProductsListScreen({
-    required this.category,
-    required this.query,
-    super.key,
-  });
+  final apiClient = ProductsApiClient();
 
   @override
   Widget build(BuildContext context) {
+    final response = apiClient.products();
+
     return FutureBuilder(
-      future: apiClient.searchByCategory(category: category, query: query),
+      future: response,
       builder: (context, snapshot) {
+
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator(),);
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text('오류 발생: ${snapshot.error}'));
+          return Center(child: Text("오류 발생: ${snapshot.error}"),);
         }
 
-        if (!snapshot.hasData || snapshot.data?.data == null) {
-          return const Center(child: Text('데이터가 없습니다.'));
+        if (!snapshot.hasData) {
+          return const Center(child: Text("데이터가 없습니다."),);
         }
 
-        final itemsJson = snapshot.data!.data['items'] as List<dynamic>? ?? [];
-        final items = itemsJson.map((e) => ProductItem.fromJson(e)).toList();
-
-        if (items.isEmpty) {
-          return const Center(child: Text('검색 결과가 없습니다.'));
-        }
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: ProductsDoubleGrid(items),
-        );
+        final data = snapshot.data?.data?.items ?? [];
+        return ProductsDoubleGrid(data);
       },
     );
   }

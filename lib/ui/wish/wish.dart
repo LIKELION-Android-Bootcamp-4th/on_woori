@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/data/client/wishes_api_client.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart' as P;
-import 'package:on_woori/data/entity/response/mypage/wish_response.dart'; // ⭐️ 새로운 응답 엔티티 import
+import 'package:on_woori/data/entity/response/mypage/wish_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/category_horizontal_scroll.dart';
 import 'package:on_woori/widgets/list_toolbar.dart';

@@ -12,14 +12,6 @@ class MypageApiClient {
 
   MypageApiClient({Dio? dio}) : _dio = dio ?? ApiClient().dio;
 
-  // 내 프로필 조회
-  Future<ProfileResponse> getProfile() async {
-    final response = await _dio.get(
-      MyPageEndpoints.getMyPageProfile,
-    );
-    return ProfileResponse.fromJson(response.data);
-  }
-
   Future<WishResponse> isFavorite(String productId)
   async {
     final response = await _dio.get(
@@ -37,7 +29,8 @@ class MypageApiClient {
     return BuyerProfileResponse.fromJson(response.data);
   }
 
-  Future<void> editBuyerProfile({
+  //프로필 수정
+  Future<BuyerProfileEditResponse> editBuyerProfile({
     required String nickName,
     MultipartFile? profileImageFile,
     String? phone,
@@ -55,7 +48,6 @@ class MypageApiClient {
       data: formData,
       options: Options(contentType: 'multipart/form-data'),
     );
-
-    return response.data;
+    return BuyerProfileEditResponse.fromJson(response.data);
   }
 }

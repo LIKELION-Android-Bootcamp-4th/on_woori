@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/data/client/mypage_api_client.dart';
 import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
+
+import '../../data/client/auth_api_client.dart';
+import '../../data/entity/response/auth/logout_response.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -26,6 +31,30 @@ class _MyPageState extends State<MyPage> {
     setState(() {
       _profileFuture = apiClient.getBuyerProfile();
     });
+  }
+
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
+  Future<void> _handleLogout(BuildContext context) async {
+    final authClient = AuthApiClient();
+
+    try {
+      final LogoutResponse response = await authClient.authLogout();
+
+      if (response.success) {
+        // 토큰 삭제
+        await _secureStorage.delete(key: 'ACCESS_TOKEN');
+        await _secureStorage.delete(key: 'REFRESH_TOKEN');
+
+        // 로그인 화면으로 이동 (모든 이전 페이지 제거)
+        context.go('/auth/login');
+        Fluttertoast.showToast(msg: '로그아웃 되었습니다.');
+      } else {
+        print('로그아웃 실패 : ${response.message}');
+      }
+    } catch (e) {
+      print('로그아웃 중 오류: $e');
+    }
   }
 
   @override
@@ -221,6 +250,20 @@ class _MyPageState extends State<MyPage> {
                   onTap: () {
                     context.push('/mypage/password');
                   },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: const Text(
+                    '로그아웃',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.red,
+                    ),
+                  ),
+                  trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+                  onTap: () => _handleLogout(context),
                 ),
 
                 const Divider(

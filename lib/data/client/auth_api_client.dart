@@ -6,6 +6,7 @@ import 'package:on_woori/data/entity/request/auth/register_buyer_request.dart';
 import 'package:on_woori/data/entity/request/auth/register_seller_request.dart';
 import 'package:on_woori/data/entity/request/auth/verify_email_request.dart';
 import 'package:on_woori/data/entity/response/auth/login_response.dart';
+import 'package:on_woori/data/entity/response/auth/logout_response.dart';
 import 'package:on_woori/data/entity/response/auth/register_response.dart';
 import 'package:on_woori/data/entity/response/auth/verify_email_response.dart';
 
@@ -15,9 +16,7 @@ class AuthApiClient {
   AuthApiClient({Dio? dio}) : _dio = dio ?? ApiClient().dio;
 
   // 로그인 (전체)
-  Future<LoginResponse> authLogin({
-    required LoginRequest request,
-  }) async {
+  Future<LoginResponse> authLogin({required LoginRequest request}) async {
     final response = await _dio.post(
       AuthEndpoints.postAuthLogin,
       data: request.toJson(),
@@ -56,5 +55,11 @@ class AuthApiClient {
       data: request.toJson(),
     );
     return VerifyEmailResponse.fromJson(response.data);
+  }
+
+  // 로그아웃
+  Future<LogoutResponse> authLogout() async {
+    final response = await _dio.post(AuthEndpoints.postAuthLogout);
+    return LogoutResponse.fromJson(response.data);
   }
 }

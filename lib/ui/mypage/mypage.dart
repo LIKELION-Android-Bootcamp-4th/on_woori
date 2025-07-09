@@ -158,7 +158,7 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                       onPressed: () async {
-                        await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName}');
+                        await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName}/${snapshot.data?.data?.profile.profileImage}');
                         _refresh();
                       },
                       child: const Text(

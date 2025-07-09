@@ -11,7 +11,8 @@ import 'package:on_woori/widgets/dropdown.dart';
 
 class EditProfilePage extends StatefulWidget {
   String nickName;
-  EditProfilePage({super.key, required this.nickName});
+  String profileUrl;
+  EditProfilePage({super.key, required this.nickName, required this.profileUrl});
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
@@ -54,7 +55,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _zipcodeController.text = '';
       _addressController.text = '';
       _detailAddressController.text = '';
-      _profileImageUrl = null;
+      _profileImageUrl = widget.profileUrl;
     });
   }
 

@@ -1,6 +1,12 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:on_woori/data/client/mypage_api_client.dart';
+import 'package:on_woori/data/client/stores_api_client.dart';
+import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
+import 'package:on_woori/data/entity/response/stores/stores_response.dart';
 import '../../core/styles/app_colors.dart';
 import '../../widgets/bottom_button.dart';
 
@@ -14,10 +20,107 @@ class BrandEditPage extends StatefulWidget {
 class _BrandEditPageState extends State<BrandEditPage> {
   final _nameController = TextEditingController();
   final _introController = TextEditingController();
-  File? _selectedImage;
+  File? _profileImageFile;
+  String? _profileImageUrl;
+
+  bool _isPickingImage = false;
+
+  late Future<SellerStoreResponse> _brandFuture;
+  final apiClient = StoresApiClient();
 
   Future<void> _onAddImagePressed() async {
-    // TODO: 이미지 선택 로직
+    if (_isPickingImage) {
+      print('이미 이미지 선택 중입니다.');
+      return;
+    }
+
+    setState(() {
+      _isPickingImage = true;
+    });
+
+    final ImagePicker picker = ImagePicker();
+
+    await showModalBottomSheet(
+      context: context,
+      isDismissible: true,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('카메라로 촬영'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? picked = await picker.pickImage(
+                    source: ImageSource.camera,
+                    imageQuality: 85,
+                  );
+                  if (!mounted) return;
+                  setState(() {
+                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageUrl = picked != null ? null : _profileImageUrl;
+                    _isPickingImage = false;
+                  });
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('갤러리에서 선택'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? picked = await picker.pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: 85,
+                  );
+                  if (!mounted) return;
+                  setState(() {
+                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageUrl = picked != null ? null : _profileImageUrl;
+                    _isPickingImage = false;
+                  });
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    ).whenComplete(() {
+      // BottomSheet 닫힐 때 플래그 해제
+      if (mounted) {
+        setState(() {
+          _isPickingImage = false;
+        });
+      }
+    });
+  }
+
+  Future<void> _submit(SellerStoreData data) async {
+    final String? imagePath = _profileImageFile?.path;
+    MultipartFile? multipartFile;
+    if (imagePath != null && imagePath.isNotEmpty) {
+      multipartFile = await MultipartFile.fromFile(
+        imagePath,
+        filename: imagePath.split('/').last,
+      );
+    } else {
+      multipartFile = null;
+    }
+    try {
+      final response = await apiClient.editSellerStore(
+        name: _nameController.text,
+        description: _introController.text,
+        data: data,
+        image: multipartFile
+      );
+    } catch (e, s) {
+      print('수정 실패 $e');
+      print(s);
+    }
+
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
   }
 
   @override
@@ -28,57 +131,85 @@ class _BrandEditPageState extends State<BrandEditPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _brandFuture = apiClient.getSellerStore().then((value) {
+      _profileImageUrl = value.data.thumbnailImageUrl;
+      return value;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          '브랜드 수정',
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 20,
-            color: Colors.black,
+    return FutureBuilder(
+      future: _brandFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('오류 발생: ${snapshot.error}'));
+        }
+
+        if (!snapshot.hasData) {
+          return const Center(child: Text('데이터가 없습니다.'));
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              '브랜드 수정',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 20,
+                color: Colors.black,
+              ),
+            ),
+            centerTitle: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            iconTheme: const IconThemeData(color: Colors.black),
           ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 8),
-            Center(child: _circleImageBox()),
+          backgroundColor: Colors.white,
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                Center(child: _circleImageBox()),
 
-            const SizedBox(height: 24),
-            _sectionTitle('브랜드 이름'),
-            const SizedBox(height: 8),
-            _textField('(이름)', _nameController),
+                const SizedBox(height: 24),
+                _sectionTitle('브랜드 이름'),
+                const SizedBox(height: 8),
+                _textField(snapshot.data?.data.name ?? '(이름)', _nameController),
 
-            const SizedBox(height: 16),
-            _sectionTitle('브랜드 소개'),
-            const SizedBox(height: 8),
-            _textField('(소개글) (최대 nn자)', _introController, maxLines: 3),
+                const SizedBox(height: 16),
+                _sectionTitle('브랜드 소개'),
+                const SizedBox(height: 8),
+                _textField(snapshot.data?.data.description ?? '(소개글) (최대 nn자)', _introController, maxLines: 3),
 
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: BottomButton(
-            buttonText: '저장',
-            pressedFunc: () {
-              // TODO: 저장 처리
-            },
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
-        ),
-      ),
+
+          bottomNavigationBar: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: BottomButton(
+                buttonText: '저장',
+                pressedFunc: () {
+                  if (snapshot.data?.data != null) {
+                    _submit(snapshot.data!.data);
+                  }
+                },
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -133,11 +264,14 @@ class _BrandEditPageState extends State<BrandEditPage> {
             color: AppColors.optionStateList,
             shape: BoxShape.circle,
           ),
-          child: _selectedImage == null
-              ? const SizedBox.shrink()
+          child: _profileImageFile == null
+              ? (
+                  _profileImageUrl == null
+                    ? const SizedBox.shrink()
+                    : ClipOval(child: Image.network(_profileImageUrl!, fit: BoxFit.cover, height: 120, width: 120,),))
               : ClipOval(
             child: Image.file(
-              _selectedImage!,
+              _profileImageFile!,
               fit: BoxFit.cover,
               width: 120,
               height: 120,

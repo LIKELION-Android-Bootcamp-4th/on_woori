@@ -44,14 +44,10 @@ ProductItem _$ProductItemFromJson(Map<String, dynamic> json) => ProductItem(
   stockType: json['stockType'] as String?,
   discount: _discountToStringJson(json['discount']),
   status: json['status'] as String?,
+  images: _productImagesFromJson(json['images']),
   store: json['store'] == null
       ? null
       : StoreData.fromJson(json['store'] as Map<String, dynamic>),
-  thumbnailImage: json['thumbnailImage'] == null
-      ? null
-      : ThumbnailImage.fromJson(json['thumbnailImage'] as Map<String, dynamic>),
-  images: _imagesFromJson(json['images'] as String?),
-  options: _optionsListFromJson(json['options'] as String?),
 );
 
 Map<String, dynamic> _$ProductItemToJson(ProductItem instance) =>
@@ -64,47 +60,31 @@ Map<String, dynamic> _$ProductItemToJson(ProductItem instance) =>
       'stockType': instance.stockType,
       'discount': instance.discount,
       'status': instance.status,
-      'store': instance.store?.toJson(),
-      'thumbnailImage': instance.thumbnailImage?.toJson(),
       'images': instance.images?.toJson(),
-      'options': instance.options?.map((e) => e.toJson()).toList(),
+      'store': instance.store?.toJson(),
     };
 
-ThumbnailImage _$ThumbnailImageFromJson(Map<String, dynamic> json) =>
-    ThumbnailImage(id: json['id'] as String, url: json['url'] as String);
-
-Map<String, dynamic> _$ThumbnailImageToJson(ThumbnailImage instance) =>
-    <String, dynamic>{'id': instance.id, 'url': instance.url};
-
-Images _$ImagesFromJson(Map<String, dynamic> json) => Images(
-  detail: (json['detail'] as List<dynamic>?)?.map((e) => e as String).toList(),
-);
-
-Map<String, dynamic> _$ImagesToJson(Images instance) => <String, dynamic>{
-  'detail': instance.detail,
-};
-
-ProductOptionGroup _$ProductOptionGroupFromJson(Map<String, dynamic> json) =>
-    ProductOptionGroup(
-      type: json['type'] as String,
-      name: json['name'] as String,
-      items: (json['items'] as List<dynamic>)
-          .map((e) => ProductOptionItem.fromJson(e as Map<String, dynamic>))
+ProductImages _$ProductImagesFromJson(Map<String, dynamic> json) =>
+    ProductImages(
+      main: json['main'] as String,
+      detail: (json['detail'] as List<dynamic>?)
+          ?.map((e) => e as String)
           .toList(),
     );
 
-Map<String, dynamic> _$ProductOptionGroupToJson(ProductOptionGroup instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'name': instance.name,
-      'items': instance.items.map((e) => e.toJson()).toList(),
-    };
+Map<String, dynamic> _$ProductImagesToJson(ProductImages instance) =>
+    <String, dynamic>{'main': instance.main, 'detail': instance.detail};
 
-ProductOptionItem _$ProductOptionItemFromJson(Map<String, dynamic> json) =>
-    ProductOptionItem(code: json['code'] as String);
+ProductOptions _$ProductOptionsFromJson(Map<String, dynamic> json) =>
+    ProductOptions(
+      color: (json['color'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      size: (json['size'] as List<dynamic>?)?.map((e) => e as String).toList(),
+    );
 
-Map<String, dynamic> _$ProductOptionItemToJson(ProductOptionItem instance) =>
-    <String, dynamic>{'code': instance.code};
+Map<String, dynamic> _$ProductOptionsToJson(ProductOptions instance) =>
+    <String, dynamic>{'color': instance.color, 'size': instance.size};
 
 StoreData _$StoreDataFromJson(Map<String, dynamic> json) => StoreData(
   id: json['id'] as String?,

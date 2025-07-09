@@ -26,7 +26,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
     productName = widget.item.name;
     brandName = widget.item.store?.name ?? "브랜드";
     isFavorite = widget.item.isFavorite;
-    imageUrl = widget.item.thumbnailImage?.url ?? "";
+    imageUrl = widget.item.images?.main ?? "";
   }
 
   @override

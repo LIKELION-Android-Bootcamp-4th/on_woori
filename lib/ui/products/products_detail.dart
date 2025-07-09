@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
@@ -7,7 +8,6 @@ import 'package:on_woori/data/entity/response/products/products_detail_response.
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
-// 페이지 진입점 위젯
 class ProductsDetailPage extends StatelessWidget {
   final String productId;
   const ProductsDetailPage(this.productId, {super.key});
@@ -30,7 +30,6 @@ class ProductsDetailPage extends StatelessWidget {
   }
 }
 
-// 실제 상세 내용을 그리는 메인 위젯
 class ProductsDetailScreen extends StatefulWidget {
   final String id;
   const ProductsDetailScreen(this.id, {super.key});
@@ -45,7 +44,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   final apiClient = ProductsApiClient();
   late Future<ProductsDetailResponse> _productsFuture;
 
-  // 사용자가 변경하는 상태값들
   int quantity = 1;
   String? selectedColor;
   String? selectedSize;
@@ -55,13 +53,12 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   void initState() {
     super.initState();
     _productsFuture = apiClient.productDetail(widget.id).then((response) {
-      // isFavorite 초기값을 API 응답에 따라 설정
-      isFavorite = response.data?.isFavorite ?? false;
+      final data = response.data;
+      isFavorite = data?.isFavorite ?? false;
       return response;
     });
   }
 
-  // 찜하기 상태를 토글하는 함수
   void _toggleFavorite() {
     // TODO: 찜하기 API 호출 로직 추가
     setState(() {
@@ -87,32 +84,26 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
 
         final product = snapshot.data!.data!;
 
-        // 파싱된 옵션 그룹 리스트에서 사이즈와 컬러를 분리합니다.
-        List<String> sizeOptions = [];
-        List<String> colorOptions = [];
-        if (product.options != null) {
-          for (final optionGroup in product.options!) {
-            if (optionGroup.name == '사이즈') {
-              sizeOptions = optionGroup.items.map((item) => item.code).toList();
-            } else if (optionGroup.name == '컬러') {
-              colorOptions = optionGroup.items.map((item) => item.code).toList();
-            }
-          }
-        }
+        // 옵션 응답이 다 달라서 더미로 대체
+        // final sizeOptions = product.options?.size ?? [];
+        // final colorOptions = product.options?.color ?? [];
+
+        // 더미 데이터로 옵션 목록을 설정합니다.
+        final List<String> sizeOptions = ['S', 'M', 'L', 'XL'];
+        final List<String> colorOptions = ['블랙', '화이트', '네이비', '카키'];
 
         final totalPrice = product.price * quantity;
         const placeholderImage = 'https://via.placeholder.com/400';
 
         return ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: EdgeInsets.symmetric(horizontal: 24),
           children: [
-            // --- 상품 대표 이미지 ---
             AspectRatio(
               aspectRatio: 1,
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                 child: Image.network(
-                  product.thumbnailImage?.url ?? placeholderImage,
+                  product.images?.main ?? placeholderImage,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Image.network(placeholderImage, fit: BoxFit.cover),
                 ),
@@ -137,20 +128,21 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             // --- 브랜드 정보 ---
             Row(
               children: [
-                const CircleAvatar(backgroundColor: AppColors.primary, radius: 16), //TODO: 스토어 이미지
+                const CircleAvatar(backgroundColor: AppColors.primary, radius: 16),
                 const SizedBox(width: 10),
                 Text(product.store?.name ?? "브랜드 정보 없음")
               ],
             ),
             const Divider(color: Colors.black),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
 
             // --- 상품 상세 이미지 ---
             ProductsDetailImageSection(product.images?.detail ?? []),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             const Divider(color: Colors.black),
 
             // --- 옵션 선택 ---
+            // [핵심] 옵션 목록이 있을 때만 드롭다운 UI를 보여줍니다.
             if (sizeOptions.isNotEmpty) ...[
               OptionDropdown(
                 hint: "사이즈 선택",
@@ -205,7 +197,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             ),
             const SizedBox(height: 10),
 
-            // --- 하단 버튼 (장바구니, 구매) ---
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -293,7 +284,7 @@ class ProductsNameSection extends StatelessWidget {
     bool hasDiscount = false;
     int finalPrice = product.price;
 
-    if (product.discount != null && product.discount!.isNotEmpty) {
+    if (product.discount != null && product.discount! != 0) {
       try {
         final discountData = jsonDecode(product.discount!);
         rate = discountData['value'];

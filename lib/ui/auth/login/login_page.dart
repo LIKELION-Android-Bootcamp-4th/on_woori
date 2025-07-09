@@ -111,10 +111,7 @@ class LoginPageStatus extends State<LoginPage> {
                           isPassword: true,
                         ),
                         SizedBox(height: 15,),
-                        BottomButton(
-                          buttonText: l10n.loginTitle,
-                          pressedFunc: _submit,
-                        ),
+                        BottomButton(buttonText: l10n.loginTitle, pressedFunc: (){}),
                         Row(
                           children: [
                             Spacer(),

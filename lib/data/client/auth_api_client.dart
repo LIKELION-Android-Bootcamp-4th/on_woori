@@ -21,15 +21,9 @@ class AuthApiClient {
     final response = await _dio.post(
       AuthEndpoints.postAuthLogin,
       data: request.toJson(),
-      options: Options(
-        headers: {
-          'X-Company-Code': '6866fd115b230f5dc709bdef',
-        },
-      ),
     );
     return LoginResponse.fromJson(response.data);
   }
-
 
   // 판매자 회원가입
   Future<RegisterResponse> authRegisterSeller({

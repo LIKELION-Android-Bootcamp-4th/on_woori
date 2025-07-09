@@ -17,7 +17,6 @@ export 'endpoint/buyer/notice_endpoints.dart';
 export 'endpoint/buyer/order_endpoints.dart';
 export 'endpoint/buyer/products_endpoints.dart';
 export 'endpoint/buyer/products_favorites_endpoints.dart';
-export 'endpoint/buyer/search_endpoints.dart';
 
 export 'endpoint/seller/seller_auth_endpoints.dart';
 export 'endpoint/seller/seller_categories_endpoints.dart';

@@ -38,14 +38,11 @@ class _HomePageState extends State<HomePage> {
       final productsResponse = await ProductsApiClient().products();
       print("[파싱 성공] Product 엔티티 변환 완료. (아이템 수: ${productsResponse.data?.items?.length ?? 0})");
 
-      print(productsResponse.data?.items?[0].thumbnailImage);
-
       final fundingsResponse = await FundingsApiClient().fundings();
       print("[파싱 성공] Funding 엔티티 변환 완료. (아이템 수: ${fundingsResponse.data?.items.length ?? 0})");
 
       final storesResponse = await StoresApiClient().stores();
       print("[파싱 성공] Store 엔티티 변환 완료. (아이템 수: ${storesResponse.data?.length ?? 0})");
-
 
       print("모든 엔티티 파싱 성공");
       return (productsResponse, fundingsResponse, storesResponse);
@@ -70,16 +67,14 @@ class _HomePageState extends State<HomePage> {
         ),
       );
       await storage.delete(key: 'ACCESS_TOKEN');
-      await storage.write(key: 'ACCESS_TOKEN', value: response.data?.accessToken);
-      await storage.write(key: 'REFRESH_TOKEN', value: response.data?.refreshToken);
-      await storage.write(key: 'COMPANY_CODE', value: '6866fd115b230f5dc709bdef');
+      await storage.write(key: 'ACCESS_TOKEN', value: response.data.accessToken);
+      await storage.write(key: 'REFRESH_TOKEN', value: response.data.refreshToken);
       print(await storage.read(key: 'ACCESS_TOKEN'));
     } catch (e, s) {
       print('로그인 실패: $e');
       print(s);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +103,6 @@ class _HomePageState extends State<HomePage> {
           final productItems = (snapshot.data?.$1.data?.items ?? []).take(4).toList();
           final fundingItems = (snapshot.data?.$2.data?.items ?? []).take(3).toList();
           final storeItems = (snapshot.data?.$3.data ?? []).take(8).toList();
-
-          print(productItems[0].images);
 
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 24),

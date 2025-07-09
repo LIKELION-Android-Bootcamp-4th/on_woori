@@ -53,7 +53,7 @@ class CategoryScreenState extends State<CategoryScreen> { //세부카테고리
     List<Widget> screenItem = [];
     screenItem.add(CategoryListSection(setIndex));
     screenItem.add(SizedBox(width: 15,));
-    switch (_selectedIndex) { //카테고리 선택된 것에 따라서 다르게 넣어줍니다 - 현재 스토어 ID가 없어서 Api 사용 불가
+    switch (_selectedIndex) {
       case 0: {
         screenItem.add(CategoryDetailSection([
           li0n!.categoryOuter_coat,
@@ -197,7 +197,7 @@ class CategoryDetailSection extends StatelessWidget { //카테고리 버튼 모�
     return children;
   }
 
-  Widget _getCategoryButton(int index) { //버튼 하나 생성
+  Widget _getCategoryButton(int index) {
     return Stack(
       children: [
         Positioned(

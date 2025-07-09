@@ -1,101 +1,218 @@
-import 'package:intl/intl.dart';
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'order_detail_response.g.dart';
 
+// 🚀 [추가] shippingCostRatio 필드를 안전하게 파싱하기 위한 헬퍼 함수
+double? _shippingCostRatioFromJson(dynamic json) {
+  if (json is num) {
+    return json.toDouble();
+  }
+  if (json is String) {
+    return double.tryParse(json);
+  }
+  return null;
+}
+
+
 @JsonSerializable(explicitToJson: true)
 class OrderDetailResponse {
+  final bool success;
+  final String message;
   final OrderDetailData? data;
+  final DateTime? timestamp;
 
-  const OrderDetailResponse({this.data});
+  const OrderDetailResponse({
+    required this.success,
+    required this.message,
+    this.data,
+    this.timestamp,
+  });
 
-  factory OrderDetailResponse.fromJson(Map<String, dynamic> json) =>
-      _$OrderDetailResponseFromJson(json);
+  factory OrderDetailResponse.fromJson(Map<String, dynamic> json) {
+    try {
+      return _$OrderDetailResponseFromJson(json);
+    } catch (e, s) {
+      debugPrint('Error parsing OrderDetailResponse: $e');
+      debugPrintStack(stackTrace: s);
+      rethrow;
+    }
+  }
   Map<String, dynamic> toJson() => _$OrderDetailResponseToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class OrderDetailData {
-  final String orderNumber;
-  final DateTime createdAt;
-  final UserInfo userInfo;
-  final List<OrderDetailProductItem> items;
+  @JsonKey(name: 'id')
+  final String id;
+  final String userId;
+  final String companyId;
+  final String storeId;
+  final List<OrderItem> items;
+  final int totalAmount;
   final int subtotalAmount;
   final int shippingCost;
-  final int totalAmount;
+  final String status;
   final ShippingInfo shippingInfo;
-
-  String get orderDate => DateFormat('yyyy-MM-dd').format(createdAt);
+  final String? memo;
+  @JsonKey(name: 'createdAt')
+  final DateTime orderDate;
+  final String orderNumber;
+  final OrderUserInfo userInfo;
+  final List<StatusHistoryItem>? statusHistory;
 
   const OrderDetailData({
-    required this.orderNumber,
-    required this.createdAt,
-    required this.userInfo,
+    required this.id,
+    required this.userId,
+    required this.companyId,
+    required this.storeId,
     required this.items,
+    required this.totalAmount,
     required this.subtotalAmount,
     required this.shippingCost,
-    required this.totalAmount,
+    required this.status,
     required this.shippingInfo,
+    this.memo,
+    required this.orderDate,
+    required this.orderNumber,
+    required this.userInfo,
+    this.statusHistory,
   });
 
-  factory OrderDetailData.fromJson(Map<String, dynamic> json) =>
-      _$OrderDetailDataFromJson(json);
+  factory OrderDetailData.fromJson(Map<String, dynamic> json) {
+    try {
+      return _$OrderDetailDataFromJson(json);
+    } catch (e, s) {
+      debugPrint('Error parsing OrderDetailData: $e');
+      debugPrintStack(stackTrace: s);
+      rethrow;
+    }
+  }
   Map<String, dynamic> toJson() => _$OrderDetailDataToJson(this);
 }
 
 @JsonSerializable()
-class UserInfo {
-  final String name;
-  const UserInfo({required this.name});
-
-  factory UserInfo.fromJson(Map<String, dynamic> json) =>
-      _$UserInfoFromJson(json);
-  Map<String, dynamic> toJson() => _$UserInfoToJson(this);
-}
-
-@JsonSerializable()
-class OrderDetailProductItem {
-  final String? productImage;
+class OrderItem {
+  final String productId;
   final String productName;
-  final Map<String, dynamic> options;
+  final int productPrice;
   final int quantity;
+  final int unitPrice;
   final int totalPrice;
+  final Map<String, dynamic>? options;
 
   String get optionsText {
-    if (options.isEmpty) {
-      return '선택 옵션 없음';
-    }
-    return options.entries.map((e) => '${e.key}: ${e.value}').join(', ');
+    if (options == null || options!.isEmpty) return '옵션 없음';
+    return options!.entries.map((e) => '${e.key}: ${e.value}').join(' / ');
   }
 
-  const OrderDetailProductItem({
-    this.productImage,
+  String? get productImage => null;
+
+  const OrderItem({
+    required this.productId,
     required this.productName,
-    required this.options,
+    required this.productPrice,
     required this.quantity,
+    required this.unitPrice,
     required this.totalPrice,
+    this.options,
   });
 
-  factory OrderDetailProductItem.fromJson(Map<String, dynamic> json) =>
-      _$OrderDetailProductItemFromJson(json);
-  Map<String, dynamic> toJson() => _$OrderDetailProductItemToJson(this);
+  factory OrderItem.fromJson(Map<String, dynamic> json) {
+    try {
+      return _$OrderItemFromJson(json);
+    } catch (e, s) {
+      debugPrint('Error parsing OrderItem: $e');
+      debugPrintStack(stackTrace: s);
+      rethrow;
+    }
+  }
+  Map<String, dynamic> toJson() => _$OrderItemToJson(this);
 }
 
 @JsonSerializable()
 class ShippingInfo {
-  final String recipient;
-  final String phone;
-  final String zipCode;
-  final String address;
+  final String? deliveryOption;
+  final bool? freeShippingApplied;
+
+  // 🚀 [수정] 헬퍼 함수를 사용하여 shippingCostRatio를 파싱합니다.
+  @JsonKey(fromJson: _shippingCostRatioFromJson)
+  final double? shippingCostRatio;
+
+  String get recipient => '정보 없음';
+  String get phone => '정보 없음';
+  String get zipCode => '정보 없음';
+  String get address => '정보 없음';
 
   const ShippingInfo({
-    required this.recipient,
-    required this.phone,
-    required this.zipCode,
-    required this.address,
+    this.deliveryOption,
+    this.freeShippingApplied,
+    this.shippingCostRatio,
   });
 
-  factory ShippingInfo.fromJson(Map<String, dynamic> json) =>
-      _$ShippingInfoFromJson(json);
+  factory ShippingInfo.fromJson(Map<String, dynamic> json) {
+    try {
+      return _$ShippingInfoFromJson(json);
+    } catch (e, s) {
+      debugPrint('Error parsing ShippingInfo: $e');
+      debugPrintStack(stackTrace: s);
+      rethrow;
+    }
+  }
   Map<String, dynamic> toJson() => _$ShippingInfoToJson(this);
+}
+
+@JsonSerializable()
+class OrderUserInfo {
+  @JsonKey(name: 'id')
+  final String id;
+  @JsonKey(name: 'nickName')
+  final String name;
+  final String email;
+
+  const OrderUserInfo({
+    required this.id,
+    required this.name,
+    required this.email,
+  });
+
+  factory OrderUserInfo.fromJson(Map<String, dynamic> json) {
+    try {
+      return _$OrderUserInfoFromJson(json);
+    } catch (e, s) {
+      debugPrint('Error parsing OrderUserInfo: $e');
+      debugPrintStack(stackTrace: s);
+      rethrow;
+    }
+  }
+  Map<String, dynamic> toJson() => _$OrderUserInfoToJson(this);
+}
+
+@JsonSerializable()
+class StatusHistoryItem {
+  @JsonKey(name: 'id')
+  final String id;
+  final String status;
+  final DateTime changedAt;
+  final String changedBy;
+  final String? note;
+
+  const StatusHistoryItem({
+    required this.id,
+    required this.status,
+    required this.changedAt,
+    required this.changedBy,
+    this.note,
+  });
+
+  factory StatusHistoryItem.fromJson(Map<String, dynamic> json) {
+    try {
+      return _$StatusHistoryItemFromJson(json);
+    } catch (e, s) {
+      debugPrint('Error parsing StatusHistoryItem: $e');
+      debugPrintStack(stackTrace: s);
+      rethrow;
+    }
+  }
+  Map<String, dynamic> toJson() => _$StatusHistoryItemToJson(this);
 }

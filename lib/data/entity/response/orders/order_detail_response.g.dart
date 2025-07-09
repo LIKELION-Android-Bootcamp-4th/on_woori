@@ -8,83 +8,132 @@ part of 'order_detail_response.dart';
 
 OrderDetailResponse _$OrderDetailResponseFromJson(Map<String, dynamic> json) =>
     OrderDetailResponse(
+      success: json['success'] as bool,
+      message: json['message'] as String,
       data: json['data'] == null
           ? null
           : OrderDetailData.fromJson(json['data'] as Map<String, dynamic>),
+      timestamp: json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String),
     );
 
 Map<String, dynamic> _$OrderDetailResponseToJson(
   OrderDetailResponse instance,
-) => <String, dynamic>{'data': instance.data?.toJson()};
+) => <String, dynamic>{
+  'success': instance.success,
+  'message': instance.message,
+  'data': instance.data?.toJson(),
+  'timestamp': instance.timestamp?.toIso8601String(),
+};
 
 OrderDetailData _$OrderDetailDataFromJson(Map<String, dynamic> json) =>
     OrderDetailData(
-      orderNumber: json['orderNumber'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      userInfo: UserInfo.fromJson(json['userInfo'] as Map<String, dynamic>),
+      id: json['id'] as String,
+      userId: json['userId'] as String,
+      companyId: json['companyId'] as String,
+      storeId: json['storeId'] as String,
       items: (json['items'] as List<dynamic>)
-          .map(
-            (e) => OrderDetailProductItem.fromJson(e as Map<String, dynamic>),
-          )
+          .map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
           .toList(),
+      totalAmount: (json['totalAmount'] as num).toInt(),
       subtotalAmount: (json['subtotalAmount'] as num).toInt(),
       shippingCost: (json['shippingCost'] as num).toInt(),
-      totalAmount: (json['totalAmount'] as num).toInt(),
+      status: json['status'] as String,
       shippingInfo: ShippingInfo.fromJson(
         json['shippingInfo'] as Map<String, dynamic>,
       ),
+      memo: json['memo'] as String?,
+      orderDate: DateTime.parse(json['createdAt'] as String),
+      orderNumber: json['orderNumber'] as String,
+      userInfo: OrderUserInfo.fromJson(
+        json['userInfo'] as Map<String, dynamic>,
+      ),
+      statusHistory: (json['statusHistory'] as List<dynamic>?)
+          ?.map((e) => StatusHistoryItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$OrderDetailDataToJson(OrderDetailData instance) =>
     <String, dynamic>{
-      'orderNumber': instance.orderNumber,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'userInfo': instance.userInfo.toJson(),
+      'id': instance.id,
+      'userId': instance.userId,
+      'companyId': instance.companyId,
+      'storeId': instance.storeId,
       'items': instance.items.map((e) => e.toJson()).toList(),
+      'totalAmount': instance.totalAmount,
       'subtotalAmount': instance.subtotalAmount,
       'shippingCost': instance.shippingCost,
-      'totalAmount': instance.totalAmount,
+      'status': instance.status,
       'shippingInfo': instance.shippingInfo.toJson(),
+      'memo': instance.memo,
+      'createdAt': instance.orderDate.toIso8601String(),
+      'orderNumber': instance.orderNumber,
+      'userInfo': instance.userInfo.toJson(),
+      'statusHistory': instance.statusHistory?.map((e) => e.toJson()).toList(),
     };
 
-UserInfo _$UserInfoFromJson(Map<String, dynamic> json) =>
-    UserInfo(name: json['name'] as String);
-
-Map<String, dynamic> _$UserInfoToJson(UserInfo instance) => <String, dynamic>{
-  'name': instance.name,
-};
-
-OrderDetailProductItem _$OrderDetailProductItemFromJson(
-  Map<String, dynamic> json,
-) => OrderDetailProductItem(
-  productImage: json['productImage'] as String?,
+OrderItem _$OrderItemFromJson(Map<String, dynamic> json) => OrderItem(
+  productId: json['productId'] as String,
   productName: json['productName'] as String,
-  options: json['options'] as Map<String, dynamic>,
+  productPrice: (json['productPrice'] as num).toInt(),
   quantity: (json['quantity'] as num).toInt(),
+  unitPrice: (json['unitPrice'] as num).toInt(),
   totalPrice: (json['totalPrice'] as num).toInt(),
+  options: json['options'] as Map<String, dynamic>?,
 );
 
-Map<String, dynamic> _$OrderDetailProductItemToJson(
-  OrderDetailProductItem instance,
-) => <String, dynamic>{
-  'productImage': instance.productImage,
+Map<String, dynamic> _$OrderItemToJson(OrderItem instance) => <String, dynamic>{
+  'productId': instance.productId,
   'productName': instance.productName,
-  'options': instance.options,
+  'productPrice': instance.productPrice,
   'quantity': instance.quantity,
+  'unitPrice': instance.unitPrice,
   'totalPrice': instance.totalPrice,
+  'options': instance.options,
 };
 
 ShippingInfo _$ShippingInfoFromJson(Map<String, dynamic> json) => ShippingInfo(
-  recipient: json['recipient'] as String,
-  phone: json['phone'] as String,
-  zipCode: json['zipCode'] as String,
-  address: json['address'] as String,
+  deliveryOption: json['deliveryOption'] as String?,
+  freeShippingApplied: json['freeShippingApplied'] as bool?,
+  shippingCostRatio: _shippingCostRatioFromJson(json['shippingCostRatio']),
 );
 
 Map<String, dynamic> _$ShippingInfoToJson(ShippingInfo instance) =>
     <String, dynamic>{
-      'recipient': instance.recipient,
-      'phone': instance.phone,
-      'zipCode': instance.zipCode,
-      'address': instance.address,
+      'deliveryOption': instance.deliveryOption,
+      'freeShippingApplied': instance.freeShippingApplied,
+      'shippingCostRatio': instance.shippingCostRatio,
+    };
+
+OrderUserInfo _$OrderUserInfoFromJson(Map<String, dynamic> json) =>
+    OrderUserInfo(
+      id: json['id'] as String,
+      name: json['nickName'] as String,
+      email: json['email'] as String,
+    );
+
+Map<String, dynamic> _$OrderUserInfoToJson(OrderUserInfo instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'nickName': instance.name,
+      'email': instance.email,
+    };
+
+StatusHistoryItem _$StatusHistoryItemFromJson(Map<String, dynamic> json) =>
+    StatusHistoryItem(
+      id: json['id'] as String,
+      status: json['status'] as String,
+      changedAt: DateTime.parse(json['changedAt'] as String),
+      changedBy: json['changedBy'] as String,
+      note: json['note'] as String?,
+    );
+
+Map<String, dynamic> _$StatusHistoryItemToJson(StatusHistoryItem instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'status': instance.status,
+      'changedAt': instance.changedAt.toIso8601String(),
+      'changedBy': instance.changedBy,
+      'note': instance.note,
     };

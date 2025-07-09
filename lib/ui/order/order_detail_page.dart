@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/data/client/orders_api_client.dart';
 import 'package:on_woori/data/entity/response/orders/order_detail_response.dart';
@@ -21,7 +22,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   }
 
   Future<OrderDetailResponse> _fetchOrderDetail() async {
-    return await OrdersApiClient().getOrderDetail(orderId: widget.orderId);
+    try {
+      return await OrdersApiClient().getOrderDetail(orderId: widget.orderId);
+    } catch (e, s) {
+      debugPrint("주문 상세 정보 조회 API 오류: $e");
+      debugPrintStack(stackTrace: s);
+      rethrow;
+    }
   }
 
   @override
@@ -131,7 +138,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
 class OrderDetailHeader extends StatelessWidget {
   final String orderNumber;
-  final String orderDate;
+  final DateTime orderDate;
   final String userName;
 
   const OrderDetailHeader({
@@ -143,6 +150,7 @@ class OrderDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formattedDate = DateFormat('yyyy.MM.dd').format(orderDate);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -155,7 +163,7 @@ class OrderDetailHeader extends StatelessWidget {
           ),
         ),
         Text(
-          "$orderDate | $userName",
+          "$formattedDate | $userName",
           style: const TextStyle(color: AppColors.grey, fontSize: 13),
         ),
       ],
@@ -222,7 +230,7 @@ class OrderProductListItem extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               Text(
-                "$price",
+                "$price원",
                 style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,

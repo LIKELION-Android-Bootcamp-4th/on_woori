@@ -221,3 +221,74 @@ Map<String, dynamic> _$StoreProductsResponseToJson(
   'data': instance.data,
   'timestamp': instance.timestamp.toIso8601String(),
 };
+
+SellerStoreResponse _$SellerStoreResponseFromJson(Map<String, dynamic> json) =>
+    SellerStoreResponse(
+      success: json['success'] as bool,
+      message: json['message'] as String,
+      data: SellerStoreData.fromJson(json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$SellerStoreResponseToJson(
+  SellerStoreResponse instance,
+) => <String, dynamic>{
+  'success': instance.success,
+  'message': instance.message,
+  'data': instance.data.toJson(),
+};
+
+SellerStoreData _$SellerStoreDataFromJson(Map<String, dynamic> json) =>
+    SellerStoreData(
+      name: json['name'] as String,
+      description: json['description'] as String?,
+      thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
+      id: json['id'] as String,
+      category: json['category'] as String?,
+      status: json['status'] as String?,
+    );
+
+Map<String, dynamic> _$SellerStoreDataToJson(SellerStoreData instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'description': instance.description,
+      'thumbnailImageUrl': instance.thumbnailImageUrl,
+      'id': instance.id,
+      'category': instance.category,
+      'status': instance.status,
+    };
+
+SellerContact _$SellerContactFromJson(Map<String, dynamic> json) =>
+    SellerContact(
+      phone: json['phone'] as String?,
+      email: json['email'] as String?,
+      kakaoTalk: json['kakaoTalk'] as String?,
+    );
+
+Map<String, dynamic> _$SellerContactToJson(SellerContact instance) =>
+    <String, dynamic>{
+      'phone': instance.phone,
+      'email': instance.email,
+      'kakaoTalk': instance.kakaoTalk,
+    };
+
+BrandProfileImageData _$BrandProfileImageDataFromJson(
+  Map<String, dynamic> json,
+) => BrandProfileImageData(
+  id: json['id'] as String?,
+  originalName: json['originalName'] as String?,
+  filename: json['filename'] as String?,
+  mimeType: json['mimeType'] as String?,
+  size: json['size'] as String?,
+  url: json['url'] as String,
+);
+
+Map<String, dynamic> _$BrandProfileImageDataToJson(
+  BrandProfileImageData instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'originalName': instance.originalName,
+  'filename': instance.filename,
+  'mimeType': instance.mimeType,
+  'size': instance.size,
+  'url': instance.url,
+};

@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 
 part 'stores_response.g.dart';
@@ -283,4 +283,86 @@ class StoreProductsResponse {
   factory StoreProductsResponse.fromJson(Map<String, dynamic> json) =>
       _$StoreProductsResponseFromJson(json);
   Map<String, dynamic> toJson() => _$StoreProductsResponseToJson(this);
+}
+
+// seller 조회 관련
+@JsonSerializable(explicitToJson: true)
+class SellerStoreResponse {
+  final bool success;
+  final String message;
+  final SellerStoreData data;
+
+  const SellerStoreResponse({
+    required this.success,
+    required this.message,
+    required this.data
+  });
+
+  factory SellerStoreResponse.fromJson(Map<String, dynamic> json) =>
+      _$SellerStoreResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$SellerStoreResponseToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SellerStoreData {
+  final String name;
+  final String? description;
+  final String? thumbnailImageUrl; //여기가 브랜드 아이콘
+  //이하 사용하지 않는 데이터도 필드 유지를 위해 받아옵니다
+  final String id;
+  final String? category;
+  final String? status;
+
+  const SellerStoreData({
+    required this.name,
+    this.description,
+    this.thumbnailImageUrl,
+    required this.id,
+    this.category,
+    this.status,
+  });
+
+  factory SellerStoreData.fromJson(Map<String, dynamic> json) =>
+      _$SellerStoreDataFromJson(json);
+  Map<String, dynamic> toJson() => _$SellerStoreDataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SellerContact {
+  final String? phone;
+  final String? email;
+  final String? kakaoTalk;
+
+  const SellerContact({
+    this.phone,
+    this.email,
+    this.kakaoTalk
+  });
+
+  factory SellerContact.fromJson(Map<String, dynamic> json) =>
+      _$SellerContactFromJson(json);
+  Map<String, dynamic> toJson() => _$SellerContactToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class BrandProfileImageData {
+  final String? id;
+  final String? originalName;
+  final String? filename;
+  final String? mimeType;
+  final String? size;
+  final String url;
+
+  const BrandProfileImageData({
+    this.id,
+    this.originalName,
+    this.filename,
+    this.mimeType,
+    this.size,
+    required this.url
+  });
+
+  factory BrandProfileImageData.fromJson(Map<String, dynamic> json) =>
+      _$BrandProfileImageDataFromJson(json);
+  Map<String, dynamic> toJson() => _$BrandProfileImageDataToJson(this);
 }

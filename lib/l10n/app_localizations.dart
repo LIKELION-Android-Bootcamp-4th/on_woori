@@ -435,6 +435,12 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'더보기'**
   String get more;
+
+  /// No description provided for @dummyImage.
+  ///
+  /// In ko, this message translates to:
+  /// **'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg'**
+  String get dummyImage;
 }
 
 class _AppLocalizationsDelegate

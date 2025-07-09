@@ -63,12 +63,40 @@ Map<String, dynamic> _$WishItemToJson(WishItem instance) => <String, dynamic>{
   'store': instance.store?.toJson(),
 };
 
+ThumbnailImage _$ThumbnailImageFromJson(Map<String, dynamic> json) =>
+    ThumbnailImage(
+      id: json['id'] as String,
+      originalName: json['originalName'] as String?,
+      filename: json['filename'] as String?,
+      mimeType: json['mimeType'] as String?,
+      size: (json['size'] as num?)?.toInt(),
+      url: json['url'] as String?,
+    );
+
+Map<String, dynamic> _$ThumbnailImageToJson(ThumbnailImage instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'originalName': instance.originalName,
+      'filename': instance.filename,
+      'mimeType': instance.mimeType,
+      'size': instance.size,
+      'url': instance.url,
+    };
+
 WishProductEntity _$WishProductEntityFromJson(Map<String, dynamic> json) =>
     WishProductEntity(
       id: json['id'] as String,
       name: json['name'] as String,
       price: (json['price'] as num).toInt(),
       images: _wishImagesFromJson(json['images'] as String?),
+      thumbnailImage: json['thumbnailImage'] == null
+          ? null
+          : ThumbnailImage.fromJson(
+              json['thumbnailImage'] as Map<String, dynamic>,
+            ),
+      thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
+      contentImage: json['contentImage'],
+      contentImageUrl: json['contentImageUrl'] as String?,
     );
 
 Map<String, dynamic> _$WishProductEntityToJson(WishProductEntity instance) =>
@@ -77,6 +105,10 @@ Map<String, dynamic> _$WishProductEntityToJson(WishProductEntity instance) =>
       'name': instance.name,
       'price': instance.price,
       'images': instance.images,
+      'thumbnailImage': instance.thumbnailImage,
+      'thumbnailImageUrl': instance.thumbnailImageUrl,
+      'contentImage': instance.contentImage,
+      'contentImageUrl': instance.contentImageUrl,
     };
 
 PaginationData _$PaginationDataFromJson(Map<String, dynamic> json) =>

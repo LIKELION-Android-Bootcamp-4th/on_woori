@@ -81,7 +81,7 @@ class _WishPageState extends State<WishPage> {
             if (detailImages != null && detailImages.isNotEmpty) {
               thumbnail = P.ThumbnailImage(
                 id: productEntity.id,
-                url: detailImages.first,
+                url: productEntity.thumbnailImage?.url ?? l10n.dummyImage,
               );
             }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/data/admin_api_client.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/client/seller_fundings_api_client.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
@@ -57,6 +58,8 @@ class BrandProductEditScreen extends StatefulWidget {
 
 class BrandProductEditScreenState extends State<BrandProductEditScreen> {
   final productApiClient = ProductsApiClient();
+  final adminApiClient = AdminApiClient();
+
   bool isLoading = true;
   bool selecting = false;
 
@@ -70,21 +73,41 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
   }
 
   Future<void> _loadProducts() async {
+    setState(() => isLoading = true);
     try {
       final response = await productApiClient.products();
-      if (response.success && response.data?.items != null) {
+      if (mounted && response.success && response.data?.items != null) {
         setState(() {
           productList = response.data!.items!;
           selectionList = List.filled(productList.length, false);
-          isLoading = false;
         });
-      } else {
-        setState(() => isLoading = false);
       }
     } catch (e) {
       print("상품 조회 오류: $e");
-      setState(() => isLoading = false);
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
+  }
+
+  void _showSnackBar(String message, {bool isError = false}) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.redAccent : Colors.green,
+      ),
+    );
+  }
+
+  // 🚀 [수정] 이 함수는 UI 상태를 변경하지 않고 순수하게 로그인 기능만 담당하도록 변경
+  Future<bool> _ensureAdminLogin() async {
+    final success = await adminApiClient.loginAsAdmin();
+    if (!success && mounted) {
+      _showSnackBar('관리자 인증에 실패했습니다.', isError: true);
+    }
+    return success;
   }
 
   void onChanged(bool? flag, int index) {
@@ -102,45 +125,91 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
     });
   }
 
-  // 🚀 [수정] 다중 선택 삭제 시 API 호출
   void deleteMultiSelection() async {
-    List<String> idsToDelete = [];
+    final idsToDelete = <String>[];
     for (int i = 0; i < selectionList.length; i++) {
       if (selectionList[i]) {
         idsToDelete.add(productList[i].id);
       }
     }
+    if (idsToDelete.isEmpty) {
+      _showSnackBar('삭제할 상품을 선택해주세요.');
+      return;
+    }
 
-    if (idsToDelete.isEmpty) return;
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('상품 일괄 삭제'),
+        content: Text('${idsToDelete.length}개의 상품을 정말로 삭제하시겠습니까?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('취소')),
+          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('삭제'), style: TextButton.styleFrom(foregroundColor: Colors.red)),
+        ],
+      ),
+    );
 
-    // TODO: 상품 여러개 삭제 API가 있다면 한번에 호출, 없다면 for문으로 개별 호출
-    // 예시: for (final id in idsToDelete) { await productApiClient.deleteProduct(id: id); }
+    if (confirm != true) return;
 
-    // API 호출 후 데이터 새로고침
-    await _loadProducts();
+    setState(() => isLoading = true);
+    if (await _ensureAdminLogin() == false) {
+      setState(() => isLoading = false); // 로그인 실패 시 로딩 종료
+      return;
+    }
+
+    for (final id in idsToDelete) {
+      try {
+        await adminApiClient.deleteProductForce(id: id);
+      } catch (e) {
+        print("상품($id) 삭제 실패: $e");
+        _showSnackBar('일부 상품 삭제에 실패했습니다.', isError: true);
+        break;
+      }
+    }
+
+    _showSnackBar('${idsToDelete.length}개의 상품이 삭제되었습니다.');
+    await _loadProducts(); // 목록 새로고침
     setState(() => selecting = false);
   }
 
-  // 🚀 [수정] 단일 선택 삭제 시 API 호출
   void deleteSelection(int index, String id) async {
-    try {
-      // TODO: 상품 단일 삭제 API 호출 (예시)
-      // final res = await productApiClient.deleteProduct(id: id);
-      // if (res.success) {
-      //   setState(() {
-      //     productList.removeAt(index);
-      //     selectionList.removeAt(index);
-      //   });
-      // }
-      print("삭제 요청: $id"); // 임시 로직
-      setState(() {
-        productList.removeAt(index);
-        selectionList.removeAt(index);
-      });
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('상품 삭제'),
+        content: const Text('정말로 이 상품을 삭제하시겠습니까?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('취소')),
+          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('삭제'), style: TextButton.styleFrom(foregroundColor: Colors.red)),
+        ],
+      ),
+    );
 
-    } catch (e) {
-      print("삭제 실패: $e");
+    if (confirm != true) return;
+
+    setState(() => isLoading = true); // 🚀 [수정] 여기서 로딩을 시작하고
+
+    if (await _ensureAdminLogin() == false) {
+      setState(() => isLoading = false); // 로그인 실패 시 로딩 종료
+      return;
     }
+
+    try {
+      await adminApiClient.deleteProductForce(id: id);
+      _showSnackBar('상품이 삭제되었습니다.');
+      await _loadProducts();
+    } catch (e) {
+      _showSnackBar('삭제에 실패했습니다: $e', isError: true);
+      print("삭제 실패: $e");
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false); // 🚀 [수정] 모든 작업이 끝나면 여기서 로딩을 종료
+      }
+    }
+  }
+
+  void editSelection(String id) {
+    print("수정할 상품 ID: $id");
   }
 
   @override
@@ -150,69 +219,51 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
     }
 
     if (selecting) {
-      bool isAllSelected = selectionList.isNotEmpty && selectionList.every((selected) => selected);
-
-      return ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        children: [
-          Row(
-            children: [
-              Text(
-                "선택된 상품 ${selectionList.where((e) => e).length}개",
-                style: const TextStyle(fontSize: 16, color: AppColors.grey),
-              ),
-              const Spacer(),
-              TextButton(
-                onPressed: toggleSelectAll,
-                child: Text(
-                  isAllSelected ? "전체 해제" : "모두 선택",
-                  style: const TextStyle(fontSize: 16, color: AppColors.editDeleteTextButton),
-                ),
-              ),
-              TextButton(
-                onPressed: deleteMultiSelection,
-                child: const Text(
-                  "선택 삭제",
-                  style: TextStyle(fontSize: 16, color: AppColors.editDeleteTextButton),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: productList.length,
-            itemBuilder: (context, index) {
-              final item = productList[index];
-              final selected = selectionList[index];
-              return BrandProductMultiSelectItem(item.name, index, selected, onChanged);
-            },
-          )
-        ],
-      );
+      bool isAllSelected = productList.isNotEmpty && selectionList.every((selected) => selected);
+      return _buildMultiSelectView(isAllSelected);
     }
 
+    return _buildSingleSelectView();
+  }
+
+  Widget _buildMultiSelectView(bool isAllSelected) {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       children: [
         Row(
           children: [
-            Text(
-              "판매중 상품 ${productList.length}개",
-              style: const TextStyle(fontSize: 16, color: AppColors.grey),
-            ),
+            Text("선택된 상품 ${selectionList.where((e) => e).length}개"),
+            const Spacer(),
+            TextButton(onPressed: toggleSelectAll, child: Text(isAllSelected ? "전체 해제" : "모두 선택")),
+            TextButton(onPressed: deleteMultiSelection, child: const Text("선택 삭제")),
+            TextButton(onPressed: () => setState(() => selecting = false), child: const Text("취소")),
+          ],
+        ),
+        const SizedBox(height: 20),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: productList.length,
+          itemBuilder: (context, index) {
+            final item = productList[index];
+            return BrandProductMultiSelectItem(item.name, index, selectionList[index], onChanged);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSingleSelectView() {
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      children: [
+        Row(
+          children: [
+            Text("판매중 상품 ${productList.length}개"),
             const Spacer(),
             TextButton(
-              onPressed: () {
-                setState(() {
-                  selecting = true;
-                });
-              },
-              child: const Text(
-                "다중선택",
-                style: TextStyle(fontSize: 16, color: AppColors.editDeleteTextButton),
-              ),
+              onPressed: () => setState(() => selecting = true),
+              child: const Text("다중선택"),
             ),
           ],
         ),
@@ -227,7 +278,8 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
               name: item.name,
               index: index,
               id: item.id,
-              deleteSelection: deleteSelection, onEdit: (String ) {  },
+              deleteSelection: deleteSelection,
+              onEdit: editSelection,
             );
           },
         ),
@@ -255,7 +307,6 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
   void initState() {
     super.initState();
     _loadFunding();
-    // 🚀 [수정] initState에서는 비동기 로딩을 호출하기만 하고, 리스트 조작은 _loadFunding에서 처리합니다.
   }
 
   void toggleSelectAll() {
@@ -271,29 +322,30 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
     setState(() => isLoading = true);
     try {
       final response = await fundingApiClient.sellerFunding();
-      if (response.success) {
+      if (mounted && response.success) {
         setState(() {
           fundingList = response.data?.items ?? [];
           selectionList = List.filled(fundingList.length, false);
-          isLoading = false;
         });
-      } else {
-        setState(() => isLoading = false);
       }
     } catch (e) {
       print("펀딩 조회 오류: $e");
-      setState(() => isLoading = false);
+    } finally {
+      if(mounted) {
+        setState(() => isLoading = false);
+      }
     }
+  }
+
+  void _refreshData() {
+    _loadFunding();
   }
 
   void deleteSelection(int index, String id) async {
     try {
       final res = await fundingApiClient.deleteFunding(id: id);
       if (res.success) {
-        setState(() {
-          fundingList.removeAt(index);
-          selectionList.removeAt(index);
-        });
+        _refreshData();
       }
     } catch (e) {
       print("삭제 실패: $e");
@@ -301,30 +353,24 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
   }
 
   void deleteMultiSelection() async {
-    List<int> toDeleteIndexes = [];
+    List<String> idsToDelete = [];
     for (int i = 0; i < selectionList.length; i++) {
       if (selectionList[i]) {
-        toDeleteIndexes.add(i);
+        idsToDelete.add(fundingList[i].id);
       }
     }
 
-    // 역순으로 삭제해야 인덱스가 꼬이지 않습니다.
-    for (int i = toDeleteIndexes.length - 1; i >= 0; i--) {
-      final index = toDeleteIndexes[i];
-      final id = fundingList[index].id;
+    if (idsToDelete.isEmpty) return;
+
+    for (final id in idsToDelete) {
       try {
-        final res = await fundingApiClient.deleteFunding(id: id);
-        if (res.success) {
-          fundingList.removeAt(index);
-          selectionList.removeAt(index);
-        } else {
-          print("삭제 실패: ${res.message}");
-        }
+        await fundingApiClient.deleteFunding(id: id);
       } catch (e) {
-        print("예외 발생: $e");
+        print("$id 삭제 실패: $e");
       }
     }
 
+    _refreshData();
     setState(() {
       selecting = false;
     });
@@ -336,6 +382,11 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
     });
   }
 
+  void editSelection(String id) {
+    print("수정할 펀딩 ID: $id");
+  }
+
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -343,7 +394,8 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
     }
 
     if (selecting) {
-      bool isAllSelected = selectionList.isNotEmpty && selectionList.every((selected) => selected);
+      bool isAllSelected =
+          fundingList.isNotEmpty && selectionList.every((selected) => selected);
 
       return ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -359,14 +411,16 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
                 onPressed: toggleSelectAll,
                 child: Text(
                   isAllSelected ? "전체 해제" : "모두 선택",
-                  style: const TextStyle(fontSize: 16, color: AppColors.editDeleteTextButton),
+                  style: const TextStyle(
+                      fontSize: 16, color: AppColors.editDeleteTextButton),
                 ),
               ),
               TextButton(
                 onPressed: deleteMultiSelection,
                 child: const Text(
                   "선택 삭제",
-                  style: TextStyle(fontSize: 16, color: AppColors.editDeleteTextButton),
+                  style: const TextStyle(
+                      fontSize: 16, color: AppColors.editDeleteTextButton),
                 ),
               ),
             ],
@@ -423,7 +477,8 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
               name: item.title,
               index: index,
               id: item.id,
-              deleteSelection: deleteSelection, onEdit: (String ) {  },
+              deleteSelection: deleteSelection,
+              onEdit: editSelection,
             );
           },
         ),

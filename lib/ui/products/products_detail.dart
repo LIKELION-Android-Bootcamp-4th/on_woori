@@ -122,9 +122,10 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
       productId: product.id,
       quantity: quantity,
       unitPrice: product.price,
-      options: CartOptions(
-        size: selectedSize,
-      ),
+      // options: CartOptions(
+      //   size: selectedSize,
+      //   color:selectedColor ?? '기본'
+      // ),
     );
 
     // 4. API 호출 및 결과 처리

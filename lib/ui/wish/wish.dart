@@ -58,7 +58,11 @@ class _WishPageState extends State<WishPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: Text("오류가 발생했습니다: ${snapshot.error}"));
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.go('/auth/login');
+              print('오류 발생: ${snapshot.error}');
+            });
+            return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || (snapshot.data!.data?.items?.isEmpty ?? true)) {
             return const Center(child: Text('위시리스트에 추가된 상품이 없습니다.'));

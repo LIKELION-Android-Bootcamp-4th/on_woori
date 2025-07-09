@@ -68,7 +68,11 @@ class _SellerMyPageState extends State<SellerMyPage> {
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('오류 발생: ${snapshot.error}'));
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.go('/auth/login');
+              print('오류 발생: ${snapshot.error}');
+            });
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (!snapshot.hasData) {

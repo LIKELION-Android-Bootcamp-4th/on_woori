@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:on_woori/config/endpoint/buyer/cart_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
+import 'package:on_woori/data/entity/request/cart/cart_checkout_request.dart';
 import 'package:on_woori/data/entity/request/cart/cart_register_request.dart';
 import 'package:on_woori/data/entity/request/cart/cart_request.dart';
+import 'package:on_woori/data/entity/response/cart/cart_checkout_response.dart';
 import 'package:on_woori/data/entity/response/cart/cart_response.dart';
 
 class CartApiClient {
@@ -39,5 +41,15 @@ class CartApiClient {
       data: request.toJson(),
     );
     return response.data;
+  }
+
+  Future<CartCheckoutResponse> postCartCheckOut({
+    required CartCheckoutRequest request,
+  }) async {
+    final response = await _dio.post(
+      CartEndpoints.postCartCheckOut,
+      data: request.toJson(),
+    );
+    return CartCheckoutResponse.fromJson(response.data);
   }
 }

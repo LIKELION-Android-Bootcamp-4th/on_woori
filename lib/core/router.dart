@@ -144,10 +144,10 @@ final GoRouter router = GoRouter(
           path: '/mypage/register',
           builder: (context, state) => const ProductRegisterPage(),
         ),
-        // GoRoute(
-        //   path: '/brand/editproduct',
-        //   builder: (context, state) => BrandProductEditPage(),
-        // ),
+        GoRoute(
+          path: '/brand/editproduct',
+          builder: (context, state) => BrandProductEditPage(),
+        ),
         GoRoute(
           path: '/brand/edit',
           builder: (context, state) => const BrandEditPage(),

@@ -1,70 +1,119 @@
 import 'package:flutter/material.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 
-class BrandProductEditListItem extends StatelessWidget { //단일
-  String name;
-  int index;
-  Function(int) deleteSelection;
-  BrandProductEditListItem(this.name, this.index, this.deleteSelection);
+/// 기본 모드에서 사용하는 단일 항목 위젯 (수정/삭제 버튼 포함)
+class BrandProductEditListItem extends StatelessWidget {
+  final String name;
+  final String? imageUrl;
+  final String id;
+  final int index;
+  final Function(String) onEdit;
+  final Function(int, String) deleteSelection;
+
+  const BrandProductEditListItem({
+    super.key,
+    required this.name,
+    required this.id,
+    required this.index,
+    required this.onEdit,
+    required this.deleteSelection,
+    this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 10,),
+        const SizedBox(height: 10),
         Row(
           children: [
-            CircleAvatar(backgroundColor: AppColors.primary, radius: 36,),
-            SizedBox(width: 15,),
-            Text(name, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
-            Spacer(),
-            IconButton(
-              onPressed: (){}, //TODO: 함수 input으로 받아서 edit 화면으로 넘겨주기
-              icon: Icon(Icons.edit),
+            CircleAvatar(
+              radius: 36,
+              backgroundColor: AppColors.grey.withOpacity(0.2),
+              backgroundImage: (imageUrl != null && imageUrl!.isNotEmpty)
+                  ? NetworkImage(imageUrl!)
+                  : null,
+              child: (imageUrl == null || imageUrl!.isEmpty)
+                  ? const Icon(Icons.storefront, color: AppColors.grey)
+                  : null,
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Text(
+                name,
+                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             IconButton(
-              onPressed: (){
-                deleteSelection(index);
-              },
-              icon: Icon(Icons.delete),
+              onPressed: () => onEdit(id),
+              icon: const Icon(Icons.edit_outlined),
+            ),
+            IconButton(
+              onPressed: () => deleteSelection(index, id),
+              icon: const Icon(Icons.delete_outline),
             )
           ],
         ),
-        SizedBox(height: 10,),
-        Divider(color: AppColors.grey,)
+        const SizedBox(height: 10),
+        const Divider(color: AppColors.grey),
       ],
     );
   }
 }
 
-class BrandProductMultiSelectItem extends StatelessWidget { //다중
-  String name;
-  int index;
-  bool isSelected;
-  Function(bool?, int) onChanged;
-  BrandProductMultiSelectItem(this.name, this.index, this.isSelected, this.onChanged);
+/// 다중 선택 모드에서 사용하는 단일 항목 위젯 (체크박스 포함)
+class BrandProductMultiSelectItem extends StatelessWidget {
+  final String name;
+  final String? imageUrl;
+  final int index;
+  final bool isSelected;
+  final Function(bool?, int) onChanged;
+
+  const BrandProductMultiSelectItem(
+      this.name,
+      this.index,
+      this.isSelected,
+      this.onChanged, {
+        super.key,
+        this.imageUrl,
+      });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 10,),
+        const SizedBox(height: 10),
         Row(
           children: [
-            CircleAvatar(backgroundColor: AppColors.primary, radius: 36,),
-            SizedBox(width: 15,),
-            Text(name, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
-            Spacer(),
+            CircleAvatar(
+              radius: 36,
+              backgroundColor: AppColors.grey.withOpacity(0.2),
+              backgroundImage: (imageUrl != null && imageUrl!.isNotEmpty)
+                  ? NetworkImage(imageUrl!)
+                  : null,
+              child: (imageUrl == null || imageUrl!.isEmpty)
+                  ? const Icon(Icons.storefront, color: AppColors.grey)
+                  : null,
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Text(
+                name,
+                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
             Checkbox(
-                value: isSelected,
-                onChanged: (value) {
-                  onChanged(value, index);
-                }
+              value: isSelected,
+              onChanged: (value) {
+                onChanged(value, index);
+              },
             )
           ],
         ),
-        SizedBox(height: 10,),
-        Divider(color: AppColors.grey,)
+        const SizedBox(height: 10),
+        const Divider(color: AppColors.grey),
       ],
     );
   }

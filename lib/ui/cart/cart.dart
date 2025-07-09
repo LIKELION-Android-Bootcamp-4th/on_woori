@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/data/client/cart_api_client.dart';
-import 'package:on_woori/data/entity/request/cart/cart_request.dart';
+import 'package:on_woori/data/entity/request/cart/cart_checkout_request.dart';
 import 'package:on_woori/data/entity/response/cart/cart_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
@@ -39,8 +39,9 @@ class _CartPageState extends State<CartPage> {
     setState(() => _isLoading = true);
 
     try {
-      final requestBody = CartRequest(cartIds: [cartId]);
-      await CartApiClient().deleteCart(request: requestBody);
+      // deleteCart는 다른 요청 구조(CartRequest)를 사용할 수 있으므로 일단 그대로 둡니다.
+      // final requestBody = CartRequest(cartIds: [cartId]);
+      // await CartApiClient().deleteCart(request: requestBody);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -52,6 +53,44 @@ class _CartPageState extends State<CartPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('삭제에 실패했습니다: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _checkout(List<CartItem> cartItems) async {
+    if (cartItems.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('장바구니에 상품이 없습니다.')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final cartIds = cartItems.map((item) => item.id).toList();
+      final request = CartCheckoutRequest(cartIds: cartIds);
+      final response = await CartApiClient().postCartCheckOut(request: request);
+
+      if (mounted && response.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('주문이 생성되었습니다.')),
+        );
+        context.go('/orderlist');
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('주문 생성에 실패했습니다: ${response.message}')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('주문 중 오류가 발생했습니다: $e')),
         );
       }
     } finally {
@@ -95,6 +134,7 @@ class _CartPageState extends State<CartPage> {
               }
 
               final cartResponse = snapshot.data!;
+              final cartItems = cartResponse.data!.items!;
 
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -102,10 +142,10 @@ class _CartPageState extends State<CartPage> {
                   children: [
                     Expanded(
                       child: ListView.separated(
-                        itemCount: cartResponse.data!.items!.length,
+                        itemCount: cartItems.length,
                         shrinkWrap: true,
                         itemBuilder: (BuildContext context, int index) {
-                          final cartItem = cartResponse.data!.items![index];
+                          final cartItem = cartItems[index];
                           return CartListItem(
                             productName: cartItem.product.name,
                             price: cartItem.cartPrice,
@@ -121,9 +161,7 @@ class _CartPageState extends State<CartPage> {
                     ),
                     BottomButton(
                       buttonText: "${cartResponse.grandTotal}원 결제하기",
-                      pressedFunc: () {
-                        context.go('/orderlist');
-                      },
+                      pressedFunc: () => _checkout(cartItems),
                     ),
                     const SizedBox(height: 16),
                   ],

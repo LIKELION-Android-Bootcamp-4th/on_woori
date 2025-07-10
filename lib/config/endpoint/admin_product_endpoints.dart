@@ -7,4 +7,11 @@ abstract class AdminProductEndpoints {
   }) {
     return '/api/admin/products/$id/force';
   }
+
+  // 비밀번호 변경(관리자용)
+  static String changeAuthUserPassword({
+    required String userId,
+  }) {
+    return '/api/auth/users/$userId/change-password';
+  }
 }

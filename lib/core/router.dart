@@ -130,8 +130,11 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const CartPage(),
         ),
         GoRoute(
-          path: '/mypage/password',
-          builder: (context, state) => const PasswordEditPage(),
+          path: '/mypage/password/:userId',
+          builder: (context, state) {
+            final String userId = state.pathParameters['userId'] ?? "";
+            return PasswordEditPage(userId: userId);
+          },
         ),
         GoRoute(
           path: '/branddetail/:brandId',

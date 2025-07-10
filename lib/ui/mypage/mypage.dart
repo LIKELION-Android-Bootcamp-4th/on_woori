@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/core/styles/default_image.dart';
 import 'package:on_woori/data/client/mypage_api_client.dart';
 import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
@@ -36,19 +37,23 @@ class _MyPageState extends State<MyPage> {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   Future<void> _handleLogout(BuildContext context) async {
+    final authClient = AuthApiClient();
+
     try {
-      await _secureStorage.deleteAll();
-      // 로그인 화면으로 이동 (모든 이전 페이지 제거)
-      if (mounted) {
+      final LogoutResponse response = await authClient.authLogout();
+
+      if (response.success) {
+        // 토큰 삭제
+        await _secureStorage.delete(key: 'ACCESS_TOKEN');
+        await _secureStorage.delete(key: 'REFRESH_TOKEN');
+
+        // 로그인 화면으로 이동 (모든 이전 페이지 제거)
         context.go('/auth/login');
         Fluttertoast.showToast(msg: '로그아웃 되었습니다.');
+      } else {
+        print('로그아웃 실패 : ${response.message}');
       }
     } catch (e) {
-      await _secureStorage.deleteAll();
-      if (mounted) {
-        context.go('/auth/login');
-        Fluttertoast.showToast(msg: '로그아웃 처리 중 오류가 발생했습니다.');
-      }
       print('로그아웃 중 오류: $e');
     }
   }
@@ -100,29 +105,27 @@ class _MyPageState extends State<MyPage> {
               children: [
                 // 사용자 정보 Row
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    ClipOval(
+                      child: SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: Image.network(
+                          snapshot.data?.data?.profile.profileImage?.path ?? DefaultImage.ProfileThumbnail,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.network(DefaultImage.ProfileThumbnail, fit: BoxFit.cover,);
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        ClipOval(
-                          child: SizedBox(
-                            width: 48,
-                            height: 48,
-                            child: Image.network(
-                              snapshot.data?.data?.profile.profileImage?.path ?? "",
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(Icons.person, size: 30, color: Colors.grey);
-                              },
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(width: 8),
                         Text(
                           snapshot.data?.data?.nickName ?? '사용자',
                           style: const TextStyle(
@@ -142,6 +145,7 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ],
                     ),
+                    Spacer(),
                     TextButton(
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -157,11 +161,8 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                       onPressed: () async {
-                        // 🔽 프로필 이미지 객체 대신 경로(path)를 전달하도록 수정
-                        final result = await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName ?? ""}/${snapshot.data?.data?.profile.profileImage?.path ?? ""}');
-                        if (result == true) {
-                          _refresh();
-                        }
+                        await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName}/${snapshot.data?.data?.profile.profileImage}');
+                        _refresh();
                       },
                       child: const Text(
                         '프로필 수정',
@@ -254,7 +255,7 @@ class _MyPageState extends State<MyPage> {
                   ),
                   trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
                   onTap: () {
-                    context.push('/mypage/password:${snapshot.data?.data?.id}');
+                    context.push('/mypage/password');
                   },
                 ),
                 ListTile(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:on_woori/core/styles/default_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FundingListItem extends StatelessWidget {
@@ -41,8 +42,7 @@ class FundingListItem extends StatelessWidget {
             errorBuilder: (context, error, stackTrace) {
               return Container(
                 color: Colors.grey[200],
-                child: const Icon(Icons.image_not_supported_outlined,
-                    color: Colors.grey),
+                child: Image.network(DefaultImage.FundingThumbnail, fit: BoxFit.cover,),
               );
             },
           ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/core/styles/default_image.dart';
 import 'package:on_woori/data/client/cart_api_client.dart';
 import 'package:on_woori/data/entity/request/cart/cart_register_request.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
@@ -196,9 +197,9 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                 child: Image.network(
-                  product.thumbnailImage?.url ?? placeholderImage,
+                  product.thumbnailImage?.url ?? DefaultImage.ProductThumbnail,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Image.network(placeholderImage, fit: BoxFit.cover),
+                  errorBuilder: (context, error, stackTrace) => Image.network(DefaultImage.ProductThumbnail, fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -228,7 +229,22 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               leading: CircleAvatar(
                 backgroundColor: AppColors.primary,
                 radius: 16,
-                backgroundImage: NetworkImage(product.store?.thumbnailImageUrl ?? ""),
+                child: ClipOval(
+                  child: Image.network(
+                    product.store?.thumbnailImageUrl ?? DefaultImage.BrandThumbnail,
+                    fit: BoxFit.cover,
+                    width: 32,
+                    height: 32,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.network(
+                        DefaultImage.BrandThumbnail,
+                        fit: BoxFit.cover,
+                        width: 32,
+                        height: 32,
+                      );
+                    },
+                  ),
+                ),
               ),
               title: Text(
                 product.store?.name ?? "브랜드 정보 없음",
@@ -436,7 +452,7 @@ class ProductsDetailImageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const placeholderImage = 'https://via.placeholder.com/400';
+    const placeholderImage = "";
     if (detailImageUrls.isEmpty) return const SizedBox.shrink();
 
     return Column(
@@ -444,7 +460,7 @@ class ProductsDetailImageSection extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 4.0),
         child: Image.network(
           url,
-          errorBuilder: (context, error, stackTrace) => Image.network(placeholderImage),
+          errorBuilder: (context, error, stackTrace) => SizedBox.shrink(),
         ),
       )).toList(),
     );

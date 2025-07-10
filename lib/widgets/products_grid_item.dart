@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:on_woori/core/styles/default_image.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 
@@ -26,7 +27,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
     price = widget.item.price;
     productName = widget.item.name;
     brandName = widget.item.store?.name ?? "브랜드";
-    imageUrl = widget.item.thumbnailImage?.url ?? "";
+    imageUrl = widget.item.thumbnailImage?.url ?? DefaultImage.ProductThumbnail;
     isFavorite = widget.item.isFavorite ?? false;
   }
 
@@ -83,7 +84,13 @@ class ProductsGridItemState extends State<ProductsGridItem> {
                 width: 170,
                 child: AspectRatio(
                   aspectRatio: 0.8,
-                  child: Image.network(imageUrl, fit: BoxFit.cover),
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.network(DefaultImage.ProductThumbnail, fit: BoxFit.cover,);
+                    },
+                  ),
                 ),
               ),
             ),

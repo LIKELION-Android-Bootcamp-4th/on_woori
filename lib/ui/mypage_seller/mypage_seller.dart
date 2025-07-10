@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/core/styles/default_image.dart';
 import 'package:on_woori/data/client/mypage_api_client.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
@@ -34,23 +35,24 @@ class _SellerMyPageState extends State<SellerMyPage> {
 
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
-  // 🔽 로그아웃 처리 함수 수정
   Future<void> _handleLogout(BuildContext context) async {
     final authClient = AuthApiClient();
 
     try {
-      await _secureStorage.deleteAll();
-      if (mounted) {
+      final LogoutResponse response = await authClient.authLogout();
+
+      if (response.success) {
+        // 토큰 삭제
+        await _secureStorage.delete(key: 'ACCESS_TOKEN');
+        await _secureStorage.delete(key: 'REFRESH_TOKEN');
+
+        // 로그인 화면으로 이동 (모든 이전 페이지 제거)
         context.go('/auth/login');
         Fluttertoast.showToast(msg: '로그아웃 되었습니다.');
+      } else {
+        print('로그아웃 실패 : ${response.message}');
       }
-
     } catch (e) {
-      await _secureStorage.deleteAll();
-      if (mounted) {
-        context.go('/auth/login');
-        Fluttertoast.showToast(msg: '로그아웃 처리 중 오류가 발생했습니다.');
-      }
       print('로그아웃 중 오류: $e');
     }
   }
@@ -116,11 +118,10 @@ class _SellerMyPageState extends State<SellerMyPage> {
                                 width: 48,
                                 height: 48,
                                 child: Image.network(
-                                  snapshot.data?.data?.profile.profileImage?.path ?? "",
+                                  snapshot.data?.data?.profile.profileImage?.path ?? DefaultImage.ProfileThumbnail,
                                   fit: BoxFit.cover,
-                                  // 이미지 로드 실패 시 에러 처리
                                   errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(Icons.person, size: 30, color: Colors.grey);
+                                    return Image.network(DefaultImage.ProfileThumbnail, fit: BoxFit.cover,);
                                   },
                                 ),
                               ),
@@ -167,7 +168,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
                           context.push('/brand/edit');
                         },
                         child: Text(
-                          '브랜드 수정',
+                          '브랜드 수정',  // 여기는 l10n 키 없음
                           style: const TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 13,
@@ -205,9 +206,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
                       ),
                     ),
                     trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
-                    onTap: () {
-                      context.push('/orderlist');
-                    },
+                    onTap: () {},
                   ),
 
                   // Divider
@@ -217,6 +216,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
                     height: 20,
                   ),
 
+                  // 마이페이지 섹션 라벨
                   const SizedBox(height: 10,),
                   const Text(
                     '마이페이지',
@@ -264,7 +264,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
                     ),
                     trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
                     onTap: () {
-                      context.push('/mypage/password/${snapshot.data?.data?.id}');
+                      context.push('/mypage/password');
                     },
                   ),
 

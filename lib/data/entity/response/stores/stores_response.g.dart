@@ -207,10 +207,12 @@ StoreProductsResponse _$StoreProductsResponseFromJson(
 ) => StoreProductsResponse(
   success: json['success'] as bool,
   message: json['message'] as String,
-  data: (json['data'] as List<dynamic>)
-      .map((e) => ProductItem.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  timestamp: DateTime.parse(json['timestamp'] as String),
+  data: json['data'] == null
+      ? null
+      : StoreProductsData.fromJson(json['data'] as Map<String, dynamic>),
+  timestamp: json['timestamp'] == null
+      ? null
+      : DateTime.parse(json['timestamp'] as String),
 );
 
 Map<String, dynamic> _$StoreProductsResponseToJson(
@@ -218,9 +220,25 @@ Map<String, dynamic> _$StoreProductsResponseToJson(
 ) => <String, dynamic>{
   'success': instance.success,
   'message': instance.message,
-  'data': instance.data,
-  'timestamp': instance.timestamp.toIso8601String(),
+  'data': instance.data?.toJson(),
+  'timestamp': instance.timestamp?.toIso8601String(),
 };
+
+StoreProductsData _$StoreProductsDataFromJson(Map<String, dynamic> json) =>
+    StoreProductsData(
+      items: (json['items'] as List<dynamic>)
+          .map((e) => ProductItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      pagination: json['pagination'] == null
+          ? null
+          : Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$StoreProductsDataToJson(StoreProductsData instance) =>
+    <String, dynamic>{
+      'items': instance.items.map((e) => e.toJson()).toList(),
+      'pagination': instance.pagination?.toJson(),
+    };
 
 SellerStoreResponse _$SellerStoreResponseFromJson(Map<String, dynamic> json) =>
     SellerStoreResponse(

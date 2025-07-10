@@ -4,6 +4,7 @@ import 'package:on_woori/data/entity/response/products/products_response.dart';
 
 part 'stores_response.g.dart';
 
+// Helper 함수들은 그대로 유지합니다.
 Contact? _contactFromJson(dynamic json) {
   if (json is Map<String, dynamic>) {
     return Contact.fromJson(json);
@@ -266,23 +267,41 @@ class StoreOwnerProfile {
   Map<String, dynamic> toJson() => _$StoreOwnerProfileToJson(this);
 }
 
-@JsonSerializable()
+// --- 수정된 부분 START ---
+
+@JsonSerializable(explicitToJson: true)
 class StoreProductsResponse {
   final bool success;
   final String message;
-  final List<ProductItem> data;
-  final DateTime timestamp;
+  final StoreProductsData? data;
+  final DateTime? timestamp;
 
   StoreProductsResponse({
     required this.success,
     required this.message,
-    required this.data,
-    required this.timestamp
+    this.data,
+    this.timestamp,
   });
 
   factory StoreProductsResponse.fromJson(Map<String, dynamic> json) =>
       _$StoreProductsResponseFromJson(json);
   Map<String, dynamic> toJson() => _$StoreProductsResponseToJson(this);
+}
+
+// [추가] JSON의 data 객체 구조를 담을 새로운 클래스
+@JsonSerializable(explicitToJson: true)
+class StoreProductsData {
+  final List<ProductItem> items;
+  final Pagination? pagination;
+
+  const StoreProductsData({
+    required this.items,
+    this.pagination,
+  });
+
+  factory StoreProductsData.fromJson(Map<String, dynamic> json) =>
+      _$StoreProductsDataFromJson(json);
+  Map<String, dynamic> toJson() => _$StoreProductsDataToJson(this);
 }
 
 // seller 조회 관련

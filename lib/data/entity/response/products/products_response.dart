@@ -71,7 +71,7 @@ class ProductItem {
   final String id;
   final String name;
   final int price;
-  final bool isFavorite;
+  final bool? isFavorite;
   final int? stock;
   final String? stockType;
   @JsonKey(fromJson: _discountToStringJson)

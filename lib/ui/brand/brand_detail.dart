@@ -1,220 +1,249 @@
- import 'package:flutter/material.dart';
- import 'package:on_woori/core/styles/app_colors.dart';
- import 'package:on_woori/data/api_client.dart';
+import 'package:flutter/material.dart';
+import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/data/client/fundings_api_client.dart';
- import 'package:on_woori/data/client/stores_api_client.dart';
- import 'package:on_woori/data/entity/response/fundings/fundings_response.dart';
- import 'package:on_woori/data/entity/response/stores/stores_response.dart';
- import 'package:on_woori/l10n/app_localizations.dart';
- import 'package:on_woori/ui/products/products_detail.dart';
- import 'package:on_woori/widgets/category_horizontal_scroll.dart';
- import 'package:on_woori/widgets/funding_list_item.dart';
- import 'package:on_woori/widgets/products_double_grid.dart';
- import 'package:on_woori/widgets/products_grid_item.dart';
+import 'package:on_woori/data/client/stores_api_client.dart';
+import 'package:on_woori/data/entity/response/fundings/fundings_response.dart';
+import 'package:on_woori/data/entity/response/stores/stores_response.dart';
+import 'package:on_woori/l10n/app_localizations.dart';
+import 'package:on_woori/widgets/category_horizontal_scroll.dart';
+import 'package:on_woori/widgets/funding_list_item.dart';
+import 'package:on_woori/widgets/products_double_grid.dart';
+import 'package:on_woori/widgets/products_grid_item.dart';
 
- import '../../data/entity/response/products/products_response.dart';
 
- class BrandDetailPage extends StatelessWidget {
-   String brandId;
-   BrandDetailPage(this.brandId);
+class BrandDetailPage extends StatelessWidget {
+  final String brandId;
+  const BrandDetailPage(this.brandId, {super.key});
 
-   @override
-   Widget build(BuildContext context) {
-     return Scaffold(
-       appBar: AppBar(),
-       body: SingleChildScrollView(
-         child: Column(
-           children: [
-             BrandDetailScreen(brandId),
-             BrandProductScreen(brandId)
-           ],
-         ),
-       )
-     );
-   }
- }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              BrandDetailScreen(brandId),
+              BrandProductScreen(brandId)
+            ],
+          ),
+        )
+    );
+  }
+}
 
- class BrandDetailScreen extends StatefulWidget {
-   String id;
-   BrandDetailScreen(this.id);
+class BrandDetailScreen extends StatefulWidget {
+  final String id;
+  const BrandDetailScreen(this.id, {super.key});
 
-   @override
-   State<StatefulWidget> createState() {
-     return BrandDetailScreenState();
-   }
- }
+  @override
+  State<StatefulWidget> createState() {
+    return BrandDetailScreenState();
+  }
+}
 
- class BrandDetailScreenState extends State<BrandDetailScreen> {
-   final apiClient = StoresApiClient();
-   late Future<StoreDetailResponse> _storesFuture;
-   Future<StoreDetailResponse> _initializeData() async {
-     return apiClient.storeDetail(widget.id);
-   }
+class BrandDetailScreenState extends State<BrandDetailScreen> {
+  final apiClient = StoresApiClient();
+  // 상품 목록 관련 Future 제거
+  late Future<StoreDetailResponse> _storesFuture;
 
-   @override
-   void initState() {
-     super.initState();
-     _storesFuture = _initializeData();
-   }
+  Future<StoreDetailResponse> _initializeData() async {
+    return apiClient.storeDetail(widget.id);
+  }
 
-   @override
-   Widget build(BuildContext context) {
-     final li0n = AppLocalizations.of(context);
-     return FutureBuilder(
-       future: _storesFuture,
-       builder: (context, snapshot) {
-         if (snapshot.connectionState == ConnectionState.waiting) {
-           return const Center(child: CircularProgressIndicator(),);
-         }
+  @override
+  void initState() {
+    super.initState();
+    _storesFuture = _initializeData();
+    // 상품 목록 초기화 로직 제거
+  }
 
-         if (snapshot.hasError) {
-           return Center(child: Text("오류 발생: ${snapshot.error}"),);
-         }
+  @override
+  Widget build(BuildContext context) {
+    final li0n = AppLocalizations.of(context);
+    return FutureBuilder<StoreDetailResponse>(
+      future: _storesFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator(),);
+        }
 
-         if (!snapshot.hasData) {
-           return const Center(child: Text("데이터가 없습니다."),);
-         }
+        if (snapshot.hasError) {
+          return Center(child: Text("오류 발생: ${snapshot.error}"),);
+        }
 
-         final StoreDetailItem? data = snapshot.data?.data;
+        if (!snapshot.hasData) {
+          return const Center(child: Text("데이터가 없습니다."),);
+        }
 
-         return ListView(
-           padding: EdgeInsets.symmetric(horizontal: 24),
-           shrinkWrap: true,
-           physics: NeverScrollableScrollPhysics(),
-           children: [
-             BrandNameSection(
-               false,
-               data?.name ?? "브랜드 이름",
-               data?.thumbnailImageUrl ?? ""
-             ),
-             SizedBox(height: 15,),
-             Text(data?.description ?? "브랜드 소개",
-               style: TextStyle(
-                   fontWeight: FontWeight.bold,
-                   color: AppColors.grey,
-                   fontSize: 13
-               ),
-             ),
-             SizedBox(height: 30,),
-             Divider(color: AppColors.DividerTextBoxLineDivider,),
-             SizedBox(height: 10,),
-             Text(
-               li0n!.home_RecommendedProducts,
-               style: TextStyle(
-                 fontWeight: FontWeight.w600,
-                 fontSize: 18,
-               ),
-             ),
-             SizedBox(height: 10,),
-           ],
-         );
-       },
-     );
-     // return
-   }
- }
+        final StoreDetailItem? data = snapshot.data?.data;
 
- class BrandProductScreen extends StatefulWidget {
-   String id;
-   BrandProductScreen(this.id);
+        return ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            BrandNameSection(
+                false,
+                data?.name ?? "브랜드 이름",
+                // Nullable 타입으로 변경됨에 따라 ?? "" 추가
+                data?.owner.profile.profileImage ?? ""
+            ),
+            const SizedBox(height: 15,),
+            Text(data?.description ?? "브랜드 소개",
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.grey,
+                  fontSize: 13
+              ),
+            ),
+            const SizedBox(height: 30,),
+            const Divider(color: AppColors.DividerTextBoxLineDivider,),
+            const SizedBox(height: 10,),
+            Text(
+              li0n!.home_RecommendedProducts,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 10,),
 
-   @override
-   State<StatefulWidget> createState() {
-     return BrandProductScreenState();
-   }
- }
+            // 추천 상품 목록을 보여주던 FutureBuilder 제거
+            // 이 UI는 BrandProductScreen으로 이동했습니다.
+          ],
+        );
+      },
+    );
+  }
+}
 
- class BrandProductScreenState extends State<BrandProductScreen> {
-   final apiClient = StoresApiClient();
-   late Future<StoreProductsResponse> _storesProductFuture;
-   Future<StoreProductsResponse> _initializeProducts() async {
-     return apiClient.storeProductList(widget.id);
-   }
+class BrandProductScreen extends StatefulWidget {
+  final String id;
+  const BrandProductScreen(this.id, {super.key});
 
-   @override
-   void initState() {
-     super.initState();
-     _storesProductFuture = _initializeProducts();
-   }
+  @override
+  State<StatefulWidget> createState() {
+    return BrandProductScreenState();
+  }
+}
 
-   @override
-   Widget build(BuildContext context) {
-     return FutureBuilder(
-       future: _storesProductFuture,
-       builder: (context, snapshot) {
-         final data = snapshot.data?.data;
-         final dataList = data?.items ?? [];
-         final li0n = AppLocalizations.of(context);
+class BrandProductScreenState extends State<BrandProductScreen> {
+  final apiClient = StoresApiClient();
+  late Future<StoreProductsResponse> _storesProductFuture;
 
-         return ListView(
-           padding: EdgeInsets.symmetric(horizontal: 24),
-           shrinkWrap: true,
-           physics: NeverScrollableScrollPhysics(),
-           children: [
-             SizedBox(
-               height: 298,
-               child: ListView.separated(
-                 scrollDirection: Axis.horizontal,
-                 padding: EdgeInsets.zero,
-                 itemCount: dataList.length,
-                 separatorBuilder: (context, index) => SizedBox(width: 10),
-                 itemBuilder: (context, index) => ProductsGridItem(dataList[index]),
-               ),
-             ),
-             Divider(color: AppColors.DividerTextBoxLineDivider,),
-             Row(
-               children: [
-                 Text(
-                   li0n!.home_OngoingFunding,
-                   style: TextStyle(
-                     fontSize: 18,
-                     fontWeight: FontWeight.w600,
-                   ),
-                 ),
-                 Spacer(),
-                 TextButton(
-                   onPressed: (){},
-                   child: Text(
-                     li0n.more,
-                     style: TextStyle(
-                         fontSize: 16,
-                         color: AppColors.grey,
-                         decoration: TextDecoration.underline
-                     ),
-                   ),
-                 ),
-               ],
-             ),
-             SizedBox(height: 10,),
-             BrandFundingSection(),
-             Divider(color: AppColors.DividerTextBoxLineDivider,),
-             CategoryHorizontalScroll(),
-             SizedBox(height: 20,),
-             ProductsNonScrollableGrid(dataList)
-           ],
-         );
-       },
-     );
-   }
+  Future<StoreProductsResponse> _initializeProducts() async {
+    try {
+      return apiClient.storeProductList(widget.id);
+    } catch (e, s) {
+      print("오류 내용: $e");
+      print("스택 트레이스: $s"); // 더 자세한 에러 로깅
+      rethrow;
+    }
+  }
 
- }
+  @override
+  void initState() {
+    super.initState();
+    _storesProductFuture = _initializeProducts();
+  }
 
- class BrandFundingSection extends StatefulWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<StoreProductsResponse>(
+      future: _storesProductFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // 추천 상품 목록 높이만큼 로딩 인디케이터를 보여줍니다.
+          return const SizedBox(
+            height: 298,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasError) {
+          // 에러 발생 시 UI
+          return const Center(child: Text("상품 정보를 가져오지 못했습니다."));
+        }
+        if (!snapshot.hasData) {
+          // 데이터가 없을 경우 (API가 null을 반환하는 등)
+          return const Center(child: Text("상품 데이터가 없습니다."));
+        }
+
+        final dataList = snapshot.data?.data?.items ?? [];
+        final li0n = AppLocalizations.of(context)!;
+
+        return ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            // [추가] 추천 상품 목록(가로 스크롤) UI를 이곳으로 이동
+            SizedBox(
+              height: 298,
+              child: dataList.isEmpty
+                  ? const Center(child: Text("추천 상품이 없습니다.")) // 상품이 없을 경우 메시지 표시
+                  : ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.zero,
+                itemCount: dataList.length,
+                separatorBuilder: (context, index) => const SizedBox(width: 10),
+                itemBuilder: (context, index) => ProductsGridItem(dataList[index]),
+              ),
+            ),
+            const Divider(color: AppColors.DividerTextBoxLineDivider,),
+            Row(
+              children: [
+                Text(
+                  li0n.home_OngoingFunding,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: (){},
+                  child: Text(
+                    li0n.more,
+                    style: const TextStyle(
+                        fontSize: 16,
+                        color: AppColors.grey,
+                        decoration: TextDecoration.underline
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10,),
+            BrandFundingSection(),
+            const Divider(color: AppColors.DividerTextBoxLineDivider,),
+            CategoryHorizontalScroll(),
+            const SizedBox(height: 20,),
+            ProductsNonScrollableGrid(dataList)
+          ],
+        );
+      },
+    );
+  }
+}
+
+class BrandFundingSection extends StatefulWidget {
+  const BrandFundingSection({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return BrandFundingSectionState();
   }
- }
+}
 
- class BrandFundingSectionState extends State<BrandFundingSection> {
-   final apiClient = FundingsApiClient();
-   late Future<FundingsResponse> _fundingFuture;
+class BrandFundingSectionState extends State<BrandFundingSection> {
+  final apiClient = FundingsApiClient();
+  late Future<FundingsResponse> _fundingFuture;
 
-   Future<FundingsResponse> _initializeProducts() async {
-     return apiClient.fundings();
-   }
+  Future<FundingsResponse> _initializeProducts() async {
+    return apiClient.fundings();
+  }
 
-   @override
+  @override
   void initState() {
     super.initState();
     _fundingFuture = _initializeProducts();
@@ -222,7 +251,7 @@ import 'package:on_woori/data/client/fundings_api_client.dart';
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<FundingsResponse>(
       future: _fundingFuture,
       builder: (context, snapshot) {
         final data = snapshot.data?.data?.items.take(3).toList() ?? [];
@@ -240,41 +269,49 @@ import 'package:on_woori/data/client/fundings_api_client.dart';
       },
     );
   }
- }
+}
 
- class BrandNameSection extends StatelessWidget {
-   final bool _isBrandMine;
-   final String _BrandName;
-   final String _BrandImageUrl;
-   BrandNameSection(this._isBrandMine, this._BrandName, this._BrandImageUrl);
+class BrandNameSection extends StatelessWidget {
+  final bool _isBrandMine;
+  final String _BrandName;
+  final String _BrandImageUrl;
+  const BrandNameSection(this._isBrandMine, this._BrandName, this._BrandImageUrl, {super.key});
 
-   @override
-   Widget build(BuildContext context) {
-     final li0n = AppLocalizations.of(context);
-     if (_isBrandMine) {
-       return Row(
-         mainAxisAlignment: MainAxisAlignment.start,
-         children: [
-           CircleAvatar(radius: 36, foregroundImage: NetworkImage(_BrandImageUrl),),
-           SizedBox(width: 15,),
-           Text(_BrandName, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
-           Spacer(),
-           TextButton(
-             onPressed: (){},
-             child: Text(li0n!.edit, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),),
-           ),
-         ],
-       );
-     }
+  @override
+  Widget build(BuildContext context) {
+    final li0n = AppLocalizations.of(context);
+    if (_isBrandMine) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: 36,
+            foregroundImage: (_BrandImageUrl.isNotEmpty) ? NetworkImage(_BrandImageUrl) : null,
+            child: (_BrandImageUrl.isNotEmpty) ? null : const Icon(Icons.store, size: 36),
+          ),
+          const SizedBox(width: 15,),
+          Text(_BrandName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+          const Spacer(),
+          TextButton(
+            onPressed: (){},
+            child: Text(li0n!.edit, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),),
+          ),
+        ],
+      );
+    }
 
-     return Row(
-       mainAxisAlignment: MainAxisAlignment.center,
-       children: [
-         CircleAvatar(radius: 36, foregroundImage: NetworkImage(_BrandImageUrl)),
-         SizedBox(width: 15,),
-         Text(_BrandName, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
-         Spacer()
-       ],
-     );
-   }
- }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircleAvatar(
+          radius: 36,
+          foregroundImage: (_BrandImageUrl.isNotEmpty) ? NetworkImage(_BrandImageUrl) : null,
+          child: (_BrandImageUrl.isNotEmpty) ? null : const Icon(Icons.store, size: 36),
+        ),
+        const SizedBox(width: 15,),
+        Text(_BrandName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+        const Spacer()
+      ],
+    );
+  }
+}

@@ -74,4 +74,20 @@ class AdminApiClient {
     );
     return response;
   }
+
+  Future<Response> changePassword({
+    required String id,
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final response = await _adminDio.patch(
+      AdminProductEndpoints.changeAuthUserPassword(userId: id),
+      data: {
+        'isForceChange': false,
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+      },
+    );
+    return response;
+  }
 }

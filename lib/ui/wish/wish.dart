@@ -88,6 +88,7 @@ class _WishPageState extends State<WishPage> {
             return P.ProductItem(
               id: productEntity.id,
               name: productEntity.name,
+              description: "",
               price: productEntity.price,
               isFavorite: true, // 위시리스트의 모든 상품은 isFavorite가 true
               // WishResponse에 없는 데이터는 null 또는 기본값 처리

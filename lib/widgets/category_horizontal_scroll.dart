@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'category_horizontal_scroll_item.dart';
 
 class CategoryHorizontalScroll extends StatefulWidget {
-  const CategoryHorizontalScroll({super.key});
+  Function(String category)? getFilteredItem;
+  CategoryHorizontalScroll({super.key, this.getFilteredItem});
 
   @override
   State<StatefulWidget> createState() => CategoryHorizontalScrollState();
@@ -26,6 +27,9 @@ class CategoryHorizontalScrollState extends State<CategoryHorizontalScroll> {
               setState(() {
                 selectedIndex = index;
               });
+              if (widget.getFilteredItem != null) {
+                widget.getFilteredItem!(categories[index]);
+              }
             },
           );
         }),

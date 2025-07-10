@@ -10,6 +10,8 @@ import 'package:on_woori/widgets/funding_list_item.dart';
 import 'package:on_woori/widgets/products_double_grid.dart';
 import 'package:on_woori/widgets/products_grid_item.dart';
 
+import '../../data/entity/response/products/products_response.dart';
+
 
 class BrandDetailPage extends StatelessWidget {
   final String brandId;
@@ -43,7 +45,6 @@ class BrandDetailScreen extends StatefulWidget {
 
 class BrandDetailScreenState extends State<BrandDetailScreen> {
   final apiClient = StoresApiClient();
-  // 상품 목록 관련 Future 제거
   late Future<StoreDetailResponse> _storesFuture;
 
   Future<StoreDetailResponse> _initializeData() async {
@@ -54,12 +55,11 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
   void initState() {
     super.initState();
     _storesFuture = _initializeData();
-    // 상품 목록 초기화 로직 제거
   }
 
   @override
   Widget build(BuildContext context) {
-    final li0n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     return FutureBuilder<StoreDetailResponse>(
       future: _storesFuture,
       builder: (context, snapshot) {
@@ -85,8 +85,7 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
             BrandNameSection(
                 false,
                 data?.name ?? "브랜드 이름",
-                // Nullable 타입으로 변경됨에 따라 ?? "" 추가
-                data?.owner.profile.profileImage ?? ""
+                data?.thumbnailImageUrl ?? ""
             ),
             const SizedBox(height: 15,),
             Text(data?.description ?? "브랜드 소개",
@@ -100,16 +99,13 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
             const Divider(color: AppColors.DividerTextBoxLineDivider,),
             const SizedBox(height: 10,),
             Text(
-              li0n!.home_RecommendedProducts,
+              l10n!.home_RecommendedProducts,
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 18,
               ),
             ),
             const SizedBox(height: 10,),
-
-            // 추천 상품 목록을 보여주던 FutureBuilder 제거
-            // 이 UI는 BrandProductScreen으로 이동했습니다.
           ],
         );
       },
@@ -130,16 +126,9 @@ class BrandProductScreen extends StatefulWidget {
 class BrandProductScreenState extends State<BrandProductScreen> {
   final apiClient = StoresApiClient();
   late Future<StoreProductsResponse> _storesProductFuture;
-
-  Future<StoreProductsResponse> _initializeProducts() async {
-    try {
-      return apiClient.storeProductList(widget.id);
-    } catch (e, s) {
-      print("오류 내용: $e");
-      print("스택 트레이스: $s"); // 더 자세한 에러 로깅
-      rethrow;
-    }
-  }
+  List<ProductItem> dataList = [];
+  List<ProductItem> originalList = [];
+  bool _isFiltering = false;
 
   @override
   void initState() {
@@ -147,79 +136,105 @@ class BrandProductScreenState extends State<BrandProductScreen> {
     _storesProductFuture = _initializeProducts();
   }
 
+  Future<StoreProductsResponse> _initializeProducts() async {
+    try {
+      return apiClient.storeProductList(widget.id);
+    } catch (e, s) {
+      print("오류 내용: $e");
+      print("스택 트레이스: $s");
+      rethrow;
+    }
+  }
+
+  void getFilteredItem(String category) async {
+    setState(() {
+      _isFiltering = true;
+    });
+
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    List<ProductItem> filteredList;
+    if (category == "전체") {
+      filteredList = originalList;
+    } else {
+      filteredList = originalList.where((item) => item.category == category).toList();
+    }
+
+    setState(() {
+      dataList = filteredList;
+      _isFiltering = false;
+    });
+  }
+  // -----------------------------------------
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<StoreProductsResponse>(
       future: _storesProductFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // 추천 상품 목록 높이만큼 로딩 인디케이터를 보여줍니다.
           return const SizedBox(
             height: 298,
             child: Center(child: CircularProgressIndicator()),
           );
         }
         if (snapshot.hasError) {
-          // 에러 발생 시 UI
           return const Center(child: Text("상품 정보를 가져오지 못했습니다."));
         }
-        if (!snapshot.hasData) {
-          // 데이터가 없을 경우 (API가 null을 반환하는 등)
+        if (!snapshot.hasData || snapshot.data!.data == null) {
           return const Center(child: Text("상품 데이터가 없습니다."));
         }
 
-        final dataList = snapshot.data?.data?.items ?? [];
-        final li0n = AppLocalizations.of(context)!;
+        // 🔽 Future가 완료된 후, 원본 리스트가 비어있을 때만 데이터를 한 번만 채웁니다.
+        if (originalList.isEmpty) {
+          originalList = snapshot.data!.data!.items;
+          dataList = originalList;
+        }
+
+        final l10n = AppLocalizations.of(context)!;
 
         return ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           children: [
-            // [추가] 추천 상품 목록(가로 스크롤) UI를 이곳으로 이동
             SizedBox(
               height: 298,
-              child: dataList.isEmpty
-                  ? const Center(child: Text("추천 상품이 없습니다.")) // 상품이 없을 경우 메시지 표시
+              child: originalList.isEmpty
+                  ? const Center(child: Text("추천 상품이 없습니다."))
                   : ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.zero,
-                itemCount: dataList.length,
+                itemCount: originalList.length,
                 separatorBuilder: (context, index) => const SizedBox(width: 10),
-                itemBuilder: (context, index) => ProductsGridItem(dataList[index]),
+                itemBuilder: (context, index) => ProductsGridItem(originalList[index]),
               ),
             ),
             const Divider(color: AppColors.DividerTextBoxLineDivider,),
             Row(
               children: [
                 Text(
-                  li0n.home_OngoingFunding,
+                  l10n.home_OngoingFunding,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 const Spacer(),
-                // TextButton(
-                //   onPressed: (){},
-                //   child: Text(
-                //     li0n.more,
-                //     style: const TextStyle(
-                //         fontSize: 16,
-                //         color: AppColors.grey,
-                //         decoration: TextDecoration.underline
-                //     ),
-                //   ),
-                // ),
               ],
             ),
             const SizedBox(height: 10,),
             BrandFundingSection(),
             const SizedBox(height: 10,),
             const Divider(color: AppColors.DividerTextBoxLineDivider,),
-            CategoryHorizontalScroll(),
+            CategoryHorizontalScroll(getFilteredItem: getFilteredItem,),
             const SizedBox(height: 20,),
-            ProductsNonScrollableGrid(dataList)
+            _isFiltering
+                ? const SizedBox(
+              height: 200,
+              child: Center(child: CircularProgressIndicator()),
+            )
+                : ProductsNonScrollableGrid(dataList)
           ],
         );
       },
@@ -255,7 +270,13 @@ class BrandFundingSectionState extends State<BrandFundingSection> {
     return FutureBuilder<FundingsResponse>(
       future: _fundingFuture,
       builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const SizedBox.shrink();
+        }
         final data = snapshot.data?.data?.items.take(3).toList() ?? [];
+        if (data.isEmpty) {
+          return const Center(child: Text("진행중인 펀딩이 없습니다."));
+        }
         return Column(
           children: data.map((item) {
             return FundingListItem(
@@ -281,7 +302,7 @@ class BrandNameSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final li0n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context);
     if (_isBrandMine) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -296,7 +317,7 @@ class BrandNameSection extends StatelessWidget {
           const Spacer(),
           TextButton(
             onPressed: (){},
-            child: Text(li0n!.edit, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),),
+            child: Text(l10n!.edit, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),),
           ),
         ],
       );

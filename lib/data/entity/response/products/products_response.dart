@@ -79,6 +79,7 @@ class ProductItem {
   final String? status;
   final StoreData? store;
   final ThumbnailImage? thumbnailImage;
+  final String? category;
 
   @JsonKey(fromJson: _imagesFromJson)
   final Images? images;
@@ -99,6 +100,7 @@ class ProductItem {
     this.thumbnailImage,
     this.images,
     this.options,
+    this.category
   });
 
   factory ProductItem.fromJson(Map<String, dynamic> json) =>

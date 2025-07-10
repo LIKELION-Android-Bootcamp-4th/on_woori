@@ -118,22 +118,24 @@ class _HomePageState extends State<HomePage> {
               children: [
                 AspectRatio(
                   aspectRatio: 2.5 / 1,
-                  child:
+                  child: Image.network(
+                    fit: BoxFit.cover,
+                    "https://images.unsplash.com/photo-1596360628086-0f70382c9764?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                  )
 
-                  TextButton(
-                      onPressed: () { context.push('/auth/login'); },
-                      child: const Center(child: Text('배너')
-                      )),
+                  // TextButton(
+                  //     onPressed: () { context.push('/auth/login'); },
+                  //     child: const Center(child: Text('배너')
+                  //     )),
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 12),
 
                 _buildSectionHeader(title: l10n.home_RecommendedProducts),
                 const SizedBox(height: 12),
                 ProductsNonScrollableGrid(productItems.take(4).toList()),
-                const SizedBox(height: 32),
+                const SizedBox(height: 12),
 
-                const SizedBox(height: 32),
                 _buildSectionHeader(title: l10n.home_OngoingFunding),
                 ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 0),

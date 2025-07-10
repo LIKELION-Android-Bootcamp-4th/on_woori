@@ -225,7 +225,11 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 }
               },
               contentPadding: EdgeInsets.zero,
-              leading: const CircleAvatar(backgroundColor: AppColors.primary, radius: 16),
+              leading: CircleAvatar(
+                backgroundColor: AppColors.primary,
+                radius: 16,
+                backgroundImage: NetworkImage(product.store?.thumbnailImageUrl ?? ""),
+              ),
               title: Text(
                 product.store?.name ?? "브랜드 정보 없음",
                 style: TextStyle(fontSize: 16),

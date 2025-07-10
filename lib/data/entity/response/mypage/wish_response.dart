@@ -10,6 +10,7 @@ Images? _wishImagesFromJson(String? jsonString) {
     final decoded = jsonDecode(jsonString);
     return Images.fromJson(decoded as Map<String, dynamic>);
   } catch (e) {
+    // print('이미지 디코딩 에러 json: $e');
     return null;
   }
 }
@@ -52,9 +53,7 @@ class WishItem {
   final String entityId;
   final WishProductEntity? entity;
   final DateTime? createdAt;
-
   final StoreData? store;
-
 
   const WishItem({
     required this.id,
@@ -71,6 +70,30 @@ class WishItem {
 }
 
 @JsonSerializable()
+class ThumbnailImage {
+  final String id;
+  final String? originalName;
+  final String? filename;
+  final String? mimeType;
+  final int? size;
+  final String? url;
+
+  const ThumbnailImage({
+    required this.id,
+    this.originalName,
+    this.filename,
+    this.mimeType,
+    this.size,
+    this.url,
+  });
+
+  factory ThumbnailImage.fromJson(Map<String, dynamic> json) =>
+      _$ThumbnailImageFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ThumbnailImageToJson(this);
+}
+
+@JsonSerializable()
 class WishProductEntity {
   final String id;
   final String name;
@@ -79,11 +102,20 @@ class WishProductEntity {
   @JsonKey(fromJson: _wishImagesFromJson)
   final Images? images;
 
+  final ThumbnailImage? thumbnailImage;
+  final String? thumbnailImageUrl;
+  final dynamic contentImage;
+  final String? contentImageUrl;
+
   const WishProductEntity({
     required this.id,
     required this.name,
     required this.price,
     this.images,
+    this.thumbnailImage,
+    this.thumbnailImageUrl,
+    this.contentImage,
+    this.contentImageUrl,
   });
 
   factory WishProductEntity.fromJson(Map<String, dynamic> json) =>

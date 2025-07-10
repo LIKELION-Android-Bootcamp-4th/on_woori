@@ -178,4 +178,8 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get more => '더보기';
+
+  @override
+  String get dummyImage =>
+      'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg';
 }

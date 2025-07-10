@@ -218,12 +218,19 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             ),
 
             const Divider(color: Colors.black),
-            Row(
-              children: [
-                const CircleAvatar(backgroundColor: AppColors.primary, radius: 16),
-                const SizedBox(width: 10),
-                Text(product.store?.name ?? "브랜드 정보 없음")
-              ],
+            ListTile(
+              onTap: () {
+                if (product.store?.id != null) {
+                  context.push('/branddetail/${product.store!.id}');
+                }
+              },
+              contentPadding: EdgeInsets.zero,
+              leading: const CircleAvatar(backgroundColor: AppColors.primary, radius: 16),
+              title: Text(
+                product.store?.name ?? "브랜드 정보 없음",
+                style: TextStyle(fontSize: 16),
+              ),
+              dense: true, // 좀 더 컴팩트한 높이로 만듭니다.
             ),
             const Divider(color: Colors.black),
             const SizedBox(height: 20),

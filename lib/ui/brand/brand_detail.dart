@@ -86,7 +86,7 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
                 false,
                 data?.name ?? "브랜드 이름",
                 // Nullable 타입으로 변경됨에 따라 ?? "" 추가
-                data?.thumbnailImageUrl ?? ""
+                data?.owner.profile.profileImage ?? ""
             ),
             const SizedBox(height: 15,),
             Text(data?.description ?? "브랜드 소개",

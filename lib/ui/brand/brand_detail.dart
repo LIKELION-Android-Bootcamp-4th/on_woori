@@ -258,6 +258,7 @@ class BrandFundingSectionState extends State<BrandFundingSection> {
         return Column(
           children: data.map((item) {
             return FundingListItem(
+              id: item.id,
               imageUrl: item.imageUrl ?? '',
               fundingName: item.title,
               brandName: item.companyId?.name ?? '브랜드 없음',

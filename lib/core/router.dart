@@ -11,6 +11,7 @@ import 'package:on_woori/ui/cart/cart.dart';
 import 'package:on_woori/ui/category/category.dart';
 import 'package:on_woori/ui/home/home.dart';
 import 'package:on_woori/ui/mypage/mypage.dart';
+import 'package:on_woori/ui/mypage_seller/funding_edit_page.dart';
 import 'package:on_woori/ui/mypage_seller/mypage_seller.dart';
 import 'package:on_woori/ui/order/order_detail_page.dart';
 import 'package:on_woori/ui/order/order_list.dart';
@@ -146,6 +147,14 @@ final GoRouter router = GoRouter(
           path: '/brand/edit',
           builder: (context, state) => const BrandEditPage(),
         ),
+
+        GoRoute(
+            path: '/funding/edit/:fundingId',
+            builder: (context, state) {
+              final String fundingId = state.pathParameters['fundingId'] ?? "";
+              return FundingEditPage(fundingId: fundingId);
+            },
+        )
       ],
     ),
   ],

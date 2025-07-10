@@ -9,4 +9,11 @@ abstract class FundingsEndpoints {
   }) {
     return '/api/fundings/$fundingId';
   }
+
+  // 펀딩 수정
+  static String editFundings({
+    required String fundingId
+  }) {
+    return '/api/fundings/$fundingId';
+  }
 }

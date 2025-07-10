@@ -143,6 +143,7 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) {
                     final item = fundingItems[index];
                     return FundingListItem(
+                      id: item.id,
                       imageUrl: item.imageUrl ?? l10n.dummyImage,
                       fundingName: item.title,
                       brandName: item.companyId?.name ?? '브랜드 없음',

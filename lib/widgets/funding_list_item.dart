@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FundingListItem extends StatelessWidget {
+  final String id;
   final String imageUrl;
   final String fundingName;
   final String brandName;
@@ -10,6 +11,7 @@ class FundingListItem extends StatelessWidget {
 
   const FundingListItem({
     super.key,
+    required this.id,
     required this.imageUrl,
     required this.fundingName,
     required this.brandName,

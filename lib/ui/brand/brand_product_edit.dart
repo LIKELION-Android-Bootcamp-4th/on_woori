@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/data/admin_api_client.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
@@ -385,6 +386,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
 
   void editSelection(String id) {
     print("수정할 펀딩 ID: $id");
+    context.push('/funding/edit/${id}');
   }
 
 
@@ -439,6 +441,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
                 index,
                 selected,
                 onChanged,
+                imageUrl: item.imageUrl,
               );
             },
           ),

@@ -280,6 +280,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
               id: item.id,
               deleteSelection: deleteSelection,
               onEdit: editSelection,
+              imageUrl: item.thumbnailImage?.url,
             );
           },
         ),
@@ -479,6 +480,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
               id: item.id,
               deleteSelection: deleteSelection,
               onEdit: editSelection,
+              imageUrl: item.imageUrl,
             );
           },
         ),

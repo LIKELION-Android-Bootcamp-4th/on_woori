@@ -25,6 +25,7 @@ import 'package:on_woori/ui/mypage_seller/mypage_seller.dart';
 import 'package:on_woori/ui/mypage_seller/product_register.dart';
 import 'package:on_woori/ui/order/order_detail_page.dart';
 import 'package:on_woori/ui/order/order_list.dart';
+import 'package:on_woori/ui/products/product_edit.dart';
 import 'package:on_woori/ui/products/products_detail.dart';
 import 'package:on_woori/ui/products/products_list.dart';
 import 'package:on_woori/ui/wish/wish.dart';
@@ -165,6 +166,13 @@ final GoRouter router = GoRouter(
             final String fundingId = state.pathParameters['fundingId'] ?? "";
             return FundingEditPage(fundingId: fundingId);
           },
+        ),
+        GoRoute(
+          path: '/productedit/:productId',
+          builder: (context, state) {
+            final String productId = state.pathParameters['productId'] ?? "";
+            return ProductEditPage(productId: productId);
+          }
         )
       ],
     ),

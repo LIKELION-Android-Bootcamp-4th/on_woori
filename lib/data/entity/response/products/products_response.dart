@@ -69,6 +69,7 @@ class ProductsData {
 class ProductItem {
   @JsonKey(name: 'id')
   final String id;
+  final String description;
   final String name;
   final int price;
   final bool? isFavorite;
@@ -90,6 +91,7 @@ class ProductItem {
   const ProductItem({
     required this.id,
     required this.name,
+    required this.description,
     required this.price,
     required this.isFavorite,
     this.stock,

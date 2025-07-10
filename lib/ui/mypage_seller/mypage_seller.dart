@@ -34,24 +34,23 @@ class _SellerMyPageState extends State<SellerMyPage> {
 
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
+  // 🔽 로그아웃 처리 함수 수정
   Future<void> _handleLogout(BuildContext context) async {
     final authClient = AuthApiClient();
 
     try {
-      final LogoutResponse response = await authClient.authLogout();
-
-      if (response.success) {
-        // 토큰 삭제
-        await _secureStorage.delete(key: 'ACCESS_TOKEN');
-        await _secureStorage.delete(key: 'REFRESH_TOKEN');
-
-        // 로그인 화면으로 이동 (모든 이전 페이지 제거)
+      await _secureStorage.deleteAll();
+      if (mounted) {
         context.go('/auth/login');
         Fluttertoast.showToast(msg: '로그아웃 되었습니다.');
-      } else {
-        print('로그아웃 실패 : ${response.message}');
       }
+
     } catch (e) {
+      await _secureStorage.deleteAll();
+      if (mounted) {
+        context.go('/auth/login');
+        Fluttertoast.showToast(msg: '로그아웃 처리 중 오류가 발생했습니다.');
+      }
       print('로그아웃 중 오류: $e');
     }
   }
@@ -119,6 +118,10 @@ class _SellerMyPageState extends State<SellerMyPage> {
                                 child: Image.network(
                                   snapshot.data?.data?.profile.profileImage?.path ?? "",
                                   fit: BoxFit.cover,
+                                  // 이미지 로드 실패 시 에러 처리
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.person, size: 30, color: Colors.grey);
+                                  },
                                 ),
                               ),
                             ),
@@ -164,7 +167,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
                           context.push('/brand/edit');
                         },
                         child: Text(
-                          '브랜드 수정',  // 여기는 l10n 키 없음
+                          '브랜드 수정',
                           style: const TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 13,
@@ -212,7 +215,6 @@ class _SellerMyPageState extends State<SellerMyPage> {
                     height: 20,
                   ),
 
-                  // 마이페이지 섹션 라벨
                   const SizedBox(height: 10,),
                   const Text(
                     '마이페이지',
@@ -239,7 +241,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
                     ),
                     trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
                     onTap: () async {
-                      final result = await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName ?? ""}/${snapshot.data?.data?.profile.profileImage ?? ""} ');
+                      final result = await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName ?? ""}/${snapshot.data?.data?.profile.profileImage?.path ?? ""}');
                       if (result == true) {
                         _refresh();
                       }

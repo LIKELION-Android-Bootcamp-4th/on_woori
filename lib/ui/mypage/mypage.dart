@@ -36,23 +36,19 @@ class _MyPageState extends State<MyPage> {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   Future<void> _handleLogout(BuildContext context) async {
-    final authClient = AuthApiClient();
-
     try {
-      final LogoutResponse response = await authClient.authLogout();
-
-      if (response.success) {
-        // 토큰 삭제
-        await _secureStorage.delete(key: 'ACCESS_TOKEN');
-        await _secureStorage.delete(key: 'REFRESH_TOKEN');
-
-        // 로그인 화면으로 이동 (모든 이전 페이지 제거)
+      await _secureStorage.deleteAll();
+      // 로그인 화면으로 이동 (모든 이전 페이지 제거)
+      if (mounted) {
         context.go('/auth/login');
         Fluttertoast.showToast(msg: '로그아웃 되었습니다.');
-      } else {
-        print('로그아웃 실패 : ${response.message}');
       }
     } catch (e) {
+      await _secureStorage.deleteAll();
+      if (mounted) {
+        context.go('/auth/login');
+        Fluttertoast.showToast(msg: '로그아웃 처리 중 오류가 발생했습니다.');
+      }
       print('로그아웃 중 오류: $e');
     }
   }
@@ -119,6 +115,9 @@ class _MyPageState extends State<MyPage> {
                             child: Image.network(
                               snapshot.data?.data?.profile.profileImage?.path ?? "",
                               fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.person, size: 30, color: Colors.grey);
+                              },
                             ),
                           ),
                         ),
@@ -158,8 +157,11 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                       onPressed: () async {
-                        await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName}/${snapshot.data?.data?.profile.profileImage}');
-                        _refresh();
+                        // 🔽 프로필 이미지 객체 대신 경로(path)를 전달하도록 수정
+                        final result = await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName ?? ""}/${snapshot.data?.data?.profile.profileImage?.path ?? ""}');
+                        if (result == true) {
+                          _refresh();
+                        }
                       },
                       child: const Text(
                         '프로필 수정',

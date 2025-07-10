@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:on_woori/core/router.dart';
@@ -41,12 +42,24 @@ class MainPage extends StatelessWidget {
       return 1;
     } else if (location.startsWith('/wish')) {
       return 2;
-    } else if (location.startsWith('/mypage')) {
+    } else if (location.startsWith('/mypage')) { // '/mypage'와 '/mypage/seller' 모두 3번 탭으로 인식
       return 3;
     } else {
       return 0; // 그 외 모든 경로는 홈(0번 탭)으로 간주
     }
   }
+
+  void _navigateToMyPageBasedOnRole(BuildContext context) async {
+    const storage = FlutterSecureStorage();
+    final userRole = await storage.read(key: 'USER_ROLE');
+
+    if (userRole == 'seller') {
+      context.go('/mypage/seller');
+    } else {
+      context.go('/mypage');
+    }
+  }
+  // ---------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +68,6 @@ class MainPage extends StatelessWidget {
       bottomNavigationBar: AppBottomNavigationBar(
         selectedIndex: _locationToTabIndex(GoRouterState.of(context).uri.toString()),
         onItemTapped: (index) {
-          final String currentLocation = GoRouterState.of(context).uri.toString();
-
           switch (index) {
             case 0:
               context.go('/');
@@ -68,11 +79,7 @@ class MainPage extends StatelessWidget {
               context.go('/wish');
               break;
             case 3:
-              if(currentLocation.startsWith('/mypage')) {
-                context.go('/mypage/seller');
-              } else {
-                context.go('/mypage');
-              }
+              _navigateToMyPageBasedOnRole(context);
               break;
           }
         },

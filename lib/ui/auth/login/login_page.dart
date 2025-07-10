@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/data/client/auth_api_client.dart';
@@ -8,8 +9,6 @@ import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 import 'package:on_woori/widgets/login_textfield.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-import '../../../data/entity/response/auth/login_response.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -20,6 +19,7 @@ class LoginPageStatus extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final apiClient = AuthApiClient();
+  final storage = const FlutterSecureStorage();
 
   void _submit() async {
     String email = emailController.text;
@@ -30,9 +30,27 @@ class LoginPageStatus extends State<LoginPage> {
         request: LoginRequest(email: email, password: password),
       );
 
-      if (response.success) {
+      if (response.success && response.data != null) {
+        // --- 🔽 토큰 및 사용자 정보 저장 로직 ---
+        await storage.write(key: 'ACCESS_TOKEN', value: response.data!.accessToken);
+        await storage.write(key: 'REFRESH_TOKEN', value: response.data!.refreshToken);
+        await storage.write(key: 'USER_ID', value: response.data!.user.id);
+        await storage.write(key: 'USER_NICKNAME', value: response.data!.user.nickName);
+        await storage.write(key: 'COMPANY_CODE', value: response.data!.user.companyId);
+
+        // --- ✨ 사용자 역할(Role) 저장 로직 추가 ---
+        final roles = response.data!.user.platformRoles ?? [];
+        String userRole = 'buyer';
+        if (roles.contains('seller')) {
+          userRole = 'seller';
+        }
+        await storage.write(key: 'USER_ROLE', value: userRole);
+        // -----------------------------------------
+
         Fluttertoast.showToast(msg: "로그인 되었습니다.");
         context.go('/');
+      } else {
+        Fluttertoast.showToast(msg: response.message);
       }
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
@@ -51,7 +69,6 @@ class LoginPageStatus extends State<LoginPage> {
           Fluttertoast.showToast(msg: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
           break;
       }
-
       print("[LOGIN ERROR] ${e.message} / $statusCode");
     } catch (e) {
       Fluttertoast.showToast(msg: "예상치 못한 오류가 발생했습니다.");
@@ -111,7 +128,9 @@ class LoginPageStatus extends State<LoginPage> {
                           isPassword: true,
                         ),
                         SizedBox(height: 15,),
-                        BottomButton(buttonText: l10n.loginTitle, pressedFunc: (){}),
+                        BottomButton(buttonText: l10n.loginTitle, pressedFunc: (){
+                          _submit();
+                        }),
                         Row(
                           children: [
                             Spacer(),

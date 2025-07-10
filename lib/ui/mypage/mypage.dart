@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/core/styles/default_image.dart';
 import 'package:on_woori/data/client/mypage_api_client.dart';
 import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
@@ -104,26 +105,27 @@ class _MyPageState extends State<MyPage> {
               children: [
                 // 사용자 정보 Row
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    ClipOval(
+                      child: SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: Image.network(
+                          snapshot.data?.data?.profile.profileImage?.path ?? DefaultImage.ProfileThumbnail,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.network(DefaultImage.ProfileThumbnail, fit: BoxFit.cover,);
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        ClipOval(
-                          child: SizedBox(
-                            width: 48,
-                            height: 48,
-                            child: Image.network(
-                              snapshot.data?.data?.profile.profileImage?.path ?? "",
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(width: 8),
                         Text(
                           snapshot.data?.data?.nickName ?? '사용자',
                           style: const TextStyle(
@@ -143,6 +145,7 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ],
                     ),
+                    Spacer(),
                     TextButton(
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.white,

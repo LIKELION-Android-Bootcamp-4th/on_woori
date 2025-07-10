@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/core/styles/default_image.dart';
 import 'package:on_woori/data/client/mypage_api_client.dart';
 import 'package:on_woori/data/entity/request/mypage/mypage_request.dart';
 import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';

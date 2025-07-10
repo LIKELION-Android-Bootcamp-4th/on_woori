@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/core/styles/default_image.dart';
 
 class BrandProductEditListItem extends StatelessWidget {
   final String name;
@@ -21,7 +22,6 @@ class BrandProductEditListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasImage = imageUrl != null && imageUrl!.isNotEmpty;
 
     return Column(
       children: [
@@ -31,10 +31,17 @@ class BrandProductEditListItem extends StatelessWidget {
             CircleAvatar(
               radius: 36,
               backgroundColor: AppColors.grey.withOpacity(0.2),
-              backgroundImage: hasImage ? NetworkImage(imageUrl!) : null,
-              child: !hasImage
-                  ? const Icon(Icons.storefront, color: AppColors.grey)
-                  : null,
+              child: ClipOval(
+                child: Image.network(
+                  imageUrl ?? DefaultImage.ProductThumbnail,
+                  fit: BoxFit.cover,
+                  width: 72,
+                  height: 72,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.network(DefaultImage.ProductThumbnail, fit: BoxFit.cover, width: 72, height: 72,);
+                  },
+                ),
+              ),
             ),
             const SizedBox(width: 15),
             Expanded(
@@ -80,7 +87,6 @@ class BrandProductMultiSelectItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasImage = imageUrl != null && imageUrl!.isNotEmpty;
 
     return Column(
       children: [
@@ -90,10 +96,17 @@ class BrandProductMultiSelectItem extends StatelessWidget {
             CircleAvatar(
               radius: 36,
               backgroundColor: AppColors.grey.withOpacity(0.2),
-              backgroundImage: hasImage ? NetworkImage(imageUrl!) : null,
-              child: !hasImage
-                  ? const Icon(Icons.storefront, color: AppColors.grey)
-                  : null,
+              child: ClipOval(
+                child: Image.network(
+                  imageUrl ?? DefaultImage.ProductThumbnail,
+                  fit: BoxFit.cover,
+                  width: 72,
+                  height: 72,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.network(DefaultImage.ProductThumbnail, fit: BoxFit.cover, width: 72, height: 72,);
+                  },
+                ),
+              ),
             ),
             const SizedBox(width: 15),
             Expanded(

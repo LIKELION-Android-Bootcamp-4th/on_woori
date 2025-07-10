@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/core/styles/default_image.dart';
 import 'package:on_woori/data/client/mypage_api_client.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
@@ -117,8 +118,11 @@ class _SellerMyPageState extends State<SellerMyPage> {
                                 width: 48,
                                 height: 48,
                                 child: Image.network(
-                                  snapshot.data?.data?.profile.profileImage?.path ?? "",
+                                  snapshot.data?.data?.profile.profileImage?.path ?? DefaultImage.ProfileThumbnail,
                                   fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Image.network(DefaultImage.ProfileThumbnail, fit: BoxFit.cover,);
+                                  },
                                 ),
                               ),
                             ),

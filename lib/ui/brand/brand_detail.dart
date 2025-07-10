@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/core/styles/default_image.dart';
 import 'package:on_woori/data/client/fundings_api_client.dart';
 import 'package:on_woori/data/client/stores_api_client.dart';
 import 'package:on_woori/data/entity/response/fundings/fundings_response.dart';
@@ -83,9 +84,9 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             BrandNameSection(
-                false,
+                false, //자기 브랜드일 때 넘겨주는 기능 결여되어 있으나 당장 추가 어려움
                 data?.name ?? "브랜드 이름",
-                data?.thumbnailImageUrl ?? ""
+                data?.thumbnailImageUrl ?? DefaultImage.BrandThumbnail
             ),
             const SizedBox(height: 15,),
             Text(data?.description ?? "브랜드 소개",
@@ -328,8 +329,19 @@ class BrandNameSection extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 36,
-          foregroundImage: (_BrandImageUrl.isNotEmpty) ? NetworkImage(_BrandImageUrl) : null,
-          child: (_BrandImageUrl.isNotEmpty) ? null : const Icon(Icons.store, size: 36),
+          child: (_BrandImageUrl.isNotEmpty)
+              ? ClipOval(
+                child: Image.network(
+                  _BrandImageUrl,
+                  fit: BoxFit.cover,
+                  height: 72,
+                  width: 72,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.network(DefaultImage.BrandThumbnail, fit: BoxFit.cover, height: 72, width: 72,);
+                  },
+                ),
+              )
+              : const Icon(Icons.store, size: 36),
         ),
         const SizedBox(width: 15,),
         Text(_BrandName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),

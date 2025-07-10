@@ -331,16 +331,16 @@ class BrandNameSection extends StatelessWidget {
           radius: 36,
           child: (_BrandImageUrl.isNotEmpty)
               ? ClipOval(
-                child: Image.network(
-                  _BrandImageUrl,
-                  fit: BoxFit.cover,
-                  height: 72,
-                  width: 72,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.network(DefaultImage.BrandThumbnail, fit: BoxFit.cover, height: 72, width: 72,);
-                  },
-                ),
-              )
+            child: Image.network(
+              _BrandImageUrl,
+              fit: BoxFit.cover,
+              height: 72,
+              width: 72,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.network(DefaultImage.BrandThumbnail, fit: BoxFit.cover, height: 72, width: 72,);
+              },
+            ),
+          )
               : const Icon(Icons.store, size: 36),
         ),
         const SizedBox(width: 15,),

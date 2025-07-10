@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<(ProductsResponse, FundingsResponse, StoresResponse)> _initializeData() async {
-    await _loginAndSaveToken();
+    // await _loginAndSaveToken();
 
     try {
       final productsResponse = await ProductsApiClient().products();

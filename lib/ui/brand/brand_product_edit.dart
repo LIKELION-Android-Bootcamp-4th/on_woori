@@ -211,6 +211,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
 
   void editSelection(String id) {
     print("수정할 상품 ID: $id");
+    context.push('/productedit/${id}');
   }
 
   @override

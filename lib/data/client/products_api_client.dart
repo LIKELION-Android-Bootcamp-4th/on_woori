@@ -52,4 +52,17 @@ class ProductsApiClient {
     );
     return ProductToggleResponse.fromJson(response.data);
   }
+
+  // 상품 수정
+  Future<ProductRegisterResponse> productUpdate({
+    required String id,
+    required FormData formData
+  })
+  async {
+    final response = await _dio.patch(
+        ProductsEndpoints.patchProductUpdate(id: id),
+        data: formData
+    );
+    return ProductRegisterResponse.fromJson(response.data);
+  }
 }

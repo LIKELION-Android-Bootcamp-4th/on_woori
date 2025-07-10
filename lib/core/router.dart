@@ -100,10 +100,10 @@ final GoRouter router = GoRouter(
             return OrderDetailPage(orderId);
           },
         ),
-        GoRoute(
-          path: '/mypage/edit-seller',
-          builder: (context, state) => const EditProfileSellerPage(),
-        ),
+        // GoRoute(
+        //   path: '/mypage/edit-seller',
+        //   builder: (context, state) => const EditProfileSellerPage(),
+        // ),
         GoRoute(
             path: '/mypage/edit-buyer/:nickName/:profileUrl',
             builder: (context, state) {

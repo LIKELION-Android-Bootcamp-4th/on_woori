@@ -52,6 +52,7 @@ ProductItem _$ProductItemFromJson(Map<String, dynamic> json) => ProductItem(
       : ThumbnailImage.fromJson(json['thumbnailImage'] as Map<String, dynamic>),
   images: _imagesFromJson(json['images'] as String?),
   options: _optionsListFromJson(json['options'] as String?),
+  category: json['category'] as String?,
 );
 
 Map<String, dynamic> _$ProductItemToJson(ProductItem instance) =>
@@ -66,6 +67,7 @@ Map<String, dynamic> _$ProductItemToJson(ProductItem instance) =>
       'status': instance.status,
       'store': instance.store?.toJson(),
       'thumbnailImage': instance.thumbnailImage?.toJson(),
+      'category': instance.category,
       'images': instance.images?.toJson(),
       'options': instance.options?.map((e) => e.toJson()).toList(),
     };

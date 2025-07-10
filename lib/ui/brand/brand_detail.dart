@@ -10,6 +10,8 @@ import 'package:on_woori/widgets/funding_list_item.dart';
 import 'package:on_woori/widgets/products_double_grid.dart';
 import 'package:on_woori/widgets/products_grid_item.dart';
 
+import '../../data/entity/response/products/products_response.dart';
+
 
 class BrandDetailPage extends StatelessWidget {
   final String brandId;
@@ -130,6 +132,8 @@ class BrandProductScreen extends StatefulWidget {
 class BrandProductScreenState extends State<BrandProductScreen> {
   final apiClient = StoresApiClient();
   late Future<StoreProductsResponse> _storesProductFuture;
+  List<ProductItem> dataList = [];
+  List<ProductItem> originalList = [];
 
   Future<StoreProductsResponse> _initializeProducts() async {
     try {
@@ -144,7 +148,11 @@ class BrandProductScreenState extends State<BrandProductScreen> {
   @override
   void initState() {
     super.initState();
-    _storesProductFuture = _initializeProducts();
+    _storesProductFuture = _initializeProducts().then((value) {
+      dataList = value.data?.items ?? [];
+      originalList = value.data?.items ?? [];
+      return value;
+    });
   }
 
   @override
@@ -168,8 +176,16 @@ class BrandProductScreenState extends State<BrandProductScreen> {
           return const Center(child: Text("상품 데이터가 없습니다."));
         }
 
-        final dataList = snapshot.data?.data?.items ?? [];
         final li0n = AppLocalizations.of(context)!;
+        
+        getFilteredItem(String category) {
+          setState(() {
+            dataList = originalList.where((item) => item.category == category).toList();
+            if (category == "전체") {
+              dataList = originalList;
+            }
+          });
+        }
 
         return ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -179,14 +195,14 @@ class BrandProductScreenState extends State<BrandProductScreen> {
             // [추가] 추천 상품 목록(가로 스크롤) UI를 이곳으로 이동
             SizedBox(
               height: 298,
-              child: dataList.isEmpty
+              child: originalList.isEmpty
                   ? const Center(child: Text("추천 상품이 없습니다.")) // 상품이 없을 경우 메시지 표시
                   : ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.zero,
-                itemCount: dataList.length,
+                itemCount: originalList.length,
                 separatorBuilder: (context, index) => const SizedBox(width: 10),
-                itemBuilder: (context, index) => ProductsGridItem(dataList[index]),
+                itemBuilder: (context, index) => ProductsGridItem(originalList[index]),
               ),
             ),
             const Divider(color: AppColors.DividerTextBoxLineDivider,),
@@ -217,7 +233,7 @@ class BrandProductScreenState extends State<BrandProductScreen> {
             BrandFundingSection(),
             const SizedBox(height: 10,),
             const Divider(color: AppColors.DividerTextBoxLineDivider,),
-            CategoryHorizontalScroll(),
+            CategoryHorizontalScroll(getFilteredItem: getFilteredItem,),
             const SizedBox(height: 20,),
             ProductsNonScrollableGrid(dataList)
           ],

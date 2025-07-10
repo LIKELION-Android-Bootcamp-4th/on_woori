@@ -239,12 +239,14 @@ class StoreDetailItem {
   final String name;
   final StoreOwner owner;
   final String description;
+  final String? thumbnailImageUrl;
 
   StoreDetailItem({
     required this.id,
     required this.name,
     required this.owner,
     required this.description,
+    this.thumbnailImageUrl
   });
 
   factory StoreDetailItem.fromJson(Map<String, dynamic> json) =>

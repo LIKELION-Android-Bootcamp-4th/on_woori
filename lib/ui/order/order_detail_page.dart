@@ -55,24 +55,19 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           const placeholderImage = 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg';
 
           return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: OrderDetailHeader(
-                    orderNumber: order.orderNumber,
-                    orderDate: order.orderDate,
-                    userName: order.userInfo.name,
-                  ),
+                OrderDetailHeader(
+                  orderNumber: order.orderNumber,
+                  orderDate: order.orderDate,
+                  userName: order.userInfo.name,
                 ),
                 const SizedBox(height: 10),
-                const Divider(color: Color(0xFFC9C9C9)),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Text("주문 상품", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20)),
-                ),
+                const Divider(color: Colors.black),
+                Text("주문 상품", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20)),
                 const SizedBox(height: 15),
                 ListView.separated(
                   itemCount: order.items.length,
@@ -80,53 +75,44 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (BuildContext context, int index) {
                     final product = order.items[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: OrderProductListItem(
-                        imageUrl: product.productImage ?? placeholderImage,
-                        productName: product.productName,
-                        options: product.optionsText,
-                        quantity: product.quantity,
-                        price: product.totalPrice,
-                      ),
+                    return OrderProductListItem(
+                      imageUrl: product.productImage ?? placeholderImage,
+                      productName: product.productName,
+                      options: product.optionsText,
+                      quantity: product.quantity,
+                      price: product.totalPrice,
                     );
                   },
                   separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(color: Color(0xFFC9C9C9), height: 30, indent: 24, endIndent: 24),
+                  const Divider(color: Colors.black, height: 30, indent: 24, endIndent: 24),
                 ),
                 const SizedBox(height: 10),
-                const Divider(color: Color(0xFFC9C9C9)),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Text("결제 정보", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20)),
-                ),
+                const Divider(color: Colors.black),
+                const Text("결제 정보", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20)),
                 const SizedBox(height: 15),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: PriceInfoBox(
-                    price: order.subtotalAmount,
-                    shippingFee: order.shippingCost,
-                    totalPrice: order.totalAmount,
-                  ),
+                PriceInfoBox(
+                  price: order.subtotalAmount,
+                  shippingFee: order.shippingCost,
+                  totalPrice: order.totalAmount,
                 ),
                 const SizedBox(height: 20),
-                const Divider(color: Color(0xFFC9C9C9)),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  child: Text("배송지 정보", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20)),
-                ),
-                const SizedBox(height: 15),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: ShippingInfoBox(
-                    recipientName: order.shippingInfo.recipient,
-                    recipientPhone: order.shippingInfo.phone,
-                    zipCode: order.shippingInfo.zipCode,
-                    address1: order.shippingInfo.address,
-                    address2: "",
-                  ),
-                ),
-                const SizedBox(height: 10),
+                const Divider(color: Colors.black),
+                // const Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 24),
+                //   child: Text("배송지 정보", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20)),
+                // ),
+                // const SizedBox(height: 15),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 24),
+                //   child: ShippingInfoBox(
+                //     recipientName: order.shippingInfo.recipient,
+                //     recipientPhone: order.shippingInfo.phone,
+                //     zipCode: order.shippingInfo.zipCode,
+                //     address1: order.shippingInfo.address,
+                //     address2: "",
+                //   ),
+                // ),
+                // const SizedBox(height: 10),
               ],
             ),
           );
@@ -332,75 +318,75 @@ class PriceInfoBox extends StatelessWidget {
   }
 }
 
-class ShippingInfoBox extends StatelessWidget {
-  final String recipientName;
-  final String recipientPhone;
-  final String zipCode;
-  final String address1;
-  final String address2;
-
-  const ShippingInfoBox({
-    required this.recipientName,
-    required this.recipientPhone,
-    required this.zipCode,
-    required this.address1,
-    required this.address2,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: AppColors.categorySizeButtonUnSelected,
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("수령인", style: TextStyle(color: AppColors.grey, fontSize: 16)),
-              Text(recipientName, style: const TextStyle(color: Colors.black, fontSize: 16)),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("핸드폰", style: TextStyle(color: AppColors.grey, fontSize: 16)),
-              Text(recipientPhone, style: const TextStyle(color: Colors.black, fontSize: 16)),
-            ],
-          ),
-          const SizedBox(height: 10),
-          const Divider(color: Color(0xFFC9C9C9)),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text("주소", style: TextStyle(color: AppColors.grey, fontSize: 16)),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text("($zipCode)", style: const TextStyle(color: Colors.black, fontSize: 16)),
-                    const SizedBox(height: 4),
-                    Text(address1, style: const TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.right),
-                    if (address2.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Text(address2, style: const TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.right),
-                    ]
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
+// class ShippingInfoBox extends StatelessWidget {
+//   final String recipientName;
+//   final String recipientPhone;
+//   final String zipCode;
+//   final String address1;
+//   final String address2;
+//
+//   const ShippingInfoBox({
+//     required this.recipientName,
+//     required this.recipientPhone,
+//     required this.zipCode,
+//     required this.address1,
+//     required this.address2,
+//     super.key,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: double.infinity,
+//       padding: const EdgeInsets.all(20),
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(10),
+//         color: AppColors.categorySizeButtonUnSelected,
+//       ),
+//       child: Column(
+//         children: [
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               const Text("수령인", style: TextStyle(color: AppColors.grey, fontSize: 16)),
+//               Text(recipientName, style: const TextStyle(color: Colors.black, fontSize: 16)),
+//             ],
+//           ),
+//           const SizedBox(height: 10),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               const Text("핸드폰", style: TextStyle(color: AppColors.grey, fontSize: 16)),
+//               Text(recipientPhone, style: const TextStyle(color: Colors.black, fontSize: 16)),
+//             ],
+//           ),
+//           const SizedBox(height: 10),
+//           const Divider(color: Color(0xFFC9C9C9)),
+//           const SizedBox(height: 10),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               const Text("주소", style: TextStyle(color: AppColors.grey, fontSize: 16)),
+//               const SizedBox(width: 20),
+//               Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.end,
+//                   children: [
+//                     Text("($zipCode)", style: const TextStyle(color: Colors.black, fontSize: 16)),
+//                     const SizedBox(height: 4),
+//                     Text(address1, style: const TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.right),
+//                     if (address2.isNotEmpty) ...[
+//                       const SizedBox(height: 4),
+//                       Text(address2, style: const TextStyle(color: Colors.black, fontSize: 16), textAlign: TextAlign.right),
+//                     ]
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

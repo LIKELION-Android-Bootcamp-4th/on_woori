@@ -200,21 +200,22 @@ class BrandProductScreenState extends State<BrandProductScreen> {
                   ),
                 ),
                 const Spacer(),
-                TextButton(
-                  onPressed: (){},
-                  child: Text(
-                    li0n.more,
-                    style: const TextStyle(
-                        fontSize: 16,
-                        color: AppColors.grey,
-                        decoration: TextDecoration.underline
-                    ),
-                  ),
-                ),
+                // TextButton(
+                //   onPressed: (){},
+                //   child: Text(
+                //     li0n.more,
+                //     style: const TextStyle(
+                //         fontSize: 16,
+                //         color: AppColors.grey,
+                //         decoration: TextDecoration.underline
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(height: 10,),
             BrandFundingSection(),
+            const SizedBox(height: 10,),
             const Divider(color: AppColors.DividerTextBoxLineDivider,),
             CategoryHorizontalScroll(),
             const SizedBox(height: 20,),

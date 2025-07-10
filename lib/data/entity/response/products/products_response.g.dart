@@ -113,6 +113,7 @@ StoreData _$StoreDataFromJson(Map<String, dynamic> json) => StoreData(
   name: json['name'] as String,
   owner: json['owner'] as String?,
   companyId: json['companyId'] as String?,
+  thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
 );
 
 Map<String, dynamic> _$StoreDataToJson(StoreData instance) => <String, dynamic>{
@@ -120,4 +121,5 @@ Map<String, dynamic> _$StoreDataToJson(StoreData instance) => <String, dynamic>{
   'name': instance.name,
   'owner': instance.owner,
   'companyId': instance.companyId,
+  'thumbnailImageUrl': instance.thumbnailImageUrl,
 };

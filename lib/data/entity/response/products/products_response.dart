@@ -165,12 +165,14 @@ class StoreData {
   final String name;
   final String? owner;
   final String? companyId;
+  final String? thumbnailImageUrl;
 
   const StoreData({
     this.id,
     required this.name,
     this.owner,
     this.companyId,
+    this.thumbnailImageUrl
   });
 
   factory StoreData.fromJson(Map<String, dynamic> json) =>

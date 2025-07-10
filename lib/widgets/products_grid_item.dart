@@ -27,7 +27,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
     productName = widget.item.name;
     brandName = widget.item.store?.name ?? "브랜드";
     imageUrl = widget.item.thumbnailImage?.url ?? "";
-    isFavorite = widget.item.isFavorite;
+    isFavorite = widget.item.isFavorite ?? false;
   }
 
   void _showSnackBar(String message) {

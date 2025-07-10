@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 32),
 
                 const SizedBox(height: 32),
-                _buildSectionHeaderAndMore(title: l10n.home_OngoingFunding),
+                _buildSectionHeader(title: l10n.home_OngoingFunding),
                 ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 0),
                   shrinkWrap: true,
@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 32),
 
-                _buildSectionHeaderAndMore(title: l10n.home_BrandList),
+                _buildSectionHeader(title: l10n.home_BrandList),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

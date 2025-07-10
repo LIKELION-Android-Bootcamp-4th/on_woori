@@ -39,7 +39,7 @@ ProductItem _$ProductItemFromJson(Map<String, dynamic> json) => ProductItem(
   id: json['id'] as String,
   name: json['name'] as String,
   price: (json['price'] as num).toInt(),
-  isFavorite: json['isFavorite'] as bool,
+  isFavorite: json['isFavorite'] as bool?,
   stock: (json['stock'] as num?)?.toInt(),
   stockType: json['stockType'] as String?,
   discount: _discountToStringJson(json['discount']),

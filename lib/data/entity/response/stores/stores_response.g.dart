@@ -180,6 +180,7 @@ StoreDetailItem _$StoreDetailItemFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       owner: StoreOwner.fromJson(json['owner'] as Map<String, dynamic>),
       description: json['description'] as String,
+      thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
     );
 
 Map<String, dynamic> _$StoreDetailItemToJson(StoreDetailItem instance) =>
@@ -188,6 +189,7 @@ Map<String, dynamic> _$StoreDetailItemToJson(StoreDetailItem instance) =>
       'name': instance.name,
       'owner': instance.owner,
       'description': instance.description,
+      'thumbnailImageUrl': instance.thumbnailImageUrl,
     };
 
 StoreOwnerProfile _$StoreOwnerProfileFromJson(Map<String, dynamic> json) =>

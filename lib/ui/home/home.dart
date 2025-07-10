@@ -172,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (context, index) {
                         final brand = storeItems[index];
                         return BrandGridItem(
-                          imageUrl: 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg',
+                          imageUrl: brand.thumbnailImageUrl ?? "",
                           brandName: brand.name,
                           onTap: () {
                             print('${brand.name} 클릭됨, ID: ${brand.id}');

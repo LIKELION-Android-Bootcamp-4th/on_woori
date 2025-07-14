@@ -452,7 +452,6 @@ class ProductsDetailImageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const placeholderImage = "";
     if (detailImageUrls.isEmpty) return const SizedBox.shrink();
 
     return Column(

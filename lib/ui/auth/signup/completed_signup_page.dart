@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
-import 'package:on_woori/widgets/login_textfield.dart';
 
 import '../../../l10n/app_localizations.dart';
 
 class CompletedSignupPage extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final introController = TextEditingController();
 
@@ -17,10 +14,7 @@ class CompletedSignupPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     void submit() {
-      if (_formKey.currentState!.validate()) {
-        // 모든 유효성 통과
-        context.go('/');
-      }
+      context.go('/');
     }
 
     return Scaffold(

@@ -39,9 +39,11 @@ Map<String, dynamic> _$LoginDataToJson(LoginData instance) => <String, dynamic>{
 };
 
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
-  id: json['id'] as String,
+  id: json['id'] as String?,
   email: json['email'] as String,
-  profile: ProfileData.fromJson(json['profile'] as Map<String, dynamic>),
+  profile: json['profile'] == null
+      ? null
+      : ProfileData.fromJson(json['profile'] as Map<String, dynamic>),
   nickName: json['nickName'] as String?,
   loginRoles: (json['loginRoles'] as List<dynamic>?)
       ?.map((e) => e as String)
@@ -61,13 +63,18 @@ UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
+  storeId: json['storeId'] as String?,
+  userId: json['userId'] as String?,
+  isWithdrawn: json['isWithdrawn'] as bool?,
+  emailVerificationEnabled: json['emailVerificationEnabled'] as bool?,
+  verificationCodeSent: json['verificationCodeSent'] as bool?,
 );
 
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
   'id': instance.id,
   'email': instance.email,
   'nickName': instance.nickName,
-  'profile': instance.profile.toJson(),
+  'profile': instance.profile?.toJson(),
   'loginRoles': instance.loginRoles,
   'platformRoles': instance.platformRoles,
   'isAdmin': instance.isAdmin,
@@ -78,6 +85,11 @@ Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{
   'companyId': instance.companyId,
   'createdAt': instance.createdAt?.toIso8601String(),
   'updatedAt': instance.updatedAt?.toIso8601String(),
+  'storeId': instance.storeId,
+  'userId': instance.userId,
+  'isWithdrawn': instance.isWithdrawn,
+  'emailVerificationEnabled': instance.emailVerificationEnabled,
+  'verificationCodeSent': instance.verificationCodeSent,
 };
 
 ProfileData _$ProfileDataFromJson(Map<String, dynamic> json) => ProfileData(

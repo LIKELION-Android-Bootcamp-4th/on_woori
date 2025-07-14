@@ -4,12 +4,10 @@ part 'register_response.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class RegisterResponse {
-  final String code;
   final String message;
   final RegisterResult result;
 
   const RegisterResponse({
-    required this.code,
     required this.message,
     required this.result,
   });

@@ -25,25 +25,25 @@ class AuthApiClient {
   }
 
   // 판매자 회원가입
-  Future<RegisterResponse> authRegisterSeller({
+  Future<LoginResponse> authRegisterSeller({
     required RegisterSellerRequest request,
   }) async {
     final response = await _dio.post(
       AuthEndpoints.postAuthRegisterSeller,
       data: request.toJson(),
     );
-    return RegisterResponse.fromJson(response.data);
+    return LoginResponse.fromJson(response.data);
   }
 
   // 구매자 회원가입
-  Future<RegisterResponse> authRegisterBuyer({
+  Future<LoginResponse> authRegisterBuyer({
     required RegisterBuyerRequest request,
   }) async {
     final response = await _dio.post(
       AuthEndpoints.postAuthRegisterBuyer,
       data: request.toJson(),
     );
-    return RegisterResponse.fromJson(response.data);
+    return LoginResponse.fromJson(response.data);
   }
 
   // 이메일 인증 코드 확인

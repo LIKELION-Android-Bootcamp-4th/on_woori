@@ -9,7 +9,6 @@ ProfileImageData? _profileImageFromJson(dynamic json) {
   return null;
 }
 
-
 @JsonSerializable(explicitToJson: true)
 class LoginResponse {
   final bool success;
@@ -48,13 +47,15 @@ class LoginData {
   Map<String, dynamic> toJson() => _$LoginDataToJson(this);
 }
 
-@JsonSerializable(explicitToJson:true)
+@JsonSerializable(explicitToJson: true)
 class UserData {
+  // ✅ [수정] 판매자 회원가입 응답에 id가 없으므로 nullable로 변경
   @JsonKey(name: 'id')
-  final String id;
+  final String? id;
+
   final String email;
   final String? nickName;
-  final ProfileData profile;
+  final ProfileData? profile;
   final List<String>? loginRoles;
   final List<String>? platformRoles;
   final bool? isAdmin;
@@ -66,10 +67,19 @@ class UserData {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
+  // 로그인/회원가입 응답 차이를 모두 수용하기 위한 nullable 필드들
+  final String? storeId;
+  final String? userId;
+  final bool? isWithdrawn;
+  final bool? emailVerificationEnabled;
+  final bool? verificationCodeSent;
+
   const UserData({
-    required this.id,
+    // ✅ [수정] 생성자에서 id의 required 키워드 제거
+    this.id,
+
     required this.email,
-    required this.profile,
+    this.profile,
     this.nickName,
     this.loginRoles,
     this.platformRoles,
@@ -81,6 +91,11 @@ class UserData {
     this.companyId,
     this.createdAt,
     this.updatedAt,
+    this.storeId,
+    this.userId,
+    this.isWithdrawn,
+    this.emailVerificationEnabled,
+    this.verificationCodeSent,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) =>

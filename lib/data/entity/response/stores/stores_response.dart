@@ -68,6 +68,21 @@ class StoresData {
   Map<String, dynamic> toJson() => _$StoresDataToJson(this);
 }
 
+@JsonSerializable(explicitToJson: true)
+class User {
+  final String companyId;
+  final String createdAt;
+  final String id;
+
+  User({
+    required this.companyId,
+    required this.createdAt,
+    required this.id,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+}
 
 @JsonSerializable(explicitToJson: true)
 class StoreItem {
@@ -75,7 +90,10 @@ class StoreItem {
   final String id;
   final String name;
   final String? description;
-  final String owner;
+
+  @JsonKey(fromJson: User.fromJson)
+  final User owner;
+
   final String companyId;
   final String status;
   final bool isDeleted;

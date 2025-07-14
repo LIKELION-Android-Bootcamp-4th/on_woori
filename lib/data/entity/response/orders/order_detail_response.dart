@@ -47,7 +47,6 @@ class OrderDetailData {
   final String id;
   final String userId;
   final String companyId;
-  final String storeId;
   final List<OrderItem> items;
   final int totalAmount;
   final int subtotalAmount;
@@ -58,14 +57,12 @@ class OrderDetailData {
   @JsonKey(name: 'createdAt')
   final DateTime orderDate;
   final String orderNumber;
-  final OrderUserInfo userInfo;
   final List<StatusHistoryItem>? statusHistory;
 
   const OrderDetailData({
     required this.id,
     required this.userId,
     required this.companyId,
-    required this.storeId,
     required this.items,
     required this.totalAmount,
     required this.subtotalAmount,
@@ -75,7 +72,6 @@ class OrderDetailData {
     this.memo,
     required this.orderDate,
     required this.orderNumber,
-    required this.userInfo,
     this.statusHistory,
   });
 
@@ -93,12 +89,13 @@ class OrderDetailData {
 
 @JsonSerializable()
 class OrderItem {
+  @JsonKey(name: "id")
   final String productId;
   final String productName;
-  final int productPrice;
   final int quantity;
   final int unitPrice;
   final int totalPrice;
+  final String? thumbnailImageUrl;
   final Map<String, dynamic>? options;
 
   String get optionsText {
@@ -111,10 +108,10 @@ class OrderItem {
   const OrderItem({
     required this.productId,
     required this.productName,
-    required this.productPrice,
     required this.quantity,
     required this.unitPrice,
     required this.totalPrice,
+    this.thumbnailImageUrl,
     this.options,
   });
 
@@ -135,7 +132,6 @@ class ShippingInfo {
   final String? deliveryOption;
   final bool? freeShippingApplied;
 
-  // 🚀 [수정] 헬퍼 함수를 사용하여 shippingCostRatio를 파싱합니다.
   @JsonKey(fromJson: _shippingCostRatioFromJson)
   final double? shippingCostRatio;
 

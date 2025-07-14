@@ -32,7 +32,6 @@ OrderDetailData _$OrderDetailDataFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       userId: json['userId'] as String,
       companyId: json['companyId'] as String,
-      storeId: json['storeId'] as String,
       items: (json['items'] as List<dynamic>)
           .map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -46,9 +45,6 @@ OrderDetailData _$OrderDetailDataFromJson(Map<String, dynamic> json) =>
       memo: json['memo'] as String?,
       orderDate: DateTime.parse(json['createdAt'] as String),
       orderNumber: json['orderNumber'] as String,
-      userInfo: OrderUserInfo.fromJson(
-        json['userInfo'] as Map<String, dynamic>,
-      ),
       statusHistory: (json['statusHistory'] as List<dynamic>?)
           ?.map((e) => StatusHistoryItem.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -59,7 +55,6 @@ Map<String, dynamic> _$OrderDetailDataToJson(OrderDetailData instance) =>
       'id': instance.id,
       'userId': instance.userId,
       'companyId': instance.companyId,
-      'storeId': instance.storeId,
       'items': instance.items.map((e) => e.toJson()).toList(),
       'totalAmount': instance.totalAmount,
       'subtotalAmount': instance.subtotalAmount,
@@ -69,27 +64,26 @@ Map<String, dynamic> _$OrderDetailDataToJson(OrderDetailData instance) =>
       'memo': instance.memo,
       'createdAt': instance.orderDate.toIso8601String(),
       'orderNumber': instance.orderNumber,
-      'userInfo': instance.userInfo.toJson(),
       'statusHistory': instance.statusHistory?.map((e) => e.toJson()).toList(),
     };
 
 OrderItem _$OrderItemFromJson(Map<String, dynamic> json) => OrderItem(
-  productId: json['productId'] as String,
+  productId: json['id'] as String,
   productName: json['productName'] as String,
-  productPrice: (json['productPrice'] as num).toInt(),
   quantity: (json['quantity'] as num).toInt(),
   unitPrice: (json['unitPrice'] as num).toInt(),
   totalPrice: (json['totalPrice'] as num).toInt(),
+  thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
   options: json['options'] as Map<String, dynamic>?,
 );
 
 Map<String, dynamic> _$OrderItemToJson(OrderItem instance) => <String, dynamic>{
-  'productId': instance.productId,
+  'id': instance.productId,
   'productName': instance.productName,
-  'productPrice': instance.productPrice,
   'quantity': instance.quantity,
   'unitPrice': instance.unitPrice,
   'totalPrice': instance.totalPrice,
+  'thumbnailImageUrl': instance.thumbnailImageUrl,
   'options': instance.options,
 };
 

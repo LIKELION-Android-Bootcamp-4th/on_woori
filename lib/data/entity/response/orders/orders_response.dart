@@ -65,12 +65,13 @@ class OrderItem {
 
 @JsonSerializable(explicitToJson: true)
 class OrderedProductItem {
-  final ProductId productId;
+  //final ProductId productId;
+  final String id;
   final String productName;
   final int quantity;
 
   const OrderedProductItem({
-    required this.productId,
+    required this.id,
     required this.productName,
     required this.quantity,
   });

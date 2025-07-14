@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:on_woori/core/styles/default_image.dart';
 import 'package:on_woori/data/client/orders_api_client.dart';
 import 'package:on_woori/data/entity/response/orders/order_detail_response.dart';
 
@@ -52,7 +53,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           }
 
           final order = snapshot.data!.data!;
-          const placeholderImage = 'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg';
 
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 24),
@@ -63,7 +63,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 OrderDetailHeader(
                   orderNumber: order.orderNumber,
                   orderDate: order.orderDate,
-                  userName: order.userInfo.name,
                 ),
                 const SizedBox(height: 10),
                 const Divider(color: Colors.black),
@@ -76,7 +75,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   itemBuilder: (BuildContext context, int index) {
                     final product = order.items[index];
                     return OrderProductListItem(
-                      imageUrl: product.productImage ?? placeholderImage,
+                      imageUrl: product.thumbnailImageUrl ?? DefaultImage.ProductThumbnail,
                       productName: product.productName,
                       options: product.optionsText,
                       quantity: product.quantity,
@@ -125,13 +124,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 class OrderDetailHeader extends StatelessWidget {
   final String orderNumber;
   final DateTime orderDate;
-  final String userName;
+  final String? userName;
 
   const OrderDetailHeader({
     super.key,
     required this.orderNumber,
     required this.orderDate,
-    required this.userName,
+    this.userName,
   });
 
   @override
@@ -149,7 +148,7 @@ class OrderDetailHeader extends StatelessWidget {
           ),
         ),
         Text(
-          "$formattedDate | $userName",
+          "$formattedDate",
           style: const TextStyle(color: AppColors.grey, fontSize: 13),
         ),
       ],

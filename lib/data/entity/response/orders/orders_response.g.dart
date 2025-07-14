@@ -59,14 +59,14 @@ Map<String, dynamic> _$OrderItemToJson(OrderItem instance) => <String, dynamic>{
 
 OrderedProductItem _$OrderedProductItemFromJson(Map<String, dynamic> json) =>
     OrderedProductItem(
-      productId: ProductId.fromJson(json['productId'] as Map<String, dynamic>),
+      id: json['id'] as String,
       productName: json['productName'] as String,
       quantity: (json['quantity'] as num).toInt(),
     );
 
 Map<String, dynamic> _$OrderedProductItemToJson(OrderedProductItem instance) =>
     <String, dynamic>{
-      'productId': instance.productId.toJson(),
+      'id': instance.id,
       'productName': instance.productName,
       'quantity': instance.quantity,
     };

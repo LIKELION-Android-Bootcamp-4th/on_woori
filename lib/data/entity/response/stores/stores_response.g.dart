@@ -39,11 +39,23 @@ Map<String, dynamic> _$StoresDataToJson(StoresData instance) =>
       'pagination': instance.pagination?.toJson(),
     };
 
+User _$UserFromJson(Map<String, dynamic> json) => User(
+  companyId: json['companyId'] as String,
+  createdAt: json['createdAt'] as String,
+  id: json['id'] as String,
+);
+
+Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+  'companyId': instance.companyId,
+  'createdAt': instance.createdAt,
+  'id': instance.id,
+};
+
 StoreItem _$StoreItemFromJson(Map<String, dynamic> json) => StoreItem(
   id: json['id'] as String,
   name: json['name'] as String,
   description: json['description'] as String?,
-  owner: json['owner'] as String,
+  owner: User.fromJson(json['owner'] as Map<String, dynamic>),
   companyId: json['companyId'] as String,
   status: json['status'] as String,
   isDeleted: json['isDeleted'] as bool,
@@ -69,7 +81,7 @@ Map<String, dynamic> _$StoreItemToJson(StoreItem instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
   'description': instance.description,
-  'owner': instance.owner,
+  'owner': instance.owner.toJson(),
   'companyId': instance.companyId,
   'status': instance.status,
   'isDeleted': instance.isDeleted,

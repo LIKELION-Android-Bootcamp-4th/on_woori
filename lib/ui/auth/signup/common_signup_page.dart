@@ -150,43 +150,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
                             },
                           ),
                         ),
-
-                        SizedBox(width: 10),
-                        SizedBox(
-                          height: 60,
-                          width: 60,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(10),
-                              backgroundColor: AppColors.primarySub,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            onPressed: () {},
-                            child: Text(
-                              "인증",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
                       ],
-                    ),
-
-                    SizedBox(height: 15),
-                    LoginTextField(
-                      controller: codeController,
-                      labelText: "인증번호",
-                      hintText: "인증번호 6자리",
-                      inputType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) return '내용을 입력해주세요';
-                        if (value.length != 6) return '인증코드는 6자리여야 합니다';
-                        return null;
-                      },
                     ),
                   ],
                 ),

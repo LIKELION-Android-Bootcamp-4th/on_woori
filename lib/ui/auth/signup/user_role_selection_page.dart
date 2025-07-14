@@ -9,44 +9,44 @@ class UserRoleSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             Text(
               l10n.signInTitle,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
               ),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Text(
               l10n.signInSubtitle,
-              style: TextStyle(color: Colors.black, fontSize: 20),
+              style: const TextStyle(color: Colors.black, fontSize: 20),
             ),
-            SizedBox(height: 90),
+            const SizedBox(height: 90),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 InkWell(
                   child: Container(
-                    padding: EdgeInsets.all(45),
+                    padding: const EdgeInsets.all(45),
                     decoration:BoxDecoration(
                         border: Border.all(color:AppColors.primarySub, width: 2),
                         borderRadius: BorderRadius.circular(15)
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.person_outline, color: AppColors.primarySub, size: 50,),
+                      children: <Widget>[
+                        const Icon(Icons.person_outline, color: AppColors.primarySub, size: 50,),
                         Text(
                           l10n.signInUserTypeConsumer,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: AppColors.primarySub,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -59,21 +59,21 @@ class UserRoleSelectionPage extends StatelessWidget {
                     context.push('/auth/signup/common');
                   },
                 ),
-                SizedBox(width: 20,),
+                const SizedBox(width: 20,),
                 InkWell(
                   child: Container(
-                    padding: EdgeInsets.all(45),
+                    padding: const EdgeInsets.all(45),
                     decoration:BoxDecoration(
                         border: Border.all(color:AppColors.primarySub, width: 2),
                         borderRadius: BorderRadius.circular(15)
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.storefront_outlined, color: AppColors.primarySub, size: 50,),
+                      children: <Widget>[
+                        const Icon(Icons.storefront_outlined, color: AppColors.primarySub, size: 50,),
                         Text(
                           l10n.signInUserTypeSeller,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: AppColors.primarySub,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

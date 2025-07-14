@@ -28,7 +28,7 @@ class _BrandEditPageState extends State<BrandEditPage> {
 
   Future<void> _onAddImagePressed() async {
     if (_isPickingImage) {
-      print('이미 이미지 선택 중입니다.');
+      debugPrint('이미 이미지 선택 중입니다.');
       return;
     }
 
@@ -115,8 +115,8 @@ class _BrandEditPageState extends State<BrandEditPage> {
         image: multipartFile
       );
     } catch (e, s) {
-      print('수정 실패 $e');
-      print(s);
+      debugPrint('수정 실패 $e');
+      debugPrint(s as String?);
     }
 
     if (!mounted) return;
@@ -241,11 +241,11 @@ class _BrandEditPageState extends State<BrandEditPage> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColors.DividerTextBoxLineDivider),
+          borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColors.DividerTextBoxLineDivider),
+          borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 12, vertical: 16),

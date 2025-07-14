@@ -84,7 +84,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
         });
       }
     } catch (e) {
-      print("상품 조회 오류: $e");
+      debugPrint("상품 조회 오류: $e");
     } finally {
       if (mounted) {
         setState(() => isLoading = false);
@@ -162,7 +162,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
       try {
         await adminApiClient.deleteProductForce(id: id);
       } catch (e) {
-        print("상품($id) 삭제 실패: $e");
+        debugPrint("상품($id) 삭제 실패: $e");
         _showSnackBar('일부 상품 삭제에 실패했습니다.', isError: true);
         break;
       }
@@ -201,7 +201,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
       await _loadProducts();
     } catch (e) {
       _showSnackBar('삭제에 실패했습니다: $e', isError: true);
-      print("삭제 실패: $e");
+      debugPrint("삭제 실패: $e");
     } finally {
       if (mounted) {
         setState(() => isLoading = false); // 🚀 [수정] 모든 작업이 끝나면 여기서 로딩을 종료
@@ -210,7 +210,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
   }
 
   void editSelection(String id) {
-    print("수정할 상품 ID: $id");
+    debugPrint("수정할 상품 ID: $id");
     context.push('/productedit/$id');
   }
 
@@ -332,7 +332,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
         });
       }
     } catch (e) {
-      print("펀딩 조회 오류: $e");
+      debugPrint("펀딩 조회 오류: $e");
     } finally {
       if(mounted) {
         setState(() => isLoading = false);
@@ -351,7 +351,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
         _refreshData();
       }
     } catch (e) {
-      print("삭제 실패: $e");
+      debugPrint("삭제 실패: $e");
     }
   }
 
@@ -369,7 +369,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
       try {
         await fundingApiClient.deleteFunding(id: id);
       } catch (e) {
-        print("$id 삭제 실패: $e");
+        debugPrint("$id 삭제 실패: $e");
       }
     }
 
@@ -386,7 +386,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
   }
 
   void editSelection(String id) {
-    print("수정할 펀딩 ID: $id");
+    debugPrint("수정할 펀딩 ID: $id");
     context.push('/funding/edit/$id');
   }
 

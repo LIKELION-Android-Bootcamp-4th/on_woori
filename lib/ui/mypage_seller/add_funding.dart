@@ -26,7 +26,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
 
   Future<void> _pickImage() async {
     if (_isPickingImage) {
-      print('이미 이미지 선택 중입니다.');
+      debugPrint('이미 이미지 선택 중입니다.');
       return;
     }
 
@@ -97,17 +97,17 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
       final storeApiClient = SellerStoreApi();
       final response = await storeApiClient.getStore();
 
-      print("storemessage : ${response.message}");
+      debugPrint("storemessage : ${response.message}");
 
       if (response.success) {
         final storeId = response.data?.owner?.id;
         return storeId;
       } else {
-        print('스토어 정보 불러오기 실패: ${response.message}');
+        debugPrint('스토어 정보 불러오기 실패: ${response.message}');
         return null;
       }
     } catch (e) {
-      print('스토어 ID 조회 중 오류 발생: $e');
+      debugPrint('스토어 ID 조회 중 오류 발생: $e');
       return null;
     }
   }
@@ -133,13 +133,13 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
 
           if (uploadResponse.success && uploadResponse.data!.files.first.url.isNotEmpty) {
             imageUrl = uploadResponse.data?.files.first.url;
-            print('업로드된 이미지 URL: $imageUrl');
+            debugPrint('업로드된 이미지 URL: $imageUrl');
           } else {
-            print('파일 업로드 실패 또는 URL 없음');
+            debugPrint('파일 업로드 실패 또는 URL 없음');
             return;
           }
         } catch (e) {
-          print('이미지 업로드 중 오류 발생: $e');
+          debugPrint('이미지 업로드 중 오류 발생: $e');
           return;
         }
       }
@@ -149,14 +149,14 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
         linkUrl: _linkController.text,
         imageUrl: imageUrl,
       );
-      print("storeId: $storeId");
+      debugPrint("storeId: $storeId");
 
       setState(() {
         if (res.success) {
-          print('펀딩 생성 성공!');
+          debugPrint('펀딩 생성 성공!');
           // 추가로 생성된 펀딩 목록 갱신 등 작업
         } else {
-          print('생성 실패: ${res.message}');
+          debugPrint('생성 실패: ${res.message}');
         }
       });
 
@@ -237,11 +237,11 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColors.DividerTextBoxLineDivider),
+          borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColors.DividerTextBoxLineDivider),
+          borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 12,

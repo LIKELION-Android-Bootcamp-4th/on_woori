@@ -60,7 +60,7 @@ class _WishPageState extends State<WishPage> {
           if (snapshot.hasError) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               context.go('/auth/login');
-              print('오류 발생: ${snapshot.error}');
+              debugPrint('오류 발생: ${snapshot.error}');
             });
             return const Center(child: CircularProgressIndicator());
           }

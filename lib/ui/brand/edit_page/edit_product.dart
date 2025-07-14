@@ -14,17 +14,17 @@ class ProductRegisterPage extends StatefulWidget {
 }
 
 class _ProductRegisterPageState extends State<ProductRegisterPage> {
-  final _nameController = TextEditingController();
-  final _priceController = TextEditingController();
-  final _discountController = TextEditingController();
-  final _displayPriceController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _discountController = TextEditingController();
+  final TextEditingController _displayPriceController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   String? _selectedCategory;
-  final List<String> _categories = ['상의', '하의', '아우터', '잡화'];
+  final List<String> _categories = <String>['상의', '하의', '아우터', '잡화'];
 
-  final List<String> _sizes = ['S', 'M', 'L', 'XL', '2XL'];
-  final Set<String> _selectedSizes = {};
+  final List<String> _sizes = <String>['S', 'M', 'L', 'XL', '2XL'];
+  final Set<String> _selectedSizes = <String>{};
 
   File? _selectedImage;
 
@@ -74,7 +74,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             _sectionTitle('대표 이미지'),
             const SizedBox(height: 8),
             Center(child: _imageBox()),
@@ -112,7 +112,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
                 alignment: WrapAlignment.center,
                 spacing: 15,
                 runSpacing: 16,
-                children: _sizes.map((size) {
+                children: _sizes.map((String size) {
                   return CommonChoiceChip(
                     label: size,
                     selected: _selectedSizes.contains(size),
@@ -128,7 +128,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
             CustomDropdown(
               selectedValue: _selectedCategory ?? _categories[0],
               items: _categories,
-              onChanged: (val) {
+              onChanged: (String val) {
                 setState(() {
                   _selectedCategory = val;
                 });
@@ -184,11 +184,11 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColors.DividerTextBoxLineDivider),
+          borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColors.DividerTextBoxLineDivider),
+          borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
@@ -199,7 +199,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
   Widget _imageBox() {
     return Stack(
       clipBehavior: Clip.none,
-      children: [
+      children: <Widget>[
         Container(
           width: 160,
           height: 160,
@@ -228,10 +228,10 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
             child: InkWell(
               customBorder: const CircleBorder(),
               onTap: _onAddImagePressed,
-              child: SizedBox(
+              child: const SizedBox(
                 width: 44,
                 height: 44,
-                child: const Icon(Icons.add, color: Colors.black, size: 24),
+                child: Icon(Icons.add, color: Colors.black, size: 24),
               ),
             ),
           ),
@@ -243,7 +243,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
   Widget _imagePreviewWithButton() {
     return Stack(
       clipBehavior: Clip.none,
-      children: [
+      children: <Widget>[
         Container(
           width: 160,
           height: 160,
@@ -261,10 +261,10 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
             child: InkWell(
               customBorder: const CircleBorder(),
               onTap: _onAddImagePressed,
-              child: SizedBox(
+              child: const SizedBox(
                 width: 44,
                 height: 44,
-                child: const Icon(Icons.add, color: Colors.black, size: 24),
+                child: Icon(Icons.add, color: Colors.black, size: 24),
               ),
             ),
           ),

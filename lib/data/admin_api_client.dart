@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:on_woori/config/endpoint/admin_product_endpoints.dart';
 import 'package:on_woori/config/endpoint/auth_endpoints.dart';
@@ -54,14 +55,14 @@ class AdminApiClient {
           key: 'adminRefreshToken',
           value: loginResponse.data!.refreshToken,
         );
-        print('관리자 로그인 성공. 별도의 키로 토큰을 저장했습니다.');
+        debugPrint('관리자 로그인 성공. 별도의 키로 토큰을 저장했습니다.');
         return true;
       } else {
-        print('관리자 로그인 실패: ${loginResponse.message}');
+        debugPrint('관리자 로그인 실패: ${loginResponse.message}');
         return false;
       }
     } catch (e) {
-      print('관리자 로그인 중 예외 발생: $e');
+      debugPrint('관리자 로그인 중 예외 발생: $e');
       return false;
     }
   }

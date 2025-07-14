@@ -38,7 +38,7 @@ class CustomDropdown extends StatelessWidget {
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            border: Border.all(color: AppColors.DividerTextBoxLineDivider),
+                            border: Border.all(color: AppColors.dividerTextBoxLineDivider),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Column(
@@ -72,7 +72,7 @@ class CustomDropdown extends StatelessWidget {
                                     Divider(
                                       height: 0.5,
                                       thickness: 0.5,
-                                      color: AppColors.DividerTextBoxLineDivider.withOpacity(0.5),
+                                      color: AppColors.dividerTextBoxLineDivider.withOpacity(0.5),
                                     ),
                                 ],
                               );
@@ -94,7 +94,7 @@ class CustomDropdown extends StatelessWidget {
             height: 48,
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.DividerTextBoxLineDivider),
+              border: Border.all(color: AppColors.dividerTextBoxLineDivider),
               borderRadius: BorderRadius.circular(8),
               color: Colors.white,
             ),

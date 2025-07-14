@@ -42,7 +42,7 @@ class FundingListItem extends StatelessWidget {
             errorBuilder: (context, error, stackTrace) {
               return Container(
                 color: Colors.grey[200],
-                child: Image.network(DefaultImage.FundingThumbnail, fit: BoxFit.cover,),
+                child: Image.network(DefaultImage.fundingThumbnail, fit: BoxFit.cover,),
               );
             },
           ),

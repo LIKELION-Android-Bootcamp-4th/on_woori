@@ -59,7 +59,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> _pickImage() async {
     if (_isPickingImage) {
-      print('이미 이미지 선택 중입니다.');
+      debugPrint('이미 이미지 선택 중입니다.');
       return;
     }
 
@@ -148,11 +148,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           profileImageFile: multipartFile
       );
-      print('닉네임: ${response.data.nickName}');
-      print('전화번호: ${response.data.phone}');
+      debugPrint('닉네임: ${response.data.nickName}');
+      debugPrint('전화번호: ${response.data.phone}');
     } catch (e, s) {
-      print('수정 실패 $e');
-      print(s);
+      debugPrint('수정 실패 $e');
+      debugPrint(s.toString());
     }
 
     if (!mounted) return;
@@ -325,15 +325,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
             contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
+              borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
+              borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
+              borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
             ),
           ),
           validator: validator ??

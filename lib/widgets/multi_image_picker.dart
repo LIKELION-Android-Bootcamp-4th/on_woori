@@ -23,7 +23,7 @@ class _MultiImagePickerState extends State<MultiImagePicker> {
       });
     } catch (e) {
       // 에러 처리
-      print("이미지 선택 중 에러 발생: $e");
+      debugPrint("이미지 선택 중 에러 발생: $e");
     }
   }
 

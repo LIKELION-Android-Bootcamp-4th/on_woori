@@ -86,7 +86,7 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
             BrandNameSection(
                 false, //자기 브랜드일 때 넘겨주는 기능 결여되어 있으나 당장 추가 어려움
                 data?.name ?? "브랜드 이름",
-                data?.thumbnailImageUrl ?? DefaultImage.BrandThumbnail
+                data?.thumbnailImageUrl ?? DefaultImage.brandThumbnail
             ),
             const SizedBox(height: 15,),
             Text(data?.description ?? "브랜드 소개",
@@ -97,7 +97,7 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
               ),
             ),
             const SizedBox(height: 30,),
-            const Divider(color: AppColors.DividerTextBoxLineDivider,),
+            const Divider(color: AppColors.dividerTextBoxLineDivider,),
             const SizedBox(height: 10,),
             Text(
               l10n!.home_RecommendedProducts,
@@ -141,8 +141,8 @@ class BrandProductScreenState extends State<BrandProductScreen> {
     try {
       return apiClient.storeProductList(widget.id);
     } catch (e, s) {
-      print("오류 내용: $e");
-      print("스택 트레이스: $s");
+      debugPrint("오류 내용: $e");
+      debugPrint("스택 트레이스: $s");
       rethrow;
     }
   }
@@ -211,7 +211,7 @@ class BrandProductScreenState extends State<BrandProductScreen> {
                 itemBuilder: (context, index) => ProductsGridItem(originalList[index]),
               ),
             ),
-            const Divider(color: AppColors.DividerTextBoxLineDivider,),
+            const Divider(color: AppColors.dividerTextBoxLineDivider,),
             Row(
               children: [
                 Text(
@@ -227,7 +227,7 @@ class BrandProductScreenState extends State<BrandProductScreen> {
             const SizedBox(height: 10,),
             BrandFundingSection(),
             const SizedBox(height: 10,),
-            const Divider(color: AppColors.DividerTextBoxLineDivider,),
+            const Divider(color: AppColors.dividerTextBoxLineDivider,),
             CategoryHorizontalScroll(getFilteredItem: getFilteredItem,),
             const SizedBox(height: 20,),
             _isFiltering
@@ -337,7 +337,7 @@ class BrandNameSection extends StatelessWidget {
               height: 72,
               width: 72,
               errorBuilder: (context, error, stackTrace) {
-                return Image.network(DefaultImage.BrandThumbnail, fit: BoxFit.cover, height: 72, width: 72,);
+                return Image.network(DefaultImage.brandThumbnail, fit: BoxFit.cover, height: 72, width: 72,);
               },
             ),
           )

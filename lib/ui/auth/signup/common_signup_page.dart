@@ -27,13 +27,13 @@ class CommonSignupPage extends StatefulWidget {
 }
 
 class _CommonSignupPageState extends State<CommonSignupPage> {
-  final _formKey = GlobalKey<FormState>();
-  final textController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final passwordConfirmController = TextEditingController();
-  final apiClient = AuthApiClient();
-  final storage = const FlutterSecureStorage();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController textController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordConfirmController = TextEditingController();
+  final AuthApiClient apiClient = AuthApiClient();
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   void _submit() async {
     if (!_formKey.currentState!.validate()) {
@@ -67,8 +67,8 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
       }
 
       if (response.success && response.data != null) {
-        final data = response.data!;
-        final user = data.user;
+        final LoginData data = response.data!;
+        final UserData user = data.user;
 
         await storage.write(key: 'ACCESS_TOKEN', value: data.accessToken);
         await storage.write(key: 'REFRESH_TOKEN', value: data.refreshToken);
@@ -82,7 +82,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
           await storage.write(key: 'COMPANY_CODE', value: user.companyId!);
         }
 
-        final roles = user.platformRoles ?? [];
+        final List<String> roles = user.platformRoles ?? <String>[];
         String userRole = 'buyer';
         if (roles.contains('seller')) {
           userRole = 'seller';
@@ -98,7 +98,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
         Fluttertoast.showToast(msg: response.message);
       }
     } on DioException catch (e) {
-      final statusCode = e.response?.statusCode;
+      final int? statusCode = e.response?.statusCode;
       String errorMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
 
       final responseBody = e.response?.data;
@@ -115,25 +115,25 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
         }
       }
       Fluttertoast.showToast(msg: errorMessage);
-      print("[SIGNUP ERROR] ${e.message} / $statusCode");
+      debugPrint("[SIGNUP ERROR] ${e.message} / $statusCode");
     } catch (e, s) {
       Fluttertoast.showToast(msg: "알 수 없는 오류가 발생했습니다. 개발자에게 문의해주세요.");
-      print("[UNEXPECTED SIGNUP ERROR] ${e.toString()}");
-      print(s);
+      debugPrint("[UNEXPECTED SIGNUP ERROR] ${e.toString()}");
+      debugPrint(s.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(l10n.signInTitle, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-            SizedBox(width: 10),
-            Text("공통", style: TextStyle(color: AppColors.primarySub, fontSize: 18)),
+          children: <Widget>[
+            Text(l10n.signInTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+            const SizedBox(width: 10),
+            const Text("공통", style: TextStyle(color: AppColors.primarySub, fontSize: 18)),
           ],
         ),
       ),
@@ -144,52 +144,52 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
             constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.6),
             child: IntrinsicHeight(
               child: Container(
-                padding: EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
                 child: Column(
-                  children: [
+                  children: <Widget>[
                     LoginTextField(
                       controller: textController,
                       labelText: "닉네임",
                       hintText: "닉네임을 입력해주세요",
                       inputType: TextInputType.text,
-                      validator: (value) {
+                      validator: (String? value) {
                         if (value == null || value.isEmpty) return '내용을 입력해주세요';
                         return null;
                       },
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     LoginTextField(
                       controller: passwordController,
                       labelText: "비밀번호",
                       hintText: "비밀번호를 입력해주세요",
                       inputType: TextInputType.text,
                       isPassword: true,
-                      validator: (value) {
+                      validator: (String? value) {
                         if (value == null || value.isEmpty) return '내용을 입력해주세요';
                         if (value.length < 6) return '비밀번호는 6자리 이상이여야 합니다';
                         return null;
                       },
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     LoginTextField(
                       controller: passwordConfirmController,
                       labelText: "비밀번호 확인",
                       hintText: "비밀번호를 한번 더 입력해주세요",
                       inputType: TextInputType.text,
                       isPassword: true,
-                      validator: (value) {
+                      validator: (String? value) {
                         if (value == null || value.isEmpty) return '내용을 입력해주세요';
                         if (passwordController.text != value) return '입력한 비밀번호가 서로 다릅니다';
                         return null;
                       },
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     LoginTextField(
                       controller: emailController,
                       labelText: l10n.loginEmailTitle,
                       hintText: l10n.loginEmailInputHint,
                       inputType: TextInputType.emailAddress,
-                      validator: (value) {
+                      validator: (String? value) {
                         String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
                         RegExp regExp = RegExp(pattern);
                         if (value == null || value.isEmpty) return '내용을 입력해주세요';
@@ -205,7 +205,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.fromLTRB(24, 0, 24, 24),
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
         child: BottomButton(
           buttonText: l10n.signInTitle,
           pressedFunc: _submit,

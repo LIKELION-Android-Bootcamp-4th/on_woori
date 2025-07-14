@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/data/client/auth_api_client.dart';
 import 'package:on_woori/data/entity/request/auth/login_request.dart';
+import 'package:on_woori/data/entity/response/auth/login_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 import 'package:on_woori/widgets/login_textfield.dart';
@@ -18,17 +19,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageStatus extends State<LoginPage> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final apiClient = AuthApiClient();
-  final storage = const FlutterSecureStorage();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final AuthApiClient apiClient = AuthApiClient();
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   void _submit() async {
     String email = emailController.text;
     String password = passwordController.text;
 
     try {
-      final response = await apiClient.authLogin(
+      final LoginResponse response = await apiClient.authLogin(
         request: LoginRequest(email: email, password: password),
       );
 
@@ -40,14 +41,12 @@ class LoginPageStatus extends State<LoginPage> {
         await storage.write(key: 'USER_NICKNAME', value: response.data!.user.nickName);
         await storage.write(key: 'COMPANY_CODE', value: response.data!.user.companyId);
 
-        // --- ✨ 사용자 역할(Role) 저장 로직 추가 ---
-        final roles = response.data!.user.platformRoles ?? [];
+        final List<String> roles = response.data!.user.platformRoles ?? <String>[];
         String userRole = 'buyer';
         if (roles.contains('seller')) {
           userRole = 'seller';
         }
         await storage.write(key: 'USER_ROLE', value: userRole);
-        // -----------------------------------------
 
         Fluttertoast.showToast(msg: "로그인 되었습니다.");
         context.go('/');
@@ -55,7 +54,7 @@ class LoginPageStatus extends State<LoginPage> {
         Fluttertoast.showToast(msg: response.message);
       }
     } on DioException catch (e) {
-      final statusCode = e.response?.statusCode;
+      final int? statusCode = e.response?.statusCode;
 
       switch (statusCode) {
         case 400:
@@ -71,17 +70,17 @@ class LoginPageStatus extends State<LoginPage> {
           Fluttertoast.showToast(msg: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
           break;
       }
-      print("[LOGIN ERROR] ${e.message} / $statusCode");
+      debugPrint("[LOGIN ERROR] ${e.message} / $statusCode");
     } catch (e) {
       Fluttertoast.showToast(msg: "예상치 못한 오류가 발생했습니다.");
-      print("[UNEXPECTED ERROR] ${e.toString()}");
+      debugPrint("[UNEXPECTED ERROR] ${e.toString()}");
     }
   }
 
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: SingleChildScrollView(
         child: ConstrainedBox(
@@ -90,7 +89,7 @@ class LoginPageStatus extends State<LoginPage> {
           ),
           child: IntrinsicHeight(
             child: Column(
-              children: [
+              children: <Widget>[
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.4,
                   child: Image.network(
@@ -102,26 +101,26 @@ class LoginPageStatus extends State<LoginPage> {
                 Expanded(
                   flex: 1, // 나머지 절반
                   child: Container(
-                    padding: EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
                         Text(
                           l10n.loginTitle,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         LoginTextField(
                           controller: emailController,
                           labelText: l10n.loginEmailTitle,
                           hintText: l10n.loginEmailInputHint,
                           inputType: TextInputType.emailAddress,
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         LoginTextField(
                           controller: passwordController,
                           labelText: l10n.loginPasswordTitle,
@@ -129,21 +128,21 @@ class LoginPageStatus extends State<LoginPage> {
                           inputType: TextInputType.visiblePassword,
                           isPassword: true,
                         ),
-                        SizedBox(height: 15,),
+                        const SizedBox(height: 15,),
                         BottomButton(buttonText: l10n.loginTitle, pressedFunc: (){
                           _submit();
                         }),
                         Row(
-                          children: [
-                            Spacer(),
-                            Text(
+                          children: <Widget>[
+                            const Spacer(),
+                            const Text(
                               "온우리가 처음이신가요?  ",
                               style: TextStyle(color: AppColors.grey),
                             ),
                             InkWell(
                               child: Text(
                                 l10n.signInTitle,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: AppColors.primarySub,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -155,7 +154,7 @@ class LoginPageStatus extends State<LoginPage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 50,)
+                        const SizedBox(height: 50)
                       ],
                     ),
                   ),

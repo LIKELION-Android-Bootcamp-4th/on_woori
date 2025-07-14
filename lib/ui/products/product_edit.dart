@@ -214,8 +214,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
       // 4. 상품 수정 API를 호출합니다.
       await ProductsApiClient().productUpdate(id: widget.productId, formData: formData);
-      print("API로 전송될 FormData: ${formData.fields}");
-      print("첨부된 대표 이미지: ${_thumbnailImageFile?.path}");
+      debugPrint("API로 전송될 FormData: ${formData.fields}");
+      debugPrint("첨부된 대표 이미지: ${_thumbnailImageFile?.path}");
 
       await Future.delayed(const Duration(seconds: 2)); // API 호출 흉내
 
@@ -375,9 +375,9 @@ class _ProductEditPageState extends State<ProductEditPage> {
         hintStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 16, color: Colors.grey[400]),
         filled: !isEnabled,
         fillColor: Colors.grey[200],
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider)),
-        disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider)),
+        disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       ),
     );

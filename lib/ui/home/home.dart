@@ -33,23 +33,21 @@ class _HomePageState extends State<HomePage> {
 
     try {
       final productsResponse = await ProductsApiClient().products();
-      print("[파싱 성공] Product 엔티티 변환 완료. (아이템 수: ${productsResponse.data?.items?.length ?? 0})");
-
-      print(productsResponse.data?.items?[0].thumbnailImage);
+      debugPrint("[파싱 성공] Product 엔티티 변환 완료. (아이템 수: ${productsResponse.data?.items?.length ?? 0})");
 
       final fundingsResponse = await FundingsApiClient().fundings();
-      print("[파싱 성공] Funding 엔티티 변환 완료. (아이템 수: ${fundingsResponse.data?.items.length ?? 0})");
+      debugPrint("[파싱 성공] Funding 엔티티 변환 완료. (아이템 수: ${fundingsResponse.data?.items.length ?? 0})");
 
       final storesResponse = await StoresApiClient().stores();
-      print("[파싱 성공] Store 엔티티 변환 완료. (아이템 수: ${storesResponse.data?.items.length ?? 0})");
+      debugPrint("[파싱 성공] Store 엔티티 변환 완료. (아이템 수: ${storesResponse.data?.items.length ?? 0})");
 
 
-      print("모든 엔티티 파싱 성공");
+      debugPrint("모든 엔티티 파싱 성공");
       return (productsResponse, fundingsResponse, storesResponse);
 
     } catch (e, s) {
-      print("오류 내용: $e");
-      print(s);
+      debugPrint("오류 내용: $e");
+      debugPrint(s.toString());
       rethrow;
     }
   }
@@ -82,8 +80,6 @@ class _HomePageState extends State<HomePage> {
           final fundingItems = (snapshot.data?.$2.data?.items ?? []).take(3).toList();
           final storeItems = (snapshot.data?.$3.data?.items ?? []).take(8).toList();
 
-          print(productItems[0].images);
-
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
@@ -93,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                   aspectRatio: 2.5 / 1,
                   child: Image.network(
                     fit: BoxFit.cover,
-                    DefaultImage.BannerThumbnail,
+                    DefaultImage.bannerThumbnail,
                   )
 
                   // TextButton(
@@ -146,10 +142,10 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (context, index) {
                         final brand = storeItems[index];
                         return BrandGridItem(
-                          imageUrl: brand.thumbnailImageUrl ?? DefaultImage.BrandThumbnail,
+                          imageUrl: brand.thumbnailImageUrl ?? DefaultImage.brandThumbnail,
                           brandName: brand.name,
                           onTap: () {
-                            print('${brand.name} 클릭됨, ID: ${brand.id}');
+                            debugPrint('${brand.name} 클릭됨, ID: ${brand.id}');
                             context.push('/branddetail/${brand.id}');
                           },
                         );

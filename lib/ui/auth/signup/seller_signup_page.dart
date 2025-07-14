@@ -8,20 +8,22 @@ import '../../../data/entity/request/auth/register_seller_request.dart';
 import '../../../l10n/app_localizations.dart';
 
 class SellerSignupPage extends StatefulWidget {
+  const SellerSignupPage({super.key});
+
   @override
   State<SellerSignupPage> createState() => _SellerSignupPageState();
 }
 
 class _SellerSignupPageState extends State<SellerSignupPage> {
-  final _formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-  final introController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController introController = TextEditingController();
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
       // 모든 유효성 통과
       StoreRequestData store = StoreRequestData(name: nameController.text, description: introController.text);
-      context.push('/auth/signup/common', extra: {
+      context.push('/auth/signup/common', extra: <String, StoreRequestData>{
         'store': store
       });
     }
@@ -29,19 +31,19 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
+          children: <Widget>[
             Text(
               l10n.signInTitle,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
-            SizedBox(width: 10),
-            Text(
+            const SizedBox(width: 10),
+            const Text(
               "사장님",
               style: TextStyle(color: AppColors.primarySub, fontSize: 18),
             ),
@@ -57,26 +59,26 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
             ),
             child: IntrinsicHeight(
               child: Container(
-                padding: EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
                 child: Column(
-                  children: [
+                  children: <Widget>[
                     LoginTextField(
                       controller: nameController,
                       labelText: "상호명",
                       hintText: "상호명",
                       inputType: TextInputType.text,
-                      validator: (value) {
+                      validator: (String? value) {
                         if (value == null || value.isEmpty) return '내용을 입력해주세요';
                         return null;
                       },
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     LoginTextField(
                       controller: introController,
                       labelText: "한 줄 소개",
                       hintText: "한 줄 소개를 입력해주세요",
                       inputType: TextInputType.text,
-                      validator: (value) {
+                      validator: (String? value) {
                         if (value == null || value.isEmpty) return '내용을 입력해주세요';
                         return null;
                       },
@@ -89,7 +91,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(left: 24, right: 24),
+        padding: const EdgeInsets.only(left: 24, right: 24),
         child: BottomButton(buttonText: "계속", pressedFunc: _submit),
       ),
     );

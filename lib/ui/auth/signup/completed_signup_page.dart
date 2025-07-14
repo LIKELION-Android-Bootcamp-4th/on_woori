@@ -5,14 +5,14 @@ import 'package:on_woori/widgets/bottom_button.dart';
 import '../../../l10n/app_localizations.dart';
 
 class CompletedSignupPage extends StatelessWidget {
-  final nameController = TextEditingController();
-  final introController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController introController = TextEditingController();
 
   CompletedSignupPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final AppLocalizations l10n = AppLocalizations.of(context)!;
     void submit() {
       context.go('/');
     }
@@ -21,15 +21,15 @@ class CompletedSignupPage extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
+          children: <Widget>[
             Text(
               l10n.signInTitle,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
           ],
         ),
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           "온우리에 오신 것을 환영합니다!",
           style: TextStyle(
@@ -40,7 +40,7 @@ class CompletedSignupPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(left: 24, right: 24),
+        padding: const EdgeInsets.only(left: 24, right: 24),
         child: BottomButton(buttonText: "메인화면으로", pressedFunc: submit),
       ),
     );

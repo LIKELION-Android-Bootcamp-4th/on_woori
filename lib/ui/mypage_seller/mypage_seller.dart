@@ -50,10 +50,10 @@ class _SellerMyPageState extends State<SellerMyPage> {
         context.go('/auth/login');
         Fluttertoast.showToast(msg: '로그아웃 되었습니다.');
       } else {
-        print('로그아웃 실패 : ${response.message}');
+        debugPrint('로그아웃 실패 : ${response.message}');
       }
     } catch (e) {
-      print('로그아웃 중 오류: $e');
+      debugPrint('로그아웃 중 오류: $e');
     }
   }
 
@@ -71,7 +71,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
           if (snapshot.hasError) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               context.go('/auth/login');
-              print('오류 발생: ${snapshot.error}');
+              debugPrint('오류 발생: ${snapshot.error}');
             });
             return const Center(child: CircularProgressIndicator());
           }
@@ -118,10 +118,10 @@ class _SellerMyPageState extends State<SellerMyPage> {
                                 width: 48,
                                 height: 48,
                                 child: Image.network(
-                                  snapshot.data?.data?.profile.profileImage?.path ?? DefaultImage.ProfileThumbnail,
+                                  snapshot.data?.data?.profile.profileImage?.path ?? DefaultImage.profileThumbnail,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
-                                    return Image.network(DefaultImage.ProfileThumbnail, fit: BoxFit.cover,);
+                                    return Image.network(DefaultImage.profileThumbnail, fit: BoxFit.cover,);
                                   },
                                 ),
                               ),
@@ -211,7 +211,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
 
                   // Divider
                   const Divider(
-                    color: AppColors.DividerTextBoxLineDivider,
+                    color: AppColors.dividerTextBoxLineDivider,
                     thickness: 1,
                     height: 20,
                   ),
@@ -339,7 +339,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
 
                   // Divider
                   const Divider(
-                    color: AppColors.DividerTextBoxLineDivider,
+                    color: AppColors.dividerTextBoxLineDivider,
                     thickness: 1,
                     height: 16,
                   ),

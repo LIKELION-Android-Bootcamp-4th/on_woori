@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:on_woori/data/api_client.dart';
 import '../../config/endpoint/buyer/search_endpoints.dart';
 
@@ -42,11 +43,11 @@ class SearchApiClient {
       'q': query,
     };
 
-    print('🟢 [searchByCategory] 요청');
-    print('🔹 category: $category');
-    print('🔹 query: $query');
-    print('🔹 customHeaders: $customHeaders');
-    print('🔹 queryParameters: $queryParams');
+    debugPrint('🟢 [searchByCategory] 요청');
+    debugPrint('🔹 category: $category');
+    debugPrint('🔹 query: $query');
+    debugPrint('🔹 customHeaders: $customHeaders');
+    debugPrint('🔹 queryParameters: $queryParams');
 
     return await _dio.get(
       SearchEndpoints.byCategory(category),

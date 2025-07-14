@@ -29,16 +29,15 @@ import 'package:on_woori/ui/products/products_list.dart';
 import 'package:on_woori/ui/wish/wish.dart';
 
 class AuthService {
-  final _storage = const FlutterSecureStorage();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   Future<bool> get isLoggedIn async {
-    final token = await _storage.read(key: 'ACCESS_TOKEN');
+    final String? token = await _storage.read(key: 'ACCESS_TOKEN');
     return token != null;
   }
 }
 
-final authService = AuthService();
-
+final AuthService authService = AuthService();
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -48,14 +47,14 @@ final GoRouter router = GoRouter(
     final String location = state.uri.toString();
 
     // 로그인이 필요한 경로 목록
-    final protectedRoutes = [
+    final List<String> protectedRoutes = <String>[
       '/wish',
       '/mypage',
       '/orderlist',
       '/wish/cart'
     ];
 
-    if (!loggedIn && protectedRoutes.any((route) => location.startsWith(route))) {
+    if (!loggedIn && protectedRoutes.any((String route) => location.startsWith(route))) {
       return '/auth/login';
     }
 
@@ -64,37 +63,37 @@ final GoRouter router = GoRouter(
 
   routes: <RouteBase>[
     ShellRoute(
-      builder: (context, state, child) {
+      builder: (BuildContext context, GoRouterState state, Widget child) {
         return MainPage(child: child);
       },
       routes: <RouteBase>[
         GoRoute(
           path: '/',
-          builder: (context, state) => const HomePage(),
+          builder: (BuildContext context, GoRouterState state) => const HomePage(),
         ),
         GoRoute(
           path: '/category',
-          builder: (context, state) => const CategoryPage(),
+          builder: (BuildContext context, GoRouterState state) => const CategoryPage(),
         ),
         GoRoute(
           path: '/wish',
-          builder: (context, state) => const WishPage(),
+          builder: (BuildContext context, GoRouterState state) => const WishPage(),
         ),
         GoRoute(
           path: '/mypage',
-          builder: (context, state) => const MyPage(),
+          builder: (BuildContext context, GoRouterState state) => const MyPage(),
         ),
         GoRoute(
           path: '/mypage/seller',
-          builder: (context, state) => SellerMyPage(),
+          builder: (BuildContext context, GoRouterState state) => SellerMyPage(),
         ),
         GoRoute(
           path: '/orderlist',
-          builder: (context, state) => const OrderListPage(),
+          builder: (BuildContext context, GoRouterState state) => const OrderListPage(),
         ),
         GoRoute(
           path: '/orderdetail/:orderId',
-          builder: (context, state) {
+          builder: (BuildContext context, GoRouterState state) {
             final String orderId = state.pathParameters['orderId'] ?? "";
             return OrderDetailPage(orderId);
           },
@@ -105,69 +104,69 @@ final GoRouter router = GoRouter(
         // ),
         GoRoute(
             path: '/mypage/edit-buyer/:nickName/:profileUrl',
-            builder: (context, state) {
+            builder: (BuildContext context, GoRouterState state) {
               final String nickName = state.pathParameters['nickName'] ?? '';
               final String profileUrl = state.pathParameters['profileUrl'] ?? '';
               return EditProfilePage(nickName: nickName, profileUrl: profileUrl);
             }),
         GoRoute(
           path: '/productslist/:categoryId',
-          builder: (context, state) {
+          builder: (BuildContext context, GoRouterState state) {
             final String categoryId = state.pathParameters['categoryId'] ?? "";
             return ProductsListPage(categoryId: categoryId);
           },
         ),
         GoRoute(
           path: '/productdetail/:productId',
-          builder: (context, state) {
+          builder: (BuildContext context, GoRouterState state) {
             final String productId = state.pathParameters['productId'] ?? "";
             return ProductsDetailPage(productId);
           },
         ),
         GoRoute(
           path: '/wish/cart',
-          builder: (context, state) => const CartPage(),
+          builder: (BuildContext context, GoRouterState state) => const CartPage(),
         ),
         GoRoute(
           path: '/mypage/password/:userId',
-          builder: (context, state) {
+          builder: (BuildContext context, GoRouterState state) {
             final String userId = state.pathParameters['userId'] ?? "";
             return PasswordEditPage(userId: userId);
           },
         ),
         GoRoute(
           path: '/branddetail/:brandId',
-          builder: (context, state) {
+          builder: (BuildContext context, GoRouterState state) {
             final String brandId = state.pathParameters['brandId'] ?? "";
             return BrandDetailPage(brandId);
           },
         ),
         GoRoute(
           path: '/funding/register',
-          builder: (context, state) => const FundingRegisterPage(),
+          builder: (BuildContext context, GoRouterState state) => const FundingRegisterPage(),
         ),
         GoRoute(
           path: '/mypage/register',
-          builder: (context, state) => const ProductRegisterPage(),
+          builder: (BuildContext context, GoRouterState state) => const ProductRegisterPage(),
         ),
         GoRoute(
           path: '/brand/editproduct',
-          builder: (context, state) => BrandProductEditPage(),
+          builder: (BuildContext context, GoRouterState state) => const BrandProductEditPage(),
         ),
         GoRoute(
           path: '/brand/edit',
-          builder: (context, state) => const BrandEditPage(),
+          builder: (BuildContext context, GoRouterState state) => const BrandEditPage(),
         ),
         GoRoute(
           path: '/funding/edit/:fundingId',
-          builder: (context, state) {
+          builder: (BuildContext context, GoRouterState state) {
             final String fundingId = state.pathParameters['fundingId'] ?? "";
             return FundingEditPage(fundingId: fundingId);
           },
         ),
         GoRoute(
           path: '/productedit/:productId',
-          builder: (context, state) {
+          builder: (BuildContext context, GoRouterState state) {
             final String productId = state.pathParameters['productId'] ?? "";
             return ProductEditPage(productId: productId);
           }
@@ -177,16 +176,16 @@ final GoRouter router = GoRouter(
 
     GoRoute(
       path: '/auth/login',
-      builder: (context, state) => LoginPage(),
+      builder: (BuildContext context, GoRouterState state) => const LoginPage(),
     ),
     GoRoute(
       path: '/auth/signup',
-      builder: (context, state) => UserRoleSelectionPage(),
+      builder: (BuildContext context, GoRouterState state) => const UserRoleSelectionPage(),
     ),
     GoRoute(
       path: '/auth/signup/common',
-      builder: (context, state) {
-        final extra = state.extra as Map<String, dynamic>?;
+      builder: (BuildContext context, GoRouterState state) {
+        final Map<String, dynamic>? extra = state.extra as Map<String, dynamic>?;
         return CommonSignupPage(
           store: extra?['store'],
         );
@@ -194,11 +193,11 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/auth/signup/seller',
-      builder: (context, state) => SellerSignupPage(),
+      builder: (BuildContext context, GoRouterState state) => SellerSignupPage(),
     ),
     GoRoute(
       path: '/auth/signup/completed',
-      builder: (context, state) => CompletedSignupPage(),
+      builder: (BuildContext context, GoRouterState state) => CompletedSignupPage(),
     ),
   ],
 );

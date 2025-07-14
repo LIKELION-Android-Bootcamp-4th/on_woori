@@ -44,13 +44,13 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       // TODO: 서버에 수정 내용 전송
-      print('=== 저장할 정보 ===');
-      print('담당자명: ${_managerController.text}');
-      print('전화번호: ${_phoneController.text}');
-      print('우편번호: ${_zipcodeController.text}');
-      print('주소: ${_addressController.text}');
-      print('상세주소: ${_detailAddressController.text}');
-      print('==================');
+      debugPrint('=== 저장할 정보 ===');
+      debugPrint('담당자명: ${_managerController.text}');
+      debugPrint('전화번호: ${_phoneController.text}');
+      debugPrint('우편번호: ${_zipcodeController.text}');
+      debugPrint('주소: ${_addressController.text}');
+      debugPrint('상세주소: ${_detailAddressController.text}');
+      debugPrint('==================');
 
       if (!mounted) return;
       context.go('/mypage/seller');
@@ -180,15 +180,15 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
             contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
+              borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
+              borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
+              borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
             ),
           ),
           validator: validator ??

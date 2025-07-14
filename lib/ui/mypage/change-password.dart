@@ -208,11 +208,11 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
         hintText: '비밀번호 입력',
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
+          borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.DividerTextBoxLineDivider),
+          borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),

@@ -244,8 +244,8 @@ class _FundingEditPageState extends State<FundingEditPage> {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 16, color: Colors.grey[400]),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppColors.DividerTextBoxLineDivider)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppColors.DividerTextBoxLineDivider)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       ),
     );

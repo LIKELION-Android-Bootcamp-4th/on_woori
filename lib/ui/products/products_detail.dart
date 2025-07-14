@@ -196,9 +196,9 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                 child: Image.network(
-                  product.thumbnailImage?.url ?? DefaultImage.ProductThumbnail,
+                  product.thumbnailImage?.url ?? DefaultImage.productThumbnail,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Image.network(DefaultImage.ProductThumbnail, fit: BoxFit.cover),
+                  errorBuilder: (context, error, stackTrace) => Image.network(DefaultImage.productThumbnail, fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -230,13 +230,13 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 radius: 16,
                 child: ClipOval(
                   child: Image.network(
-                    product.store?.thumbnailImageUrl ?? DefaultImage.BrandThumbnail,
+                    product.store?.thumbnailImageUrl ?? DefaultImage.brandThumbnail,
                     fit: BoxFit.cover,
                     width: 32,
                     height: 32,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.network(
-                        DefaultImage.BrandThumbnail,
+                        DefaultImage.brandThumbnail,
                         fit: BoxFit.cover,
                         width: 32,
                         height: 32,

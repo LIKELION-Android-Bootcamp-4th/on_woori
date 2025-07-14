@@ -5,23 +5,23 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ApiClient {
   final Dio dio;
-  final _secureStorage = const FlutterSecureStorage();
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   ApiClient._privateConstructor() : dio = Dio() {
     dio.options = BaseOptions(
       baseUrl: 'http://git.hansul.kr:3002/',
       connectTimeout: const Duration(milliseconds: 5000),
       receiveTimeout: const Duration(milliseconds: 3000),
-      headers: {
+      headers: <String, dynamic>{
         'Content-Type' : 'application/json',
         'X-Company-Code' : '6866fd115b230f5dc709bdef'
       }
     );
 
     dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) async {
+      onRequest: (RequestOptions options, RequestInterceptorHandler handler) async {
         // companyId 읽어서 헤더에 추가
-        final companyId = await _secureStorage.read(key: 'companyId');
+        final String? companyId = await _secureStorage.read(key: 'companyId');
         if (companyId != null) {
           options.headers['X-Company-Code'] = companyId;
         }

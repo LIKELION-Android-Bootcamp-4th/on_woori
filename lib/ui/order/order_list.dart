@@ -27,7 +27,7 @@ class _OrderListPageState extends State<OrderListPage> {
       return response;
     } catch (e, s) {
       debugPrint("주문 목록 조회 오류: $e");
-      print(s);
+      debugPrint(s.toString());
       rethrow;
     }
   }

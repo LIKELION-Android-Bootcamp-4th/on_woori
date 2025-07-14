@@ -210,7 +210,7 @@ class CategoryDetailSection extends StatelessWidget { //카테고리 버튼 모�
         Positioned(
           bottom: 3,
           left: 0,
-          child: Container(height: 1.0, width: 100, color: AppColors.DividerTextBoxLineDivider,),
+          child: Container(height: 1.0, width: 100, color: AppColors.dividerTextBoxLineDivider,),
         ),
         TextButton(
           style: TextButton.styleFrom(

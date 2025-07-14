@@ -75,7 +75,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   itemBuilder: (BuildContext context, int index) {
                     final product = order.items[index];
                     return OrderProductListItem(
-                      imageUrl: product.thumbnailImageUrl ?? DefaultImage.ProductThumbnail,
+                      imageUrl: product.thumbnailImageUrl ?? DefaultImage.productThumbnail,
                       productName: product.productName,
                       options: product.optionsText,
                       quantity: product.quantity,

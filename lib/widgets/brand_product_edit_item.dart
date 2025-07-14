@@ -33,12 +33,12 @@ class BrandProductEditListItem extends StatelessWidget {
               backgroundColor: AppColors.grey.withOpacity(0.2),
               child: ClipOval(
                 child: Image.network(
-                  imageUrl ?? DefaultImage.ProductThumbnail,
+                  imageUrl ?? DefaultImage.productThumbnail,
                   fit: BoxFit.cover,
                   width: 72,
                   height: 72,
                   errorBuilder: (context, error, stackTrace) {
-                    return Image.network(DefaultImage.ProductThumbnail, fit: BoxFit.cover, width: 72, height: 72,);
+                    return Image.network(DefaultImage.productThumbnail, fit: BoxFit.cover, width: 72, height: 72,);
                   },
                 ),
               ),
@@ -98,12 +98,12 @@ class BrandProductMultiSelectItem extends StatelessWidget {
               backgroundColor: AppColors.grey.withOpacity(0.2),
               child: ClipOval(
                 child: Image.network(
-                  imageUrl ?? DefaultImage.ProductThumbnail,
+                  imageUrl ?? DefaultImage.productThumbnail,
                   fit: BoxFit.cover,
                   width: 72,
                   height: 72,
                   errorBuilder: (context, error, stackTrace) {
-                    return Image.network(DefaultImage.ProductThumbnail, fit: BoxFit.cover, width: 72, height: 72,);
+                    return Image.network(DefaultImage.productThumbnail, fit: BoxFit.cover, width: 72, height: 72,);
                   },
                 ),
               ),

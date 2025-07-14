@@ -11,8 +11,8 @@ class FundingRegisterPage extends StatefulWidget {
 }
 
 class _FundingRegisterPageState extends State<FundingRegisterPage> {
-  final _nameController = TextEditingController();
-  final _linkController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _linkController = TextEditingController();
   File? _selectedImage;
 
   Future<void> _onAddImagePressed() async {
@@ -48,7 +48,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             Center(child: _sectionTitle('대표 이미지')),
             const SizedBox(height: 8),
             Center(child: _imageBox()),
@@ -106,11 +106,11 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColors.DividerTextBoxLineDivider),
+          borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColors.DividerTextBoxLineDivider),
+          borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
@@ -121,7 +121,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
   Widget _imageBox() {
     return Stack(
       clipBehavior: Clip.none,
-      children: [
+      children: <Widget>[
         Container(
           width: 160,
           height: 160,
@@ -150,10 +150,10 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
             child: InkWell(
               customBorder: const CircleBorder(),
               onTap: _onAddImagePressed,
-              child: SizedBox(
+              child: const SizedBox(
                 width: 44,
                 height: 44,
-                child: const Icon(Icons.add, color: Colors.black, size: 24),
+                child: Icon(Icons.add, color: Colors.black, size: 24),
               ),
             ),
           ),

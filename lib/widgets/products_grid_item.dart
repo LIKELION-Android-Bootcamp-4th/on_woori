@@ -27,7 +27,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
     price = widget.item.price;
     productName = widget.item.name;
     brandName = widget.item.store?.name ?? "브랜드";
-    imageUrl = widget.item.thumbnailImage?.url ?? DefaultImage.ProductThumbnail;
+    imageUrl = widget.item.thumbnailImage?.url ?? DefaultImage.productThumbnail;
     isFavorite = widget.item.isFavorite ?? false;
   }
 
@@ -88,7 +88,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
                     imageUrl,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return Image.network(DefaultImage.ProductThumbnail, fit: BoxFit.cover,);
+                      return Image.network(DefaultImage.productThumbnail, fit: BoxFit.cover,);
                     },
                   ),
                 ),

@@ -1,14 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:on_woori/config/endpoint/buyer/products_endpoints.dart';
+import 'package:on_woori/config/endpoint/seller/seller_products_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
-import 'package:on_woori/data/entity/request/auth/login_request.dart';
-import 'package:on_woori/data/entity/request/auth/register_buyer_request.dart';
-import 'package:on_woori/data/entity/request/auth/register_seller_request.dart';
-import 'package:on_woori/data/entity/request/auth/verify_email_request.dart';
-import 'package:on_woori/data/entity/request/products/product_register_request.dart';
-import 'package:on_woori/data/entity/response/auth/login_response.dart';
-import 'package:on_woori/data/entity/response/auth/register_response.dart';
-import 'package:on_woori/data/entity/response/auth/verify_email_response.dart';
 import 'package:on_woori/data/entity/response/products/product_register_response.dart';
 import 'package:on_woori/data/entity/response/products/product_toggle_response.dart';
 import 'package:on_woori/data/entity/response/products/products_detail_response.dart';
@@ -24,6 +17,15 @@ class ProductsApiClient {
   async {
     final response = await _dio.get(
       ProductsEndpoints.getProducts,
+    );
+    return ProductsResponse.fromJson(response.data);
+  }
+
+  // 판매자 상품 목록 조회
+  Future<ProductsResponse> sellerProducts()
+  async {
+    final response = await _dio.get(
+      SellerProductsEndpoints.getSellerProducts,
     );
     return ProductsResponse.fromJson(response.data);
   }

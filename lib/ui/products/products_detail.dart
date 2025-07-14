@@ -104,19 +104,19 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
       return;
     }
 
-    // 2. 할인 정보 파싱
-    CartDiscount? cartDiscount;
-    if (product.discount != null && product.discount!.isNotEmpty) {
-      try {
-        final discountData = jsonDecode(product.discount!);
-        cartDiscount = CartDiscount(
-          type: discountData['type'] ?? 'percent', // 기본값으로 'percent' 사용
-          amount: discountData['value'] ?? 0,
-        );
-      } catch (e) {
-        // 할인 정보 파싱 실패 시 무시
-      }
-    }
+    // // 2. 할인 정보 파싱
+    // CartDiscount? cartDiscount;
+    // if (product.discount != null && product.discount!.isNotEmpty) {
+    //   try {
+    //     final discountData = jsonDecode(product.discount!);
+    //     cartDiscount = CartDiscount(
+    //       type: discountData['type'] ?? 'percent', // 기본값으로 'percent' 사용
+    //       amount: discountData['value'] ?? 0,
+    //     );
+    //   } catch (e) {
+    //     // 할인 정보 파싱 실패 시 무시
+    //   }
+    // }
 
     // 3. API 요청 객체 생성
     final request = CartRegisterRequest(
@@ -186,7 +186,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
         }
 
         final totalPrice = product.price * quantity;
-        const placeholderImage = 'https://via.placeholder.com/400';
 
         return ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24),

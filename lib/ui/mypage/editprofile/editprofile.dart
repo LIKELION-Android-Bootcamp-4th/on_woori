@@ -3,12 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
-import 'package:on_woori/core/styles/default_image.dart';
 import 'package:on_woori/data/client/mypage_api_client.dart';
-import 'package:on_woori/data/entity/request/mypage/mypage_request.dart';
 import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
-import 'package:on_woori/widgets/dropdown.dart';
 
 class EditProfilePage extends StatefulWidget {
   String nickName;
@@ -58,22 +55,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _detailAddressController.text = '';
       _profileImageUrl = widget.profileUrl;
     });
-  }
-
-  void _showErrorDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('에러'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('확인'),
-          ),
-        ],
-      ),
-    );
   }
 
   Future<void> _pickImage() async {

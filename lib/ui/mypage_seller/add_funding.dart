@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/data/client/seller_fundings_api_client.dart';
 import 'package:on_woori/data/client/seller_store_api.dart';

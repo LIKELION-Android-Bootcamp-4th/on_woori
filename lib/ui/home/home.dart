@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
-import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/core/styles/default_image.dart';
-import 'package:on_woori/data/client/auth_api_client.dart';
 import 'package:on_woori/data/client/fundings_api_client.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/client/stores_api_client.dart';
-import 'package:on_woori/data/entity/request/auth/login_request.dart';
 import 'package:on_woori/data/entity/response/fundings/fundings_response.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 import 'package:on_woori/data/entity/response/stores/stores_response.dart';
@@ -57,30 +53,6 @@ class _HomePageState extends State<HomePage> {
       rethrow;
     }
   }
-
-  Future<void> _loginAndSaveToken() async {
-    print("로그인 테스트 시작");
-
-    final apiClient = AuthApiClient();
-    final storage = const FlutterSecureStorage();
-    try {
-      final response = await apiClient.authLogin(
-        request: LoginRequest(
-          email: 'seller@hanbokmall.com',
-          password: 'password123',
-        ),
-      );
-      await storage.delete(key: 'ACCESS_TOKEN');
-      await storage.write(key: 'ACCESS_TOKEN', value: response.data?.accessToken);
-      await storage.write(key: 'REFRESH_TOKEN', value: response.data?.refreshToken);
-      await storage.write(key: 'COMPANY_CODE', value: '6866fd115b230f5dc709bdef');
-      print(await storage.read(key: 'ACCESS_TOKEN'));
-    } catch (e, s) {
-      print('로그인 실패: $e');
-      print(s);
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -203,31 +175,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildSectionHeaderAndMore({required String title}) {
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Spacer(),
-        TextButton(
-          onPressed: (){},
-          child: Text(
-            "더보기",
-            style: TextStyle(
-                fontSize: 16,
-                color: AppColors.grey,
-                decoration: TextDecoration.underline
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }

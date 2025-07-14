@@ -11,6 +11,8 @@ import 'package:on_woori/widgets/login_textfield.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   State<StatefulWidget> createState() => LoginPageStatus();
 }

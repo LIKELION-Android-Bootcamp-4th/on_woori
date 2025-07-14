@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
-import 'package:on_woori/main.dart'; // MainPage가 있는 파일 경로
+import 'package:on_woori/main.dart';
 
-// --- 실제 앱에 맞게 수정해야 할 부분 ---
 import 'package:on_woori/ui/auth/login/login_page.dart';
 import 'package:on_woori/ui/auth/signup/common_signup_page.dart';
 import 'package:on_woori/ui/auth/signup/completed_signup_page.dart';
@@ -19,7 +18,6 @@ import 'package:on_woori/ui/mypage/editprofile/editprofile.dart';
 import 'package:on_woori/ui/mypage/mypage.dart';
 import 'package:on_woori/ui/mypage_seller/add_funding.dart';
 import 'package:on_woori/ui/mypage_seller/edit_brand.dart';
-import 'package:on_woori/ui/mypage_seller/editprofile/edit_profile_seller.dart';
 import 'package:on_woori/ui/mypage_seller/funding_edit_page.dart';
 import 'package:on_woori/ui/mypage_seller/mypage_seller.dart';
 import 'package:on_woori/ui/mypage_seller/product_register.dart';

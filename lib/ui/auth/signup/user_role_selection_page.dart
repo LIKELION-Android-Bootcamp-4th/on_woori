@@ -5,6 +5,8 @@ import 'package:on_woori/core/styles/app_colors.dart';
 import '../../../l10n/app_localizations.dart';
 
 class UserRoleSelectionPage extends StatelessWidget {
+  const UserRoleSelectionPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;

@@ -1,13 +1,10 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:on_woori/config/endpoint/buyer/stores_endpoints.dart';
 import 'package:on_woori/config/endpoint/seller/seller_funding_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
 import 'package:on_woori/data/entity/request/funding/create_funding_request.dart';
-import 'package:on_woori/data/entity/request/funding/edit_funding_request.dart';
 import 'package:on_woori/data/entity/response/seller/fundings/seller_funding_response.dart';
-import 'package:on_woori/data/entity/response/stores/stores_response.dart';
 
 import '../entity/response/ApiBasicResponse.dart';
 

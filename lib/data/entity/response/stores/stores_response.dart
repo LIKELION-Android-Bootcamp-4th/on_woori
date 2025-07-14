@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 
 part 'stores_response.g.dart';

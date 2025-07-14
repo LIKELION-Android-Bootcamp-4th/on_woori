@@ -95,7 +95,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
     });
 
     try {
-      final success = await _adminApiClient.loginAsAdmin();
+      await _adminApiClient.loginAsAdmin();
 
       await _adminApiClient.changePassword(
         id: widget.userId,

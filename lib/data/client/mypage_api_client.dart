@@ -2,10 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:on_woori/config/endpoint/buyer/mypage_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
 import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
-import 'package:on_woori/data/entity/response/mypage/profile_response.dart';
 import 'package:on_woori/data/entity/response/mypage/wish_response.dart';
-
-import '../entity/request/mypage/mypage_request.dart';
 
 class MypageApiClient {
   final Dio _dio;

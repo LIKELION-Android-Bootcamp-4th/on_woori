@@ -63,7 +63,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _nameController.text = product.name;
         _priceController.text = product.price.toString();
         _discountController.text = product.discount?.toString() ?? '';
-        _descriptionController.text = product.description ?? '';
+        _descriptionController.text = product.description;
 
         _selectedCategory = product.category;
 
@@ -172,7 +172,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       }
 
       final imagesJson = {
-        "detail": detailImageUrls ?? [],
+        "detail": detailImageUrls,
       };
 
       final sizeOptionsJson = {
@@ -213,7 +213,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       }
 
       // 4. 상품 수정 API를 호출합니다.
-      final response = await ProductsApiClient().productUpdate(id: widget.productId, formData: formData);
+      await ProductsApiClient().productUpdate(id: widget.productId, formData: formData);
       print("API로 전송될 FormData: ${formData.fields}");
       print("첨부된 대표 이미지: ${_thumbnailImageFile?.path}");
 

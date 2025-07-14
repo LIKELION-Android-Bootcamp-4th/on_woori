@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:on_woori/data/client/mypage_api_client.dart';
 import 'package:on_woori/data/client/stores_api_client.dart';
-import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
 import 'package:on_woori/data/entity/response/stores/stores_response.dart';
 import '../../core/styles/app_colors.dart';
 import '../../widgets/bottom_button.dart';
@@ -110,7 +108,7 @@ class _BrandEditPageState extends State<BrandEditPage> {
     if (_nameController.text.isEmpty) _nameController.text = data.name;
     if (_introController.text.isEmpty) _introController.text = data.description ?? "";
     try {
-      final response = await apiClient.editSellerStore(
+      await apiClient.editSellerStore(
         name: _nameController.text,
         description: _introController.text,
         data: data,

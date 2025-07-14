@@ -255,7 +255,7 @@ class _MyPageState extends State<MyPage> {
                   ),
                   trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
                   onTap: () {
-                    context.push('/mypage/password');
+                    context.push('/mypage/password/${snapshot.data?.data?.id}');
                   },
                 ),
                 ListTile(

@@ -148,7 +148,7 @@ class OrderDetailHeader extends StatelessWidget {
           ),
         ),
         Text(
-          "$formattedDate",
+          formattedDate,
           style: const TextStyle(color: AppColors.grey, fontSize: 13),
         ),
       ],

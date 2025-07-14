@@ -1,12 +1,12 @@
-/***
- * 본 문서는 파이널 프로젝트 1번 API 이용 가이드를 기반으로 작성된 엔드포인트 배럴 파일입니다.
- * 다음 정보를 기반으로 작성되었습니다.
- *
- * API 가이드 : http://git.hansul.kr:3000/api/docs
- * 업데이트 시간 : 2025-06-30 16:00
- *
- * TODO : swagger 로 작성된 API 명세서가 다시 보이면 그 때 업데이트 해놓도록 하겠습니다.
- */
+/// *
+/// 본 문서는 파이널 프로젝트 1번 API 이용 가이드를 기반으로 작성된 엔드포인트 배럴 파일입니다.
+/// 다음 정보를 기반으로 작성되었습니다.
+///
+/// API 가이드 : http://git.hansul.kr:3000/api/docs
+/// 업데이트 시간 : 2025-07-14 15:30
+///
+/// TODO : swagger 로 작성된 API 명세서가 다시 보이면 그 때 업데이트 해놓도록 하겠습니다.
+library;
 
 export 'endpoint/buyer/auth_endpoints.dart';
 export 'endpoint/buyer/cart_endpoints.dart';

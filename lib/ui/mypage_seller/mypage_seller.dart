@@ -264,7 +264,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
                     ),
                     trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
                     onTap: () {
-                      context.push('/mypage/password');
+                      context.push('/mypage/password/${snapshot.data?.data?.id}');
                     },
                   ),
 

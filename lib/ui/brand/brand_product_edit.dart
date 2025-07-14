@@ -76,7 +76,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
   Future<void> _loadProducts() async {
     setState(() => isLoading = true);
     try {
-      final response = await productApiClient.products();
+      final response = await productApiClient.sellerProducts();
       if (mounted && response.success && response.data?.items != null) {
         setState(() {
           productList = response.data!.items!;
@@ -211,7 +211,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
 
   void editSelection(String id) {
     print("수정할 상품 ID: $id");
-    context.push('/productedit/${id}');
+    context.push('/productedit/$id');
   }
 
   @override
@@ -387,7 +387,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
 
   void editSelection(String id) {
     print("수정할 펀딩 ID: $id");
-    context.push('/funding/edit/${id}');
+    context.push('/funding/edit/$id');
   }
 
 

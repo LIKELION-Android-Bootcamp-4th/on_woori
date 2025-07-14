@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ListToolbar extends StatelessWidget {
   int itemCount;
 
-  ListToolbar(this.itemCount);
+  ListToolbar(this.itemCount, {super.key});
 
   @override
   Widget build(BuildContext context) {

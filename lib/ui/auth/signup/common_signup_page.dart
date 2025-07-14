@@ -173,7 +173,6 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
                       isPassword: true,
                       validator: (String? value) {
                         if (value == null || value.isEmpty) return '내용을 입력해주세요';
-                        if (value.length < 6) return '비밀번호는 6자리 이상이여야 합니다';
                         return null;
                       },
                     ),
@@ -185,9 +184,11 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
                       inputType: TextInputType.text,
                       isPassword: true,
                       validator: (String? value) {
-                        if (value == null || value.isEmpty) return '내용을 입력해주세요';
-                        if (passwordController.text != value)
-                          return '입력한 비밀번호가 서로 다릅니다';
+                        String pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$';
+                        RegExp regExp = RegExp(pattern);
+                        if (value == null || value.isEmpty) return '내용을 입력해 주세요';
+                        if (passwordController.text != value) return '입력한 비밀번호가 서로 다릅니다';
+                        if (!regExp.hasMatch(value)) return '8자 이상, 숫자/대문자/소문자/특수문자를 포함해야 합니다';
                         return null;
                       },
                     ),

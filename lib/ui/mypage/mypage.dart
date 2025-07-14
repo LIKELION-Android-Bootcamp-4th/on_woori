@@ -88,7 +88,9 @@ class _MyPageState extends State<MyPage> {
             elevation: 0,
             centerTitle: true,
             title: Text(
-              l10n.bottomNavigationBarMyPage, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+              l10n.bottomNavigationBarMyPage,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
             actions: [
               IconButton(
                 onPressed: () {
@@ -113,10 +115,14 @@ class _MyPageState extends State<MyPage> {
                         width: 48,
                         height: 48,
                         child: Image.network(
-                          snapshot.data?.data?.profile.profileImage?.path ?? DefaultImage.profileThumbnail,
+                          snapshot.data?.data?.profile.profileImage?.path ??
+                              DefaultImage.profileThumbnail,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return Image.network(DefaultImage.profileThumbnail, fit: BoxFit.cover,);
+                            return Image.network(
+                              DefaultImage.profileThumbnail,
+                              fit: BoxFit.cover,
+                            );
                           },
                         ),
                       ),
@@ -150,18 +156,21 @@ class _MyPageState extends State<MyPage> {
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 2,
+                        ),
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero,
-                          side: const BorderSide(
-                            color: AppColors.grey,
-                          ),
+                          side: const BorderSide(color: AppColors.grey),
                         ),
                       ),
                       onPressed: () async {
-                        await context.push('/mypage/edit-buyer/${snapshot.data?.data?.nickName}/${snapshot.data?.data?.profile.profileImage}');
+                        await context.push(
+                          '/mypage/edit-buyer/${snapshot.data?.data?.nickName}/${snapshot.data?.data?.profile.profileImage}',
+                        );
                         _refresh();
                       },
                       child: const Text(
@@ -200,7 +209,11 @@ class _MyPageState extends State<MyPage> {
                       color: Colors.black,
                     ),
                   ),
-                  trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+                  trailing: const Icon(
+                    Icons.chevron_right,
+                    size: 20,
+                    color: Colors.black,
+                  ),
                   onTap: () {
                     context.push('/orderlist');
                   },
@@ -217,7 +230,11 @@ class _MyPageState extends State<MyPage> {
                       color: Colors.black,
                     ),
                   ),
-                  trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+                  trailing: const Icon(
+                    Icons.chevron_right,
+                    size: 20,
+                    color: Colors.black,
+                  ),
                   onTap: () {
                     context.push('/wish');
                   },
@@ -230,7 +247,7 @@ class _MyPageState extends State<MyPage> {
                 ),
 
                 // 내 정보 섹션 라벨
-                const SizedBox(height: 10,),
+                const SizedBox(height: 10),
                 const Text(
                   '내 정보',
                   style: TextStyle(
@@ -253,7 +270,11 @@ class _MyPageState extends State<MyPage> {
                       color: Colors.black,
                     ),
                   ),
-                  trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+                  trailing: const Icon(
+                    Icons.chevron_right,
+                    size: 20,
+                    color: Colors.black,
+                  ),
                   onTap: () {
                     context.push('/mypage/password/${snapshot.data?.data?.id}');
                   },
@@ -269,7 +290,11 @@ class _MyPageState extends State<MyPage> {
                       color: Colors.red,
                     ),
                   ),
-                  trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.black),
+                  trailing: const Icon(
+                    Icons.chevron_right,
+                    size: 20,
+                    color: Colors.black,
+                  ),
                   onTap: () => _handleLogout(context),
                 ),
 

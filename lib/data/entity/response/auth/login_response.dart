@@ -112,11 +112,7 @@ class ProfileData {
   @JsonKey(fromJson: _profileImageFromJson)
   final ProfileImageData? profileImage;
 
-  const ProfileData({
-    this.name,
-    this.birthDate,
-    this.profileImage,
-  });
+  const ProfileData({this.name, this.birthDate, this.profileImage});
 
   factory ProfileData.fromJson(Map<String, dynamic> json) =>
       _$ProfileDataFromJson(json);

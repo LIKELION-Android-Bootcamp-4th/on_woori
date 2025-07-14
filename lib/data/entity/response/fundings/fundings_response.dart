@@ -16,6 +16,7 @@ class FundingsResponse {
 
   factory FundingsResponse.fromJson(Map<String, dynamic> json) =>
       _$FundingsResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$FundingsResponseToJson(this);
 }
 
@@ -24,13 +25,11 @@ class FundingData {
   final List<SellerFundingItem> items;
   final Pagination pagination;
 
-  const FundingData({
-    required this.items,
-    required this.pagination,
-  });
+  const FundingData({required this.items, required this.pagination});
 
   factory FundingData.fromJson(Map<String, dynamic> json) =>
       _$FundingDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$FundingDataToJson(this);
 }
 
@@ -61,6 +60,7 @@ class SellerFundingItem {
 
   factory SellerFundingItem.fromJson(Map<String, dynamic> json) =>
       _$SellerFundingItemFromJson(json);
+
   Map<String, dynamic> toJson() => _$SellerFundingItemToJson(this);
 }
 
@@ -70,13 +70,11 @@ class CompanyId {
   final String id;
   final String name;
 
-  const CompanyId({
-    required this.id,
-    required this.name,
-  });
+  const CompanyId({required this.id, required this.name});
 
   factory CompanyId.fromJson(Map<String, dynamic> json) =>
       _$CompanyIdFromJson(json);
+
   Map<String, dynamic> toJson() => _$CompanyIdToJson(this);
 }
 
@@ -100,5 +98,6 @@ class Pagination {
 
   factory Pagination.fromJson(Map<String, dynamic> json) =>
       _$PaginationFromJson(json);
+
   Map<String, dynamic> toJson() => _$PaginationToJson(this);
 }

@@ -66,7 +66,7 @@ class _OrderListPageState extends State<OrderListPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal:24),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Text(
                   '총 주문 내역 ${ordersData.orders.length}개',
                   style: const TextStyle(fontSize: 14, color: Colors.grey),
@@ -74,8 +74,8 @@ class _OrderListPageState extends State<OrderListPage> {
               ),
               SizedBox(height: 10),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal:24),
-                child: Divider(color: Colors.black, height: 1.0)
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Divider(color: Colors.black, height: 1.0),
               ),
 
               Expanded(
@@ -92,7 +92,9 @@ class _OrderListPageState extends State<OrderListPage> {
                     return OrderListItem(
                       id: order.id,
                       orderNumber: order.orderNumber,
-                      orderDate: DateFormat('yyyy.MM.dd').format(order.createdAt),
+                      orderDate: DateFormat(
+                        'yyyy.MM.dd',
+                      ).format(order.createdAt),
                       totalAmount: order.totalAmount,
                       status: order.status,
                       products: productSummaries, // 위에서 생성한 목록을 전달

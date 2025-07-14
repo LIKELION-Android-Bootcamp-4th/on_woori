@@ -17,7 +17,8 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _zipcodeController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _detailAddressController = TextEditingController();
+  final TextEditingController _detailAddressController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -91,12 +92,15 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildLabel('담당자명'),
-              const SizedBox(height: 5,),
-              _buildTextFormField(_managerController, validatorText: '담당자명을 입력해주세요'),
+              const SizedBox(height: 5),
+              _buildTextFormField(
+                _managerController,
+                validatorText: '담당자명을 입력해주세요',
+              ),
 
               const SizedBox(height: 16),
               _buildLabel('전화번호'),
-              const SizedBox(height: 5,),
+              const SizedBox(height: 5),
               _buildTextFormField(
                 _phoneController,
                 keyboardType: TextInputType.phone,
@@ -105,7 +109,7 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
 
               const SizedBox(height: 16),
               _buildLabel('우편번호'),
-              const SizedBox(height: 5,),
+              const SizedBox(height: 5),
               _buildTextFormField(
                 _zipcodeController,
                 keyboardType: TextInputType.number,
@@ -122,13 +126,19 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
 
               const SizedBox(height: 16),
               _buildLabel('주소'),
-              const SizedBox(height: 5,),
-              _buildTextFormField(_addressController, validatorText: '주소를 입력해주세요'),
+              const SizedBox(height: 5),
+              _buildTextFormField(
+                _addressController,
+                validatorText: '주소를 입력해주세요',
+              ),
 
               const SizedBox(height: 16),
               _buildLabel('상세주소'),
-              const SizedBox(height: 5,),
-              _buildTextFormField(_detailAddressController, validatorText: '상세주소를 입력해주세요'),
+              const SizedBox(height: 5),
+              _buildTextFormField(
+                _detailAddressController,
+                validatorText: '상세주소를 입력해주세요',
+              ),
 
               const SizedBox(height: 30),
             ],
@@ -138,10 +148,7 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: BottomButton(
-            buttonText: '저장',
-            pressedFunc: _submit,
-          ),
+          child: BottomButton(buttonText: '저장', pressedFunc: _submit),
         ),
       ),
     );
@@ -159,11 +166,11 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
   }
 
   Widget _buildTextFormField(
-      TextEditingController controller, {
-        TextInputType keyboardType = TextInputType.text,
-        String? validatorText,
-        String? Function(String?)? validator,
-      }) {
+    TextEditingController controller, {
+    TextInputType keyboardType = TextInputType.text,
+    String? validatorText,
+    String? Function(String?)? validator,
+  }) {
     return Column(
       children: [
         const SizedBox(height: 4),
@@ -177,22 +184,32 @@ class _EditProfileSellerPageState extends State<EditProfileSellerPage> {
           ),
           decoration: InputDecoration(
             isDense: true,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 12,
+              horizontal: 12,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
+              borderSide: const BorderSide(
+                color: AppColors.dividerTextBoxLineDivider,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
+              borderSide: const BorderSide(
+                color: AppColors.dividerTextBoxLineDivider,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
+              borderSide: const BorderSide(
+                color: AppColors.dividerTextBoxLineDivider,
+              ),
             ),
           ),
-          validator: validator ??
-                  (value) {
+          validator:
+              validator ??
+              (value) {
                 if (value == null || value.isEmpty) {
                   return validatorText ?? '내용을 입력해주세요';
                 }

@@ -29,10 +29,7 @@ class ProductCreationData {
   final String id;
   final String name;
 
-  const ProductCreationData({
-    required this.id,
-    required this.name,
-  });
+  const ProductCreationData({required this.id, required this.name});
 
   factory ProductCreationData.fromJson(Map<String, dynamic> json) =>
       _$ProductCreationDataFromJson(json);

@@ -6,7 +6,12 @@ class CategoryHorizontalScrollItem extends StatelessWidget {
   bool isSelected;
   VoidCallback onTap;
 
-  CategoryHorizontalScrollItem(this.buttonText, this.isSelected, this.onTap, {super.key});
+  CategoryHorizontalScrollItem(
+    this.buttonText,
+    this.isSelected,
+    this.onTap, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

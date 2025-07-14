@@ -10,10 +10,7 @@ import '../../widgets/bottom_button.dart';
 class FundingEditPage extends StatefulWidget {
   final String fundingId;
 
-  const FundingEditPage({
-    super.key,
-    required this.fundingId,
-  });
+  const FundingEditPage({super.key, required this.fundingId});
 
   @override
   State<FundingEditPage> createState() => _FundingEditPageState();
@@ -44,7 +41,9 @@ class _FundingEditPageState extends State<FundingEditPage> {
 
     try {
       // 수정된 API 클라이언트 호출
-      final response = await _fundingApiClient.fundingDetail(id: widget.fundingId);
+      final response = await _fundingApiClient.fundingDetail(
+        id: widget.fundingId,
+      );
 
       // API 응답의 success 필드와 data 존재 여부 확인
       if (response.success && response.data != null) {
@@ -66,9 +65,9 @@ class _FundingEditPageState extends State<FundingEditPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('오류가 발생했습니다: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('오류가 발생했습니다: $e')));
         context.pop();
       }
     } finally {
@@ -80,12 +79,13 @@ class _FundingEditPageState extends State<FundingEditPage> {
     }
   }
 
-
   Future<void> _pickImage() async {
     // ... (기존과 동일)
     if (_isPickingImage) return;
 
-    setState(() { _isPickingImage = true; });
+    setState(() {
+      _isPickingImage = true;
+    });
 
     final ImagePicker picker = ImagePicker();
 
@@ -102,7 +102,10 @@ class _FundingEditPageState extends State<FundingEditPage> {
                 title: const Text('카메라로 촬영'),
                 onTap: () async {
                   Navigator.pop(context);
-                  final XFile? picked = await picker.pickImage(source: ImageSource.camera, imageQuality: 85);
+                  final XFile? picked = await picker.pickImage(
+                    source: ImageSource.camera,
+                    imageQuality: 85,
+                  );
                   if (!mounted) return;
                   setState(() {
                     if (picked != null) {
@@ -118,7 +121,10 @@ class _FundingEditPageState extends State<FundingEditPage> {
                 title: const Text('갤러리에서 선택'),
                 onTap: () async {
                   Navigator.pop(context);
-                  final XFile? picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+                  final XFile? picked = await picker.pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: 85,
+                  );
                   if (!mounted) return;
                   setState(() {
                     if (picked != null) {
@@ -135,7 +141,9 @@ class _FundingEditPageState extends State<FundingEditPage> {
       },
     ).whenComplete(() {
       if (mounted) {
-        setState(() { _isPickingImage = false; });
+        setState(() {
+          _isPickingImage = false;
+        });
       }
     });
   }
@@ -149,7 +157,6 @@ class _FundingEditPageState extends State<FundingEditPage> {
 
   // 🔽 펀딩 수정 로직 수정
   void updateFunding() async {
-
     try {
       final res = await _fundingEditApiClient.editFundings(
         id: widget.fundingId,
@@ -175,10 +182,10 @@ class _FundingEditPageState extends State<FundingEditPage> {
         }
       }
     } catch (e) {
-      if(mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('오류가 발생했습니다: $e')),
-        );
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('오류가 발생했습니다: $e')));
       }
     }
   }
@@ -189,7 +196,11 @@ class _FundingEditPageState extends State<FundingEditPage> {
       appBar: AppBar(
         title: const Text(
           '펀딩 수정',
-          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20, color: Colors.black),
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: Colors.black,
+          ),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -201,41 +212,48 @@ class _FundingEditPageState extends State<FundingEditPage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(child: _sectionTitle('대표 이미지')),
-            const SizedBox(height: 8),
-            Center(child: _imageBox()),
-            const SizedBox(height: 24),
-            _sectionTitle('펀딩명'),
-            const SizedBox(height: 8),
-            _textField('(이름)', _nameController),
-            const SizedBox(height: 16),
-            _sectionTitle('펀딩 링크'),
-            const SizedBox(height: 8),
-            _textField('https://www.', _linkController),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(child: _sectionTitle('대표 이미지')),
+                  const SizedBox(height: 8),
+                  Center(child: _imageBox()),
+                  const SizedBox(height: 24),
+                  _sectionTitle('펀딩명'),
+                  const SizedBox(height: 8),
+                  _textField('(이름)', _nameController),
+                  const SizedBox(height: 16),
+                  _sectionTitle('펀딩 링크'),
+                  const SizedBox(height: 8),
+                  _textField('https://www.', _linkController),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
       bottomNavigationBar: _isLoading
           ? null // 로딩 중일때는 하단 버튼 숨기기
           : SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: BottomButton(
-            buttonText: '펀딩 수정',
-            pressedFunc: updateFunding,
-          ),
-        ),
-      ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: BottomButton(
+                  buttonText: '펀딩 수정',
+                  pressedFunc: updateFunding,
+                ),
+              ),
+            ),
     );
   }
 
   Widget _sectionTitle(String title) {
-    return Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20, color: Colors.black));
+    return Text(
+      title,
+      style: const TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 20,
+        color: Colors.black,
+      ),
+    );
   }
 
   Widget _textField(String hint, TextEditingController controller) {
@@ -243,10 +261,23 @@ class _FundingEditPageState extends State<FundingEditPage> {
       controller: controller,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 16, color: Colors.grey[400]),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        hintStyle: TextStyle(
+          fontWeight: FontWeight.w400,
+          fontSize: 16,
+          color: Colors.grey[400],
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 16,
+        ),
       ),
     );
   }
@@ -261,15 +292,23 @@ class _FundingEditPageState extends State<FundingEditPage> {
           decoration: BoxDecoration(
             color: AppColors.optionStateList,
             borderRadius: BorderRadius.circular(12),
-            image: _profileImageFile == null && (_profileImageUrl == null || _profileImageUrl!.isEmpty)
+            image:
+                _profileImageFile == null &&
+                    (_profileImageUrl == null || _profileImageUrl!.isEmpty)
                 ? null
                 : DecorationImage(
-              image: _profileImageFile != null ? FileImage(_profileImageFile!) as ImageProvider : NetworkImage(_profileImageUrl!),
-              fit: BoxFit.cover,
-            ),
+                    image: _profileImageFile != null
+                        ? FileImage(_profileImageFile!) as ImageProvider
+                        : NetworkImage(_profileImageUrl!),
+                    fit: BoxFit.cover,
+                  ),
           ),
-          child: (_profileImageFile == null && (_profileImageUrl == null || _profileImageUrl!.isEmpty))
-              ? const Center(child: Icon(Icons.photo, color: Colors.grey, size: 50))
+          child:
+              (_profileImageFile == null &&
+                  (_profileImageUrl == null || _profileImageUrl!.isEmpty))
+              ? const Center(
+                  child: Icon(Icons.photo, color: Colors.grey, size: 50),
+                )
               : null,
         ),
         Positioned(
@@ -281,7 +320,11 @@ class _FundingEditPageState extends State<FundingEditPage> {
             child: InkWell(
               customBorder: const CircleBorder(),
               onTap: _pickImage,
-              child: const SizedBox(width: 44, height: 44, child: Icon(Icons.add, color: Colors.black, size: 24)),
+              child: const SizedBox(
+                width: 44,
+                height: 44,
+                child: Icon(Icons.add, color: Colors.black, size: 24),
+              ),
             ),
           ),
         ),

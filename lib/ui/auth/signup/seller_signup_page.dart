@@ -22,10 +22,14 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       // 모든 유효성 통과
-      StoreRequestData store = StoreRequestData(name: nameController.text, description: introController.text);
-      context.push('/auth/signup/common', extra: <String, StoreRequestData>{
-        'store': store
-      });
+      StoreRequestData store = StoreRequestData(
+        name: nameController.text,
+        description: introController.text,
+      );
+      context.push(
+        '/auth/signup/common',
+        extra: <String, StoreRequestData>{'store': store},
+      );
     }
   }
 

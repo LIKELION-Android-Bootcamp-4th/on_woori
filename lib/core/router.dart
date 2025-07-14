@@ -42,7 +42,8 @@ final AuthService authService = AuthService();
 final GoRouter router = GoRouter(
   initialLocation: '/',
 
-  redirect: (BuildContext context, GoRouterState state) async { // ◀️ async 추가
+  redirect: (BuildContext context, GoRouterState state) async {
+    // ◀️ async 추가
     final bool loggedIn = await authService.isLoggedIn;
     final String location = state.uri.toString();
 
@@ -51,10 +52,11 @@ final GoRouter router = GoRouter(
       '/wish',
       '/mypage',
       '/orderlist',
-      '/wish/cart'
+      '/wish/cart',
     ];
 
-    if (!loggedIn && protectedRoutes.any((String route) => location.startsWith(route))) {
+    if (!loggedIn &&
+        protectedRoutes.any((String route) => location.startsWith(route))) {
       return '/auth/login';
     }
 
@@ -69,27 +71,33 @@ final GoRouter router = GoRouter(
       routes: <RouteBase>[
         GoRoute(
           path: '/',
-          builder: (BuildContext context, GoRouterState state) => const HomePage(),
+          builder: (BuildContext context, GoRouterState state) =>
+              const HomePage(),
         ),
         GoRoute(
           path: '/category',
-          builder: (BuildContext context, GoRouterState state) => const CategoryPage(),
+          builder: (BuildContext context, GoRouterState state) =>
+              const CategoryPage(),
         ),
         GoRoute(
           path: '/wish',
-          builder: (BuildContext context, GoRouterState state) => const WishPage(),
+          builder: (BuildContext context, GoRouterState state) =>
+              const WishPage(),
         ),
         GoRoute(
           path: '/mypage',
-          builder: (BuildContext context, GoRouterState state) => const MyPage(),
+          builder: (BuildContext context, GoRouterState state) =>
+              const MyPage(),
         ),
         GoRoute(
           path: '/mypage/seller',
-          builder: (BuildContext context, GoRouterState state) => SellerMyPage(),
+          builder: (BuildContext context, GoRouterState state) =>
+              SellerMyPage(),
         ),
         GoRoute(
           path: '/orderlist',
-          builder: (BuildContext context, GoRouterState state) => const OrderListPage(),
+          builder: (BuildContext context, GoRouterState state) =>
+              const OrderListPage(),
         ),
         GoRoute(
           path: '/orderdetail/:orderId',
@@ -103,12 +111,13 @@ final GoRouter router = GoRouter(
         //   builder: (context, state) => const EditProfileSellerPage(),
         // ),
         GoRoute(
-            path: '/mypage/edit-buyer/:nickName/:profileUrl',
-            builder: (BuildContext context, GoRouterState state) {
-              final String nickName = state.pathParameters['nickName'] ?? '';
-              final String profileUrl = state.pathParameters['profileUrl'] ?? '';
-              return EditProfilePage(nickName: nickName, profileUrl: profileUrl);
-            }),
+          path: '/mypage/edit-buyer/:nickName/:profileUrl',
+          builder: (BuildContext context, GoRouterState state) {
+            final String nickName = state.pathParameters['nickName'] ?? '';
+            final String profileUrl = state.pathParameters['profileUrl'] ?? '';
+            return EditProfilePage(nickName: nickName, profileUrl: profileUrl);
+          },
+        ),
         GoRoute(
           path: '/productslist/:categoryId',
           builder: (BuildContext context, GoRouterState state) {
@@ -125,7 +134,8 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/wish/cart',
-          builder: (BuildContext context, GoRouterState state) => const CartPage(),
+          builder: (BuildContext context, GoRouterState state) =>
+              const CartPage(),
         ),
         GoRoute(
           path: '/mypage/password/:userId',
@@ -143,19 +153,23 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/funding/register',
-          builder: (BuildContext context, GoRouterState state) => const FundingRegisterPage(),
+          builder: (BuildContext context, GoRouterState state) =>
+              const FundingRegisterPage(),
         ),
         GoRoute(
           path: '/mypage/register',
-          builder: (BuildContext context, GoRouterState state) => const ProductRegisterPage(),
+          builder: (BuildContext context, GoRouterState state) =>
+              const ProductRegisterPage(),
         ),
         GoRoute(
           path: '/brand/editproduct',
-          builder: (BuildContext context, GoRouterState state) => const BrandProductEditPage(),
+          builder: (BuildContext context, GoRouterState state) =>
+              const BrandProductEditPage(),
         ),
         GoRoute(
           path: '/brand/edit',
-          builder: (BuildContext context, GoRouterState state) => const BrandEditPage(),
+          builder: (BuildContext context, GoRouterState state) =>
+              const BrandEditPage(),
         ),
         GoRoute(
           path: '/funding/edit/:fundingId',
@@ -169,8 +183,8 @@ final GoRouter router = GoRouter(
           builder: (BuildContext context, GoRouterState state) {
             final String productId = state.pathParameters['productId'] ?? "";
             return ProductEditPage(productId: productId);
-          }
-        )
+          },
+        ),
       ],
     ),
 
@@ -180,24 +194,26 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/auth/signup',
-      builder: (BuildContext context, GoRouterState state) => const UserRoleSelectionPage(),
+      builder: (BuildContext context, GoRouterState state) =>
+          const UserRoleSelectionPage(),
     ),
     GoRoute(
       path: '/auth/signup/common',
       builder: (BuildContext context, GoRouterState state) {
-        final Map<String, dynamic>? extra = state.extra as Map<String, dynamic>?;
-        return CommonSignupPage(
-          store: extra?['store'],
-        );
+        final Map<String, dynamic>? extra =
+            state.extra as Map<String, dynamic>?;
+        return CommonSignupPage(store: extra?['store']);
       },
     ),
     GoRoute(
       path: '/auth/signup/seller',
-      builder: (BuildContext context, GoRouterState state) => SellerSignupPage(),
+      builder: (BuildContext context, GoRouterState state) =>
+          SellerSignupPage(),
     ),
     GoRoute(
       path: '/auth/signup/completed',
-      builder: (BuildContext context, GoRouterState state) => CompletedSignupPage(),
+      builder: (BuildContext context, GoRouterState state) =>
+          CompletedSignupPage(),
     ),
   ],
 );

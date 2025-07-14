@@ -6,6 +6,7 @@ import 'package:on_woori/data/entity/response/products/products_response.dart';
 
 class ProductsGridItem extends StatefulWidget {
   final ProductItem item;
+
   const ProductsGridItem(this.item, {super.key});
 
   @override
@@ -34,10 +35,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
   void _showSnackBar(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 2),
-      ),
+      SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
     );
   }
 
@@ -48,7 +46,9 @@ class ProductsGridItemState extends State<ProductsGridItem> {
     });
 
     try {
-      final response = await apiClient.toggleFavorite(productId: widget.item.id);
+      final response = await apiClient.toggleFavorite(
+        productId: widget.item.id,
+      );
 
       if (response.success) {
         setState(() {
@@ -70,7 +70,6 @@ class ProductsGridItemState extends State<ProductsGridItem> {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -88,7 +87,10 @@ class ProductsGridItemState extends State<ProductsGridItem> {
                     imageUrl,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return Image.network(DefaultImage.productThumbnail, fit: BoxFit.cover,);
+                      return Image.network(
+                        DefaultImage.productThumbnail,
+                        fit: BoxFit.cover,
+                      );
                     },
                   ),
                 ),

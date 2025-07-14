@@ -5,7 +5,10 @@ class TokenManager extends Interceptor {
   final _storage = const FlutterSecureStorage();
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     // 1. 저장된 토큰을 읽어옵니다.
     final token = await _storage.read(key: 'ACCESS_TOKEN');
     final companyCode = await _storage.read(key: 'COMPANY_CODE');

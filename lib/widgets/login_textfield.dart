@@ -42,7 +42,10 @@ class LoginTextField extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
         ),
         contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
-        errorStyle: TextStyle(color: AppColors.editDeleteTextButton, fontSize: 12),
+        errorStyle: TextStyle(
+          color: AppColors.editDeleteTextButton,
+          fontSize: 12,
+        ),
       ),
       keyboardType: inputType,
     );

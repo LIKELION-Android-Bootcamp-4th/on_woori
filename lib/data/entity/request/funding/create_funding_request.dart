@@ -16,6 +16,7 @@ class CreateFundingRequest {
 
   factory CreateFundingRequest.fromJson(Map<String, dynamic> json) =>
       _$CreateFundingRequestFromJson(json);
+
   Map<String, dynamic> toJson() => _$CreateFundingRequestToJson(this);
 }
 
@@ -40,5 +41,6 @@ class FundingData {
 
   factory FundingData.fromJson(Map<String, dynamic> json) =>
       _$FundingDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$FundingDataToJson(this);
 }

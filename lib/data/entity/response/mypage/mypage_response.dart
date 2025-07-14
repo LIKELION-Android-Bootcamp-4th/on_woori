@@ -23,6 +23,7 @@ class BuyerProfileResponse {
 
   factory BuyerProfileResponse.fromJson(Map<String, dynamic> json) =>
       _$BuyerProfileResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$BuyerProfileResponseToJson(this);
 }
 
@@ -40,7 +41,6 @@ class BuyerProfileData {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-
   const BuyerProfileData({
     required this.id,
     required this.email,
@@ -56,6 +56,7 @@ class BuyerProfileData {
 
   factory BuyerProfileData.fromJson(Map<String, dynamic> json) =>
       _$BuyerProfileDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$BuyerProfileDataToJson(this);
 }
 
@@ -67,14 +68,11 @@ class ProfileData {
   @JsonKey(fromJson: _profileImageFromJson)
   final ProfileImageData? profileImage;
 
-  const ProfileData({
-    this.name,
-    this.birthDate,
-    this.profileImage,
-  });
+  const ProfileData({this.name, this.birthDate, this.profileImage});
 
   factory ProfileData.fromJson(Map<String, dynamic> json) =>
       _$ProfileDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$ProfileDataToJson(this);
 }
 
@@ -87,11 +85,12 @@ class BuyerProfileEditResponse {
   const BuyerProfileEditResponse({
     required this.success,
     required this.message,
-    required this.data
+    required this.data,
   });
 
   factory BuyerProfileEditResponse.fromJson(Map<String, dynamic> json) =>
       _$BuyerProfileEditResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$BuyerProfileEditResponseToJson(this);
 }
 
@@ -106,11 +105,12 @@ class BuyerProfileEditedData {
     required this.nickName,
     required this.profileImage,
     required this.phone,
-    required this.address
+    required this.address,
   });
 
   factory BuyerProfileEditedData.fromJson(Map<String, dynamic> json) =>
       _$BuyerProfileEditedDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$BuyerProfileEditedDataToJson(this);
 }
 
@@ -123,11 +123,12 @@ class AddressData {
   const AddressData({
     required this.zipCode,
     required this.address1,
-    this.address2
+    this.address2,
   });
 
   factory AddressData.fromJson(Map<String, dynamic> json) =>
       _$AddressDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$AddressDataToJson(this);
 }
 
@@ -146,10 +147,11 @@ class ProfileImageData {
     this.filename,
     this.originalName,
     this.mimeType,
-    this.size
+    this.size,
   });
 
   factory ProfileImageData.fromJson(Map<String, dynamic> json) =>
       _$ProfileImageDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$ProfileImageDataToJson(this);
 }

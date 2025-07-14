@@ -35,13 +35,26 @@ class LoginPageStatus extends State<LoginPage> {
 
       if (response.success && response.data != null) {
         // --- 🔽 토큰 및 사용자 정보 저장 로직 ---
-        await storage.write(key: 'ACCESS_TOKEN', value: response.data!.accessToken);
-        await storage.write(key: 'REFRESH_TOKEN', value: response.data!.refreshToken);
+        await storage.write(
+          key: 'ACCESS_TOKEN',
+          value: response.data!.accessToken,
+        );
+        await storage.write(
+          key: 'REFRESH_TOKEN',
+          value: response.data!.refreshToken,
+        );
         await storage.write(key: 'USER_ID', value: response.data!.user.id);
-        await storage.write(key: 'USER_NICKNAME', value: response.data!.user.nickName);
-        await storage.write(key: 'COMPANY_CODE', value: response.data!.user.companyId);
+        await storage.write(
+          key: 'USER_NICKNAME',
+          value: response.data!.user.nickName,
+        );
+        await storage.write(
+          key: 'COMPANY_CODE',
+          value: response.data!.user.companyId,
+        );
 
-        final List<String> roles = response.data!.user.platformRoles ?? <String>[];
+        final List<String> roles =
+            response.data!.user.platformRoles ?? <String>[];
         String userRole = 'buyer';
         if (roles.contains('seller')) {
           userRole = 'seller';
@@ -76,7 +89,6 @@ class LoginPageStatus extends State<LoginPage> {
       debugPrint("[UNEXPECTED ERROR] ${e.toString()}");
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -128,10 +140,13 @@ class LoginPageStatus extends State<LoginPage> {
                           inputType: TextInputType.visiblePassword,
                           isPassword: true,
                         ),
-                        const SizedBox(height: 15,),
-                        BottomButton(buttonText: l10n.loginTitle, pressedFunc: (){
-                          _submit();
-                        }),
+                        const SizedBox(height: 15),
+                        BottomButton(
+                          buttonText: l10n.loginTitle,
+                          pressedFunc: () {
+                            _submit();
+                          },
+                        ),
                         Row(
                           children: <Widget>[
                             const Spacer(),
@@ -154,7 +169,7 @@ class LoginPageStatus extends State<LoginPage> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 50)
+                        const SizedBox(height: 50),
                       ],
                     ),
                   ),

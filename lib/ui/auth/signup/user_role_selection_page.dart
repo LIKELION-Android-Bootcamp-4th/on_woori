@@ -36,14 +36,18 @@ class UserRoleSelectionPage extends StatelessWidget {
                 InkWell(
                   child: Container(
                     padding: const EdgeInsets.all(45),
-                    decoration:BoxDecoration(
-                        border: Border.all(color:AppColors.primarySub, width: 2),
-                        borderRadius: BorderRadius.circular(15)
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.primarySub, width: 2),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        const Icon(Icons.person_outline, color: AppColors.primarySub, size: 50,),
+                        const Icon(
+                          Icons.person_outline,
+                          color: AppColors.primarySub,
+                          size: 50,
+                        ),
                         Text(
                           l10n.signInUserTypeConsumer,
                           style: const TextStyle(
@@ -55,22 +59,26 @@ class UserRoleSelectionPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  onTap: (){
+                  onTap: () {
                     context.push('/auth/signup/common');
                   },
                 ),
-                const SizedBox(width: 20,),
+                const SizedBox(width: 20),
                 InkWell(
                   child: Container(
                     padding: const EdgeInsets.all(45),
-                    decoration:BoxDecoration(
-                        border: Border.all(color:AppColors.primarySub, width: 2),
-                        borderRadius: BorderRadius.circular(15)
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.primarySub, width: 2),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        const Icon(Icons.storefront_outlined, color: AppColors.primarySub, size: 50,),
+                        const Icon(
+                          Icons.storefront_outlined,
+                          color: AppColors.primarySub,
+                          size: 50,
+                        ),
                         Text(
                           l10n.signInUserTypeSeller,
                           style: const TextStyle(
@@ -82,12 +90,12 @@ class UserRoleSelectionPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  onTap: (){
+                  onTap: () {
                     context.push('/auth/signup/seller');
                   },
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

@@ -6,16 +6,12 @@ abstract class SellerProductsEndpoints {
   static String postSellerProducts = '/api/seller/products';
 
   // 상품 상세 조회 (동적 필드 포함)
-  static String getSellerProductsDetail({
-    required String productId
-  }) {
+  static String getSellerProductsDetail({required String productId}) {
     return '/api/seller/products/$productId';
   }
 
   // 상품 수정 (동적 필드 지원)
-  static String patchSellerProducts({
-    required String productId
-  }) {
+  static String patchSellerProducts({required String productId}) {
     return '/api/seller/products/$productId';
   }
 }

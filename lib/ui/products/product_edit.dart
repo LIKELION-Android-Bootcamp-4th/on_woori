@@ -17,6 +17,7 @@ import '../../widgets/dropdown.dart';
 
 class ProductEditPage extends StatefulWidget {
   final String productId;
+
   const ProductEditPage({super.key, required this.productId});
 
   @override
@@ -54,7 +55,9 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   Future<void> _fetchProductDetails() async {
     try {
-      final response = await ProductsApiClient().productDetail(widget.productId);
+      final response = await ProductsApiClient().productDetail(
+        widget.productId,
+      );
 
       if (mounted && response.success && response.data != null) {
         final product = response.data!;
@@ -68,7 +71,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _selectedCategory = product.category;
 
         final sizeOptionGroup = product.options?.firstWhere(
-              (opt) => opt.name == '사이즈',
+          (opt) => opt.name == '사이즈',
           orElse: () => ProductOptionGroup(type: '', name: '', items: []),
         );
         _selectedSizes.addAll(sizeOptionGroup!.items.map((item) => item.code));
@@ -77,7 +80,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         // ✨ 기존 상세 이미지 URL은 불러오지 않음
       } else {
         _showSnackBar(response.message);
-        if(mounted) context.pop();
+        if (mounted) context.pop();
       }
     } catch (e) {
       _showSnackBar('상품 정보를 불러오는 데 실패했습니다: $e');
@@ -160,10 +163,14 @@ class _ProductEditPageState extends State<ProductEditPage> {
       List<String> detailImageUrls = [];
       if (_detailImages.isNotEmpty) {
         final uploadRequest = UploadFilesRequest(files: _detailImages);
-        final uploadResponse = await UploadApiClient().uploadFiles(uploadRequest);
+        final uploadResponse = await UploadApiClient().uploadFiles(
+          uploadRequest,
+        );
 
         if (uploadResponse.success && uploadResponse.data != null) {
-          detailImageUrls = uploadResponse.data!.files.map((file) => file.url).toList();
+          detailImageUrls = uploadResponse.data!.files
+              .map((file) => file.url)
+              .toList();
         } else {
           _showSnackBar('상세 이미지 업로드에 실패했습니다: ${uploadResponse.message}');
           setState(() => _isSaving = false);
@@ -171,9 +178,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         }
       }
 
-      final imagesJson = {
-        "detail": detailImageUrls,
-      };
+      final imagesJson = {"detail": detailImageUrls};
 
       final sizeOptionsJson = {
         "type": "size",
@@ -185,11 +190,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
       final colorOptionsJson = {
         "type": "color",
         "name": "컬러",
-        "items": [{"code": "기본"}],
+        "items": [
+          {"code": "기본"},
+        ],
       };
 
       final optionsList = [sizeOptionsJson, colorOptionsJson];
-
 
       final jsondetailImages = jsonEncode(imagesJson);
 
@@ -206,14 +212,19 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
       // 3. 새 대표 이미지를 선택했다면 FormData에 파일로 추가합니다.
       if (_thumbnailImageFile != null) {
-        formData.files.add(MapEntry(
-          'thumbnailImage',
-          await MultipartFile.fromFile(_thumbnailImageFile!.path),
-        ));
+        formData.files.add(
+          MapEntry(
+            'thumbnailImage',
+            await MultipartFile.fromFile(_thumbnailImageFile!.path),
+          ),
+        );
       }
 
       // 4. 상품 수정 API를 호출합니다.
-      await ProductsApiClient().productUpdate(id: widget.productId, formData: formData);
+      await ProductsApiClient().productUpdate(
+        id: widget.productId,
+        formData: formData,
+      );
       debugPrint("API로 전송될 FormData: ${formData.fields}");
       debugPrint("첨부된 대표 이미지: ${_thumbnailImageFile?.path}");
 
@@ -244,9 +255,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   @override
   Widget build(BuildContext context) {
     if (_isFetching) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final price = int.tryParse(_priceController.text) ?? 0;
@@ -259,7 +268,14 @@ class _ProductEditPageState extends State<ProductEditPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => context.pop(),
         ),
-        title: const Text('상품 수정', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20, color: Colors.black)),
+        title: const Text(
+          '상품 수정',
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: Colors.black,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -291,17 +307,28 @@ class _ProductEditPageState extends State<ProductEditPage> {
                   const SizedBox(height: 16),
                   _sectionTitle('상품 할인율 (미기재시 0%)'),
                   const SizedBox(height: 8),
-                  _textField(_discountController, hint: 'Ex : 10', isNumber: true),
+                  _textField(
+                    _discountController,
+                    hint: 'Ex : 10',
+                    isNumber: true,
+                  ),
 
                   const SizedBox(height: 16),
                   _sectionTitle('표시 가격 (할인율 반영)'),
                   const SizedBox(height: 8),
-                  _textField(TextEditingController(text: '$displayPrice'), isEnabled: false),
+                  _textField(
+                    TextEditingController(text: '$displayPrice'),
+                    isEnabled: false,
+                  ),
 
                   const SizedBox(height: 16),
                   _sectionTitle('상품 소개글'),
                   const SizedBox(height: 8),
-                  _textField(_descriptionController, hint: '(소개글)', maxLines: 3),
+                  _textField(
+                    _descriptionController,
+                    hint: '(소개글)',
+                    maxLines: 3,
+                  ),
 
                   const SizedBox(height: 24),
                   _sectionTitle('사이즈 옵션'),
@@ -361,10 +388,33 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  Widget _sectionTitle(String title) => Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20, color: Colors.black));
-  Widget _centeredSectionTitle(String title) => Center(child: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black)));
+  Widget _sectionTitle(String title) => Text(
+    title,
+    style: const TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 20,
+      color: Colors.black,
+    ),
+  );
 
-  Widget _textField(TextEditingController controller, {String? hint, bool isNumber = false, int maxLines = 1, bool isEnabled = true}) {
+  Widget _centeredSectionTitle(String title) => Center(
+    child: Text(
+      title,
+      style: const TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 16,
+        color: Colors.black,
+      ),
+    ),
+  );
+
+  Widget _textField(
+    TextEditingController controller, {
+    String? hint,
+    bool isNumber = false,
+    int maxLines = 1,
+    bool isEnabled = true,
+  }) {
     return TextField(
       controller: controller,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
@@ -372,13 +422,35 @@ class _ProductEditPageState extends State<ProductEditPage> {
       enabled: isEnabled,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 16, color: Colors.grey[400]),
+        hintStyle: TextStyle(
+          fontWeight: FontWeight.w400,
+          fontSize: 16,
+          color: Colors.grey[400],
+        ),
         filled: !isEnabled,
         fillColor: Colors.grey[200],
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider)),
-        disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: AppColors.dividerTextBoxLineDivider,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: AppColors.dividerTextBoxLineDivider,
+          ),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: AppColors.dividerTextBoxLineDivider,
+          ),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 16,
+        ),
       ),
     );
   }
@@ -387,7 +459,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
     ImageProvider? imageProvider;
     if (_thumbnailImageFile != null) {
       imageProvider = FileImage(_thumbnailImageFile!);
-    } else if (_existingThumbnailUrl != null && _existingThumbnailUrl!.isNotEmpty) {
+    } else if (_existingThumbnailUrl != null &&
+        _existingThumbnailUrl!.isNotEmpty) {
       imageProvider = NetworkImage(_existingThumbnailUrl!);
     }
 
@@ -400,10 +473,18 @@ class _ProductEditPageState extends State<ProductEditPage> {
           decoration: BoxDecoration(
             color: AppColors.optionStateList,
             borderRadius: BorderRadius.circular(12),
-            image: imageProvider != null ? DecorationImage(image: imageProvider, fit: BoxFit.cover) : null,
+            image: imageProvider != null
+                ? DecorationImage(image: imageProvider, fit: BoxFit.cover)
+                : null,
           ),
           child: imageProvider == null
-              ? const Center(child: Icon(Icons.camera_alt_outlined, color: AppColors.grey, size: 40))
+              ? const Center(
+                  child: Icon(
+                    Icons.camera_alt_outlined,
+                    color: AppColors.grey,
+                    size: 40,
+                  ),
+                )
               : null,
         ),
         Positioned(
@@ -415,7 +496,11 @@ class _ProductEditPageState extends State<ProductEditPage> {
             child: InkWell(
               customBorder: const CircleBorder(),
               onTap: _pickThumbnailImage,
-              child: const SizedBox(width: 44, height: 44, child: Icon(Icons.add, color: Colors.black, size: 24)),
+              child: const SizedBox(
+                width: 44,
+                height: 44,
+                child: Icon(Icons.add, color: Colors.black, size: 24),
+              ),
             ),
           ),
         ),
@@ -478,7 +563,11 @@ class _ProductEditPageState extends State<ProductEditPage> {
               child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.add_photo_alternate_outlined, color: AppColors.grey, size: 30),
+                  Icon(
+                    Icons.add_photo_alternate_outlined,
+                    color: AppColors.grey,
+                    size: 30,
+                  ),
                   SizedBox(height: 4),
                   Text('상세 이미지 추가', style: TextStyle(color: AppColors.grey)),
                 ],

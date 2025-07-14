@@ -9,20 +9,14 @@ class MypageApiClient {
 
   MypageApiClient({Dio? dio}) : _dio = dio ?? ApiClient().dio;
 
-  Future<WishResponse> isFavorite(String productId)
-  async {
-    final response = await _dio.get(
-      MyPageEndpoints.getMyPageFavorites,
-    );
+  Future<WishResponse> isFavorite(String productId) async {
+    final response = await _dio.get(MyPageEndpoints.getMyPageFavorites);
     return WishResponse.fromJson(response.data);
   }
 
   //프로필 정보 조회
-  Future<BuyerProfileResponse> getBuyerProfile()
-  async {
-    final response = await _dio.get(
-      MyPageEndpoints.getMyPageProfile
-    );
+  Future<BuyerProfileResponse> getBuyerProfile() async {
+    final response = await _dio.get(MyPageEndpoints.getMyPageProfile);
     return BuyerProfileResponse.fromJson(response.data);
   }
 
@@ -37,7 +31,7 @@ class MypageApiClient {
       'nickName': nickName,
       if (profileImageFile != null) 'profileImage': profileImageFile,
       if (phone != null) 'phone': phone,
-      if (address != null) 'address' : address
+      if (address != null) 'address': address,
     });
 
     final response = await _dio.patch(

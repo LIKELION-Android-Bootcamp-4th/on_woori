@@ -71,10 +71,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: BottomButton(
-            buttonText: '펀딩 수정',
-            pressedFunc: () {},
-          ),
+          child: BottomButton(buttonText: '펀딩 수정', pressedFunc: () {}),
         ),
       ),
     );
@@ -91,10 +88,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
     );
   }
 
-  Widget _textField(
-      String hint,
-      TextEditingController controller,
-      ) {
+  Widget _textField(String hint, TextEditingController controller) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -106,14 +100,20 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
+          borderSide: const BorderSide(
+            color: AppColors.dividerTextBoxLineDivider,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
+          borderSide: const BorderSide(
+            color: AppColors.dividerTextBoxLineDivider,
+          ),
         ),
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 16,
+        ),
       ),
     );
   }
@@ -132,14 +132,14 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
           child: _selectedImage == null
               ? const SizedBox.shrink()
               : ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.file(
-              _selectedImage!,
-              fit: BoxFit.cover,
-              width: 160,
-              height: 160,
-            ),
-          ),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.file(
+                    _selectedImage!,
+                    fit: BoxFit.cover,
+                    width: 160,
+                    height: 160,
+                  ),
+                ),
         ),
         Positioned(
           bottom: -10,

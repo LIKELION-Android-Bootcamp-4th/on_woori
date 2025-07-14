@@ -31,6 +31,7 @@ class WishResponse {
 
   factory WishResponse.fromJson(Map<String, dynamic> json) =>
       _$WishResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$WishResponseToJson(this);
 }
 
@@ -43,6 +44,7 @@ class WishData {
 
   factory WishData.fromJson(Map<String, dynamic> json) =>
       _$WishDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$WishDataToJson(this);
 }
 
@@ -66,6 +68,7 @@ class WishItem {
 
   factory WishItem.fromJson(Map<String, dynamic> json) =>
       _$WishItemFromJson(json);
+
   Map<String, dynamic> toJson() => _$WishItemToJson(this);
 }
 
@@ -120,6 +123,7 @@ class WishProductEntity {
 
   factory WishProductEntity.fromJson(Map<String, dynamic> json) =>
       _$WishProductEntityFromJson(json);
+
   Map<String, dynamic> toJson() => _$WishProductEntityToJson(this);
 }
 
@@ -143,5 +147,6 @@ class PaginationData {
 
   factory PaginationData.fromJson(Map<String, dynamic> json) =>
       _$PaginationDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$PaginationDataToJson(this);
 }

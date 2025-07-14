@@ -10,9 +10,9 @@ import 'package:on_woori/data/entity/response/products/products_detail_response.
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 
-
 class ProductsDetailPage extends StatelessWidget {
   final String productId;
+
   const ProductsDetailPage(this.productId, {super.key});
 
   @override
@@ -21,11 +21,17 @@ class ProductsDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(l10n.productDetailTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+        title: Text(
+          l10n.productDetailTitle,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
         actions: [
-          IconButton(onPressed: (){
-            context.push('/wish/cart');
-          }, icon: const Icon(Icons.shopping_bag_outlined))
+          IconButton(
+            onPressed: () {
+              context.push('/wish/cart');
+            },
+            icon: const Icon(Icons.shopping_bag_outlined),
+          ),
         ],
       ),
       body: ProductsDetailScreen(productId),
@@ -35,6 +41,7 @@ class ProductsDetailPage extends StatelessWidget {
 
 class ProductsDetailScreen extends StatefulWidget {
   final String id;
+
   const ProductsDetailScreen(this.id, {super.key});
 
   @override
@@ -58,7 +65,9 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _productsFuture = productsApiClient.productDetail(widget.id).then((response) {
+    _productsFuture = productsApiClient.productDetail(widget.id).then((
+      response,
+    ) {
       // isLiked의 초기값을 서버 데이터로 설정
       isLiked = response.data?.isFavorite ?? false;
       return response;
@@ -72,7 +81,9 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
     });
 
     try {
-      final response = await productsApiClient.toggleFavorite(productId: widget.id);
+      final response = await productsApiClient.toggleFavorite(
+        productId: widget.id,
+      );
 
       if (response.success) {
         setState(() {
@@ -93,7 +104,11 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   }
 
   /// 장바구니에 상품을 추가하는 로직
-  Future<void> _addToCart(ProductItem product, List<String> sizeOptions, List<String> colorOptions) async {
+  Future<void> _addToCart(
+    ProductItem product,
+    List<String> sizeOptions,
+    List<String> colorOptions,
+  ) async {
     // 1. 옵션 선택 유효성 검사
     if (sizeOptions.isNotEmpty && selectedSize == null) {
       _showSnackBar('사이즈를 선택해주세요.');
@@ -137,20 +152,16 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
       } else {
         _showSnackBar('장바구니 추가에 실패했습니다: ${response.data}');
       }
-    } catch(e) {
+    } catch (e) {
       _showSnackBar('오류가 발생했습니다: $e');
     }
   }
-
 
   // 오류나 상태 메시지를 보여줄 작은 스낵바 함수
   void _showSnackBar(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 2),
-      ),
+      SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
     );
   }
 
@@ -180,7 +191,9 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             if (optionGroup.name == '사이즈') {
               sizeOptions = optionGroup.items.map((item) => item.code).toList();
             } else if (optionGroup.name == '컬러') {
-              colorOptions = optionGroup.items.map((item) => item.code).toList();
+              colorOptions = optionGroup.items
+                  .map((item) => item.code)
+                  .toList();
             }
           }
         }
@@ -194,11 +207,17 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             AspectRatio(
               aspectRatio: 1,
               child: ClipRRect(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
                 child: Image.network(
                   product.thumbnailImage?.url ?? DefaultImage.productThumbnail,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Image.network(DefaultImage.productThumbnail, fit: BoxFit.cover),
+                  errorBuilder: (context, error, stackTrace) => Image.network(
+                    DefaultImage.productThumbnail,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -211,7 +230,11 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 Expanded(child: ProductsNameSection.fromProduct(product)),
                 // isLiked 변수를 사용하도록 수정
                 IconButton(
-                  icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border, color: Colors.red, size: 30),
+                  icon: Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
+                    size: 30,
+                  ),
                   onPressed: _toggleFavorite,
                 ),
               ],
@@ -230,7 +253,8 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 radius: 16,
                 child: ClipOval(
                   child: Image.network(
-                    product.store?.thumbnailImageUrl ?? DefaultImage.brandThumbnail,
+                    product.store?.thumbnailImageUrl ??
+                        DefaultImage.brandThumbnail,
                     fit: BoxFit.cover,
                     width: 32,
                     height: 32,
@@ -284,25 +308,59 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(product.name, style: const TextStyle(fontSize: 16)),
-                        if (selectedSize != null) Text('사이즈: $selectedSize', style: const TextStyle(fontSize: 13, color: AppColors.grey)),
-                        if (selectedColor != null) Text('색상: $selectedColor', style: const TextStyle(fontSize: 13, color: AppColors.grey)),
+                        Text(
+                          product.name,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        if (selectedSize != null)
+                          Text(
+                            '사이즈: $selectedSize',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.grey,
+                            ),
+                          ),
+                        if (selectedColor != null)
+                          Text(
+                            '색상: $selectedColor',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.grey,
+                            ),
+                          ),
                       ],
                     ),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text("$totalPrice원", style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                      Text(
+                        "$totalPrice원",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
                       Row(
                         children: [
-                          IconButton(icon: const Icon(Icons.remove), onPressed: () => setState(() { if (quantity > 1) quantity--; })),
-                          Text("$quantity", style: const TextStyle(fontSize: 20)),
-                          IconButton(icon: const Icon(Icons.add), onPressed: () => setState(() => quantity++)),
+                          IconButton(
+                            icon: const Icon(Icons.remove),
+                            onPressed: () => setState(() {
+                              if (quantity > 1) quantity--;
+                            }),
+                          ),
+                          Text(
+                            "$quantity",
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () => setState(() => quantity++),
+                          ),
                         ],
-                      )
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -313,9 +371,19 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               child: TextButton(
                 onPressed: () => _addToCart(product, sizeOptions, colorOptions),
                 style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                    backgroundColor: AppColors.primary),
-                child: Text(l10n.cart, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  backgroundColor: AppColors.primary,
+                ),
+                child: Text(
+                  l10n.cart,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                ),
               ),
             ),
             // const SizedBox(height: 5),
@@ -330,7 +398,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             //     child: Text(l10n.order, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black)),
             //   ),
             // ),
-            const SizedBox(height: 20)
+            const SizedBox(height: 20),
           ],
         );
       },
@@ -363,7 +431,9 @@ class OptionDropdown extends StatelessWidget {
           hint: Text(hint),
           value: value,
           isExpanded: true,
-          items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+          items: items
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              .toList(),
           onChanged: onChanged,
         ),
       ),
@@ -428,17 +498,40 @@ class ProductsNameSection extends StatelessWidget {
         Text(productName, style: const TextStyle(fontSize: 16)),
         const SizedBox(height: 2),
         if (hasDiscount) ...[
-          Text("$originalPrice원", style: const TextStyle(fontSize: 10, decoration: TextDecoration.lineThrough, color: AppColors.grey)),
+          Text(
+            "$originalPrice원",
+            style: const TextStyle(
+              fontSize: 10,
+              decoration: TextDecoration.lineThrough,
+              color: AppColors.grey,
+            ),
+          ),
           const SizedBox(height: 2),
           Row(
             children: [
-              Text("$discountRate%", style: const TextStyle(fontSize: 13, color: Colors.red, fontWeight: FontWeight.bold)),
+              Text(
+                "$discountRate%",
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(width: 5),
-              Text("$discountedPrice원", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(
+                "$discountedPrice원",
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ] else ...[
-          Text("$originalPrice원", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(
+            "$originalPrice원",
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
         ],
       ],
     );
@@ -447,6 +540,7 @@ class ProductsNameSection extends StatelessWidget {
 
 class ProductsDetailImageSection extends StatelessWidget {
   final List<String> detailImageUrls;
+
   const ProductsDetailImageSection(this.detailImageUrls, {super.key});
 
   @override
@@ -454,13 +548,17 @@ class ProductsDetailImageSection extends StatelessWidget {
     if (detailImageUrls.isEmpty) return const SizedBox.shrink();
 
     return Column(
-      children: detailImageUrls.map((url) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Image.network(
-          url,
-          errorBuilder: (context, error, stackTrace) => SizedBox.shrink(),
-        ),
-      )).toList(),
+      children: detailImageUrls
+          .map(
+            (url) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Image.network(
+                url,
+                errorBuilder: (context, error, stackTrace) => SizedBox.shrink(),
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 }

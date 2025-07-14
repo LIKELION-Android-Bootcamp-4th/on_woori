@@ -10,33 +10,23 @@ class StoresApiClient {
   StoresApiClient({Dio? dio}) : _dio = dio ?? ApiClient().dio;
 
   // 공개 펀딩 목록 조회
-  Future<StoresResponse> stores()
-  async {
-    final response = await _dio.get(
-      StoresEndpoints.getStores,
-    );
+  Future<StoresResponse> stores() async {
+    final response = await _dio.get(StoresEndpoints.getStores);
     return StoresResponse.fromJson(response.data);
   }
 
-  Future<StoreDetailResponse> storeDetail(String id)
-  async {
-    final response = await _dio.get(
-      StoresEndpoints.getStoreDetail(id: id),
-    );
+  Future<StoreDetailResponse> storeDetail(String id) async {
+    final response = await _dio.get(StoresEndpoints.getStoreDetail(id: id));
     return StoreDetailResponse.fromJson(response.data);
   }
 
-  Future<StoreProductsResponse> storeProductList(String id)
-  async {
-    final response = await _dio.get(
-      StoresEndpoints.getStoreProducts(id: id),
-    );
+  Future<StoreProductsResponse> storeProductList(String id) async {
+    final response = await _dio.get(StoresEndpoints.getStoreProducts(id: id));
     return StoreProductsResponse.fromJson(response.data);
   }
 
   // 상점 정보 조회 & 변경
-  Future<SellerStoreResponse> getSellerStore()
-  async {
+  Future<SellerStoreResponse> getSellerStore() async {
     final response = await _dio.get(
       SellerStoreEndpoints.getSellerStoresMystore,
     );
@@ -47,7 +37,7 @@ class StoresApiClient {
     required String name,
     required String description,
     required SellerStoreData data,
-    MultipartFile? image
+    MultipartFile? image,
   }) async {
     final formData = FormData.fromMap({
       'name': name,

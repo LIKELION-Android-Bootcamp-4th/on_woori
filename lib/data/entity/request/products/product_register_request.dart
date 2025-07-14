@@ -35,15 +35,15 @@ class ProductRegisterRequest {
     final colorOptionsJson = {
       "type": "color",
       "name": "컬러",
-      "items": [{"code": "기본"}],
+      "items": [
+        {"code": "기본"},
+      ],
     };
 
     // 3. 두 옵션 그룹을 하나의 리스트로 합치기
     final optionsList = [sizeOptionsJson, colorOptionsJson];
 
-    final imagesJson = {
-      "detail": detailImageUrls ?? [],
-    };
+    final imagesJson = {"detail": detailImageUrls ?? []};
 
     final Map<String, dynamic> formDataMap = {
       'name': name,

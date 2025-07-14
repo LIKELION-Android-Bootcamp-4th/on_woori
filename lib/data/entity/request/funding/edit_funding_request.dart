@@ -16,5 +16,6 @@ class EditFundingRequest {
 
   factory EditFundingRequest.fromJson(Map<String, dynamic> json) =>
       _$EditFundingRequestFromJson(json);
+
   Map<String, dynamic> toJson() => _$EditFundingRequestToJson(this);
 }

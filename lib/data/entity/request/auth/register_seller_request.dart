@@ -27,10 +27,7 @@ class StoreRequestData {
   final String name;
   final String description;
 
-  const StoreRequestData({
-    required this.name,
-    required this.description,
-  });
+  const StoreRequestData({required this.name, required this.description});
 
   factory StoreRequestData.fromJson(Map<String, dynamic> json) =>
       _$StoreRequestDataFromJson(json);

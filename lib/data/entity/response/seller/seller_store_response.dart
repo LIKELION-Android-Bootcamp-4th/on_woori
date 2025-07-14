@@ -66,6 +66,7 @@ class StoreData {
 
   factory StoreData.fromJson(Map<String, dynamic> json) =>
       _$StoreDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$StoreDataToJson(this);
 }
 
@@ -101,6 +102,7 @@ class OwnerData {
 
   factory OwnerData.fromJson(Map<String, dynamic> json) =>
       _$OwnerDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$OwnerDataToJson(this);
 }
 
@@ -110,14 +112,11 @@ class Profile {
   final String? profileImage;
   final String? birthDate;
 
-  Profile({
-    this.name,
-    this.profileImage,
-    this.birthDate,
-  });
+  Profile({this.name, this.profileImage, this.birthDate});
 
   factory Profile.fromJson(Map<String, dynamic> json) =>
       _$ProfileFromJson(json);
+
   Map<String, dynamic> toJson() => _$ProfileToJson(this);
 }
 
@@ -135,5 +134,6 @@ class ShippingPolicy {
 
   factory ShippingPolicy.fromJson(Map<String, dynamic> json) =>
       _$ShippingPolicyFromJson(json);
+
   Map<String, dynamic> toJson() => _$ShippingPolicyToJson(this);
 }

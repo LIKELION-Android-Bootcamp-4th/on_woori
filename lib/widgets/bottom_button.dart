@@ -9,11 +9,7 @@ class BottomButton extends StatelessWidget {
   final String buttonText;
   final VoidCallback? pressedFunc;
 
-  const BottomButton({
-    required this.buttonText,
-    this.pressedFunc,
-    super.key,
-  });
+  const BottomButton({required this.buttonText, this.pressedFunc, super.key});
 
   @override
   Widget build(BuildContext context) {

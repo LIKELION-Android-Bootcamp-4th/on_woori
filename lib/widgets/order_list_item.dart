@@ -33,9 +33,7 @@ class OrderListItem extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10),
         decoration: const BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: Colors.black, width: 1.0),
-          ),
+          border: Border(bottom: BorderSide(color: Colors.black, width: 1.0)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,11 +51,17 @@ class OrderListItem extends StatelessWidget {
                   children: [
                     Text(
                       orderDate,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       '총 ${currencyFormat.format(totalAmount)}원',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -80,7 +84,10 @@ class OrderListItem extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Text(
                     product,
-                    style: const TextStyle(fontSize: 14, color: Color(0xFF555555)),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF555555),
+                    ),
                   ),
                 );
               }).toList(),

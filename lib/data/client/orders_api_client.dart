@@ -10,19 +10,13 @@ class OrdersApiClient {
   OrdersApiClient({Dio? dio}) : _dio = dio ?? ApiClient().dio;
 
   // 내 주문 목록 조회
-  Future<OrdersResponse> getOrders()
-  async {
-    final response = await _dio.get(
-      OrderEndpoints.getOrders,
-    );
+  Future<OrdersResponse> getOrders() async {
+    final response = await _dio.get(OrderEndpoints.getOrders);
     return OrdersResponse.fromJson(response.data);
   }
 
   // 주문 상세 조회
-  Future<OrderDetailResponse> getOrderDetail({
-    required String orderId,
-  })
-  async {
+  Future<OrderDetailResponse> getOrderDetail({required String orderId}) async {
     final response = await _dio.get(
       OrderEndpoints.getOrdersDetail(orderId: orderId),
     );

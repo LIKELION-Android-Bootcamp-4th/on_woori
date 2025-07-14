@@ -4,16 +4,12 @@ abstract class FundingsEndpoints {
   static String getFundings = '/api/fundings';
 
   // 펀딩 상세 조회
-  static String getFundingsDetail({
-    required String fundingId
-  }) {
+  static String getFundingsDetail({required String fundingId}) {
     return '/api/fundings/$fundingId';
   }
 
   // 펀딩 수정
-  static String editFundings({
-    required String fundingId
-  }) {
+  static String editFundings({required String fundingId}) {
     return '/api/fundings/$fundingId';
   }
 }

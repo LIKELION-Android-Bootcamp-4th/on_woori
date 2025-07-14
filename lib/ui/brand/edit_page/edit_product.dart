@@ -142,10 +142,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
 
             const SizedBox(height: 32),
             Center(
-              child: BottomButton(
-                buttonText: '상품 수정',
-                pressedFunc: () {},
-              ),
+              child: BottomButton(buttonText: '상품 수정', pressedFunc: () {}),
             ),
             const SizedBox(height: 16),
           ],
@@ -166,11 +163,11 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
   }
 
   Widget _textField(
-      String hint,
-      TextEditingController controller, {
-        bool isNumber = false,
-        int maxLines = 1,
-      }) {
+    String hint,
+    TextEditingController controller, {
+    bool isNumber = false,
+    int maxLines = 1,
+  }) {
     return TextField(
       controller: controller,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
@@ -184,14 +181,20 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
+          borderSide: const BorderSide(
+            color: AppColors.dividerTextBoxLineDivider,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
+          borderSide: const BorderSide(
+            color: AppColors.dividerTextBoxLineDivider,
+          ),
         ),
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 16,
+        ),
       ),
     );
   }
@@ -210,14 +213,14 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
           child: _selectedImage == null
               ? const SizedBox.shrink()
               : ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.file(
-              _selectedImage!,
-              fit: BoxFit.cover,
-              width: 160,
-              height: 160,
-            ),
-          ),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.file(
+                    _selectedImage!,
+                    fit: BoxFit.cover,
+                    width: 160,
+                    height: 160,
+                  ),
+                ),
         ),
         Positioned(
           bottom: -10,

@@ -22,6 +22,7 @@ class CartResponse {
 
   factory CartResponse.fromJson(Map<String, dynamic> json) =>
       _$CartResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$CartResponseToJson(this);
 }
 
@@ -30,13 +31,11 @@ class CartData {
   final List<CartItem>? items;
   final CartPagination? pagination;
 
-  const CartData({
-    this.items,
-    this.pagination,
-  });
+  const CartData({this.items, this.pagination});
 
   factory CartData.fromJson(Map<String, dynamic> json) =>
       _$CartDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$CartDataToJson(this);
 }
 
@@ -62,6 +61,7 @@ class CartItem {
 
   factory CartItem.fromJson(Map<String, dynamic> json) =>
       _$CartItemFromJson(json);
+
   Map<String, dynamic> toJson() => _$CartItemToJson(this);
 }
 
@@ -93,6 +93,7 @@ class CartProduct {
 
   factory CartProduct.fromJson(Map<String, dynamic> json) =>
       _$CartProductFromJson(json);
+
   Map<String, dynamic> toJson() => _$CartProductToJson(this);
 }
 
@@ -116,5 +117,6 @@ class CartPagination {
 
   factory CartPagination.fromJson(Map<String, dynamic> json) =>
       _$CartPaginationFromJson(json);
+
   Map<String, dynamic> toJson() => _$CartPaginationToJson(this);
 }

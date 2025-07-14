@@ -11,7 +11,9 @@ List<ProductOptionGroup>? _optionsListFromJson(String? jsonString) {
   try {
     final List<dynamic> decodedList = jsonDecode(jsonString);
     return decodedList
-        .map((item) => ProductOptionGroup.fromJson(item as Map<String, dynamic>))
+        .map(
+          (item) => ProductOptionGroup.fromJson(item as Map<String, dynamic>),
+        )
         .toList();
   } catch (e) {
     debugPrint('Options parsing error for string "$jsonString": $e');
@@ -53,16 +55,19 @@ class ProductsResponse {
 
   factory ProductsResponse.fromJson(Map<String, dynamic> json) =>
       _$ProductsResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$ProductsResponseToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class ProductsData {
   final List<ProductItem>? items;
+
   const ProductsData({this.items});
 
   factory ProductsData.fromJson(Map<String, dynamic> json) =>
       _$ProductsDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$ProductsDataToJson(this);
 }
 
@@ -103,11 +108,12 @@ class ProductItem {
     this.thumbnailImage,
     this.images,
     this.options,
-    this.category
+    this.category,
   });
 
   factory ProductItem.fromJson(Map<String, dynamic> json) =>
       _$ProductItemFromJson(json);
+
   Map<String, dynamic> toJson() => _$ProductItemToJson(this);
 }
 
@@ -120,6 +126,7 @@ class ThumbnailImage {
 
   factory ThumbnailImage.fromJson(Map<String, dynamic> json) =>
       _$ThumbnailImageFromJson(json);
+
   Map<String, dynamic> toJson() => _$ThumbnailImageToJson(this);
 }
 
@@ -130,6 +137,7 @@ class Images {
   const Images({this.detail});
 
   factory Images.fromJson(Map<String, dynamic> json) => _$ImagesFromJson(json);
+
   Map<String, dynamic> toJson() => _$ImagesToJson(this);
 }
 
@@ -147,6 +155,7 @@ class ProductOptionGroup {
 
   factory ProductOptionGroup.fromJson(Map<String, dynamic> json) =>
       _$ProductOptionGroupFromJson(json);
+
   Map<String, dynamic> toJson() => _$ProductOptionGroupToJson(this);
 }
 
@@ -158,6 +167,7 @@ class ProductOptionItem {
 
   factory ProductOptionItem.fromJson(Map<String, dynamic> json) =>
       _$ProductOptionItemFromJson(json);
+
   Map<String, dynamic> toJson() => _$ProductOptionItemToJson(this);
 }
 
@@ -175,10 +185,11 @@ class StoreData {
     required this.name,
     this.owner,
     this.companyId,
-    this.thumbnailImageUrl
+    this.thumbnailImageUrl,
   });
 
   factory StoreData.fromJson(Map<String, dynamic> json) =>
       _$StoreDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$StoreDataToJson(this);
 }

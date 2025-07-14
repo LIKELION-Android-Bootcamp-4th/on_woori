@@ -52,7 +52,10 @@ class CartListItemState extends State<CartListItem> {
             ),
             InkWell(
               onTap: widget.onDelete,
-              child: const Icon(Icons.delete_outlined, color: Color(0xFF7D7D7D)),
+              child: const Icon(
+                Icons.delete_outlined,
+                color: Color(0xFF7D7D7D),
+              ),
             ),
           ],
         ),
@@ -69,7 +72,12 @@ class CartListItemState extends State<CartListItem> {
                 height: 80,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Image.network('https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg', width: 80, height: 80, fit: BoxFit.cover);
+                  return Image.network(
+                    'https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg',
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover,
+                  );
                 },
               ),
             ),
@@ -136,7 +144,7 @@ class CartListItemState extends State<CartListItem> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10,)
+                  SizedBox(height: 10),
                 ],
               ),
             ),

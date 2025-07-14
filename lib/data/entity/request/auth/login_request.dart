@@ -8,11 +8,10 @@ class LoginRequest {
 
   final String? password;
 
-  const LoginRequest({
-    this.email,
-    this.password,
-  });
+  const LoginRequest({this.email, this.password});
 
-  factory LoginRequest.fromJson(Map<String, dynamic> json) => _$LoginRequestFromJson(json);
+  factory LoginRequest.fromJson(Map<String, dynamic> json) =>
+      _$LoginRequestFromJson(json);
+
   Map<String, dynamic> toJson() => _$LoginRequestToJson(this);
 }

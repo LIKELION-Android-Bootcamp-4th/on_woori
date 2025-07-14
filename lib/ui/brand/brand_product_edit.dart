@@ -51,6 +51,7 @@ class BrandProductEditPage extends StatelessWidget {
 
 class BrandProductEditScreen extends StatefulWidget {
   const BrandProductEditScreen({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return BrandProductEditScreenState();
@@ -144,8 +145,15 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
         title: const Text('상품 일괄 삭제'),
         content: Text('${idsToDelete.length}개의 상품을 정말로 삭제하시겠습니까?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('취소')),
-          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('삭제'), style: TextButton.styleFrom(foregroundColor: Colors.red)),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('취소'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('삭제'),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+          ),
         ],
       ),
     );
@@ -180,8 +188,15 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
         title: const Text('상품 삭제'),
         content: const Text('정말로 이 상품을 삭제하시겠습니까?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('취소')),
-          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('삭제'), style: TextButton.styleFrom(foregroundColor: Colors.red)),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('취소'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('삭제'),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+          ),
         ],
       ),
     );
@@ -221,7 +236,8 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
     }
 
     if (selecting) {
-      bool isAllSelected = productList.isNotEmpty && selectionList.every((selected) => selected);
+      bool isAllSelected =
+          productList.isNotEmpty && selectionList.every((selected) => selected);
       return _buildMultiSelectView(isAllSelected);
     }
 
@@ -236,9 +252,18 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
           children: [
             Text("선택된 상품 ${selectionList.where((e) => e).length}개"),
             const Spacer(),
-            TextButton(onPressed: toggleSelectAll, child: Text(isAllSelected ? "전체 해제" : "모두 선택")),
-            TextButton(onPressed: deleteMultiSelection, child: const Text("선택 삭제")),
-            TextButton(onPressed: () => setState(() => selecting = false), child: const Text("취소")),
+            TextButton(
+              onPressed: toggleSelectAll,
+              child: Text(isAllSelected ? "전체 해제" : "모두 선택"),
+            ),
+            TextButton(
+              onPressed: deleteMultiSelection,
+              child: const Text("선택 삭제"),
+            ),
+            TextButton(
+              onPressed: () => setState(() => selecting = false),
+              child: const Text("취소"),
+            ),
           ],
         ),
         const SizedBox(height: 20),
@@ -248,7 +273,12 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
           itemCount: productList.length,
           itemBuilder: (context, index) {
             final item = productList[index];
-            return BrandProductMultiSelectItem(item.name, index, selectionList[index], onChanged);
+            return BrandProductMultiSelectItem(
+              item.name,
+              index,
+              selectionList[index],
+              onChanged,
+            );
           },
         ),
       ],
@@ -293,6 +323,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
 
 class BrandFundingEditScreen extends StatefulWidget {
   const BrandFundingEditScreen({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return BrandFundingEditScreenState();
@@ -334,7 +365,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
     } catch (e) {
       debugPrint("펀딩 조회 오류: $e");
     } finally {
-      if(mounted) {
+      if (mounted) {
         setState(() => isLoading = false);
       }
     }
@@ -390,7 +421,6 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
     context.push('/funding/edit/$id');
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -416,7 +446,9 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
                 child: Text(
                   isAllSelected ? "전체 해제" : "모두 선택",
                   style: const TextStyle(
-                      fontSize: 16, color: AppColors.editDeleteTextButton),
+                    fontSize: 16,
+                    color: AppColors.editDeleteTextButton,
+                  ),
                 ),
               ),
               TextButton(
@@ -424,7 +456,9 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
                 child: const Text(
                   "선택 삭제",
                   style: const TextStyle(
-                      fontSize: 16, color: AppColors.editDeleteTextButton),
+                    fontSize: 16,
+                    color: AppColors.editDeleteTextButton,
+                  ),
                 ),
               ),
             ],

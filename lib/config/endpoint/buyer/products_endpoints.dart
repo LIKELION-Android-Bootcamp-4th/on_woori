@@ -3,9 +3,7 @@ abstract class ProductsEndpoints {
   static String getProducts = '/api/products';
 
   // 상품 상세 조회
-  static String getProductDetail({
-    required String id
-  }) {
+  static String getProductDetail({required String id}) {
     return '/api/products/$id';
   }
 
@@ -13,9 +11,7 @@ abstract class ProductsEndpoints {
   static String getProductRegister = '/api/seller/products';
 
   // 상품 수정 (동적 필드 지원)
-  static String patchProductUpdate({
-    required String id
-  }) {
+  static String patchProductUpdate({required String id}) {
     return '/api/seller/products/$id';
   }
 

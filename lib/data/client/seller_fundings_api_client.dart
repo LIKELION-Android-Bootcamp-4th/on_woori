@@ -14,11 +14,8 @@ class SellerFundingsApiClient {
   SellerFundingsApiClient({Dio? dio}) : _dio = dio ?? ApiClient().dio;
 
   // 판매자 펀딩 목록 조회
-  Future<SellerFundingResponse> sellerFunding()
-  async {
-    final response = await _dio.get(
-      SellerFundingEndpoints.getFunding,
-    );
+  Future<SellerFundingResponse> sellerFunding() async {
+    final response = await _dio.get(SellerFundingEndpoints.getFunding);
     return SellerFundingResponse.fromJson(response.data);
   }
 
@@ -28,7 +25,7 @@ class SellerFundingsApiClient {
     String? linkUrl,
     String? imageUrl,
   }) async {
-    final formData = FormData.fromMap({
+    final FormData formData = FormData.fromMap(<String, dynamic>{
       'storeId': storeId,
       'title': title,
       if (linkUrl != null && linkUrl.isNotEmpty) 'linkUrl': linkUrl,
@@ -44,8 +41,7 @@ class SellerFundingsApiClient {
     return CreateFundingRequest.fromJson(response.data);
   }
 
-  Future<SellerFundingResponse> fundingDetail({required String id})
-  async {
+  Future<SellerFundingResponse> fundingDetail({required String id}) async {
     final response = await _dio.get(
       SellerFundingEndpoints.getFundingDetail(id: id),
     );
@@ -59,20 +55,21 @@ class SellerFundingsApiClient {
     String? linkUrl,
     File? thumbnailImage,
   }) async {
-
     final formData = FormData.fromMap({
       'title': title,
       if (linkUrl != null && linkUrl.isNotEmpty) 'linkUrl': linkUrl,
     });
 
     if (thumbnailImage != null) {
-      formData.files.add(MapEntry(
-        'thumbnailImage',
-        await MultipartFile.fromFile(
+      formData.files.add(
+        MapEntry(
+          'thumbnailImage',
+          await MultipartFile.fromFile(
             thumbnailImage.path,
-            filename: thumbnailImage.path.split('/').last
+            filename: thumbnailImage.path.split('/').last,
+          ),
         ),
-      ));
+      );
     }
 
     final response = await _dio.patch(
@@ -89,5 +86,4 @@ class SellerFundingsApiClient {
     );
     return ApiBasicResponse.fromJson(response.data);
   }
-
 }

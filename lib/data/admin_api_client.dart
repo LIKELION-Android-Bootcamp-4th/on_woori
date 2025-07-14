@@ -10,39 +10,37 @@ class AdminApiClient {
   final _secureStorage = const FlutterSecureStorage();
   late final Dio _adminDio;
   final baseUrl = 'http://git.hansul.kr:3002';
+
   AdminApiClient() {
-    _adminDio = Dio(BaseOptions(
-      baseUrl: baseUrl,
-    ));
+    _adminDio = Dio(BaseOptions(baseUrl: baseUrl));
 
-    _adminDio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) async {
-        final adminToken = await _secureStorage.read(key: 'adminAccessToken');
-        if (adminToken != null) {
-          options.headers['Authorization'] = 'Bearer $adminToken';
-        }
-        options.headers['X-Company-Code'] = '6866fd115b230f5dc709bdef';
-        return handler.next(options);
-      },
-    ));
+    _adminDio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          final adminToken = await _secureStorage.read(key: 'adminAccessToken');
+          if (adminToken != null) {
+            options.headers['Authorization'] = 'Bearer $adminToken';
+          }
+          options.headers['X-Company-Code'] = '6866fd115b230f5dc709bdef';
+          return handler.next(options);
+        },
+      ),
+    );
 
-    _adminDio.interceptors.add(PrettyDioLogger(requestHeader: true, requestBody: true));
+    _adminDio.interceptors.add(
+      PrettyDioLogger(requestHeader: true, requestBody: true),
+    );
   }
 
   Future<bool> loginAsAdmin() async {
     final loginDio = Dio(BaseOptions(baseUrl: baseUrl));
     try {
       final response = await loginDio.post(
-          AuthEndpoints.postAuthLogin,
-          data: {
-            'email': 'admin@hanbokmall.com',
-            'password': 'qwer1234'
-          },
-          options: Options(
-              headers: {
-                'X-Company-Code': '6866fd115b230f5dc709bdef'
-              }
-          )
+        AuthEndpoints.postAuthLogin,
+        data: {'email': 'admin@hanbokmall.com', 'password': 'qwer1234'},
+        options: Options(
+          headers: {'X-Company-Code': '6866fd115b230f5dc709bdef'},
+        ),
       );
       final loginResponse = LoginResponse.fromJson(response.data);
 
@@ -67,9 +65,7 @@ class AdminApiClient {
     }
   }
 
-  Future<Response> deleteProductForce({
-    required String id,
-  }) async {
+  Future<Response> deleteProductForce({required String id}) async {
     final response = await _adminDio.delete(
       AdminProductEndpoints.deleteAdminProductsForce(id: id),
     );

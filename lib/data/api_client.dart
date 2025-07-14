@@ -13,23 +13,28 @@ class ApiClient {
       connectTimeout: const Duration(milliseconds: 5000),
       receiveTimeout: const Duration(milliseconds: 3000),
       headers: <String, dynamic>{
-        'Content-Type' : 'application/json',
-        'X-Company-Code' : '6866fd115b230f5dc709bdef'
-      }
+        'Content-Type': 'application/json',
+        'X-Company-Code': '6866fd115b230f5dc709bdef',
+      },
     );
 
-    dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (RequestOptions options, RequestInterceptorHandler handler) async {
-        // companyId 읽어서 헤더에 추가
-        final String? companyId = await _secureStorage.read(key: 'companyId');
-        if (companyId != null) {
-          options.headers['X-Company-Code'] = companyId;
-        }
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest:
+            (RequestOptions options, RequestInterceptorHandler handler) async {
+              // companyId 읽어서 헤더에 추가
+              final String? companyId = await _secureStorage.read(
+                key: 'companyId',
+              );
+              if (companyId != null) {
+                options.headers['X-Company-Code'] = companyId;
+              }
 
-        // tokenManager로 추가 처리
-        return handler.next(options);
-      },
-    ));
+              // tokenManager로 추가 처리
+              return handler.next(options);
+            },
+      ),
+    );
 
     dio.interceptors.add(TokenManager());
     dio.interceptors.add(

@@ -22,7 +22,6 @@ class BrandProductEditListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         const SizedBox(height: 10),
@@ -38,7 +37,12 @@ class BrandProductEditListItem extends StatelessWidget {
                   width: 72,
                   height: 72,
                   errorBuilder: (context, error, stackTrace) {
-                    return Image.network(DefaultImage.productThumbnail, fit: BoxFit.cover, width: 72, height: 72,);
+                    return Image.network(
+                      DefaultImage.productThumbnail,
+                      fit: BoxFit.cover,
+                      width: 72,
+                      height: 72,
+                    );
                   },
                 ),
               ),
@@ -47,7 +51,10 @@ class BrandProductEditListItem extends StatelessWidget {
             Expanded(
               child: Text(
                 name,
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -58,7 +65,7 @@ class BrandProductEditListItem extends StatelessWidget {
             IconButton(
               onPressed: () => deleteSelection(index, id),
               icon: const Icon(Icons.delete_outline),
-            )
+            ),
           ],
         ),
         const SizedBox(height: 10),
@@ -77,17 +84,16 @@ class BrandProductMultiSelectItem extends StatelessWidget {
   final Function(bool?, int) onChanged;
 
   const BrandProductMultiSelectItem(
-      this.name,
-      this.index,
-      this.isSelected,
-      this.onChanged, {
-        super.key,
-        this.imageUrl,
-      });
+    this.name,
+    this.index,
+    this.isSelected,
+    this.onChanged, {
+    super.key,
+    this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
         const SizedBox(height: 10),
@@ -103,7 +109,12 @@ class BrandProductMultiSelectItem extends StatelessWidget {
                   width: 72,
                   height: 72,
                   errorBuilder: (context, error, stackTrace) {
-                    return Image.network(DefaultImage.productThumbnail, fit: BoxFit.cover, width: 72, height: 72,);
+                    return Image.network(
+                      DefaultImage.productThumbnail,
+                      fit: BoxFit.cover,
+                      width: 72,
+                      height: 72,
+                    );
                   },
                 ),
               ),
@@ -112,7 +123,10 @@ class BrandProductMultiSelectItem extends StatelessWidget {
             Expanded(
               child: Text(
                 name,
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -121,7 +135,7 @@ class BrandProductMultiSelectItem extends StatelessWidget {
               onChanged: (value) {
                 onChanged(value, index);
               },
-            )
+            ),
           ],
         ),
         const SizedBox(height: 10),

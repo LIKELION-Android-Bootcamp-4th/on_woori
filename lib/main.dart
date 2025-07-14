@@ -31,10 +31,7 @@ class MyApp extends StatelessWidget {
 class MainPage extends StatelessWidget {
   final Widget child;
 
-  const MainPage({
-    super.key,
-    required this.child,
-  });
+  const MainPage({super.key, required this.child});
 
   // 현재 경로(location)를 기반으로 BottomNavigationBar의 인덱스를 계산하는 함수
   int _locationToTabIndex(String location) {
@@ -42,7 +39,8 @@ class MainPage extends StatelessWidget {
       return 1;
     } else if (location.startsWith('/wish')) {
       return 2;
-    } else if (location.startsWith('/mypage')) { // '/mypage'와 '/mypage/seller' 모두 3번 탭으로 인식
+    } else if (location.startsWith('/mypage')) {
+      // '/mypage'와 '/mypage/seller' 모두 3번 탭으로 인식
       return 3;
     } else {
       return 0; // 그 외 모든 경로는 홈(0번 탭)으로 간주
@@ -59,6 +57,7 @@ class MainPage extends StatelessWidget {
       context.go('/mypage');
     }
   }
+
   // ---------------------------------------------------------
 
   @override
@@ -66,7 +65,9 @@ class MainPage extends StatelessWidget {
     return Scaffold(
       body: child,
       bottomNavigationBar: AppBottomNavigationBar(
-        selectedIndex: _locationToTabIndex(GoRouterState.of(context).uri.toString()),
+        selectedIndex: _locationToTabIndex(
+          GoRouterState.of(context).uri.toString(),
+        ),
         onItemTapped: (index) {
           switch (index) {
             case 0:

@@ -3,16 +3,12 @@ abstract class SellerFundingEndpoints {
   static String getFunding = '/api/seller/fundings';
 
   // 펀딩 상세 조회
-  static String getFundingDetail({
-    required String id
-  }) {
+  static String getFundingDetail({required String id}) {
     return '/api/seller/fundings/$id';
   }
 
   // 펀딩 수정
-  static String editFunding({
-    required String id
-  }) {
+  static String editFunding({required String id}) {
     return '/api/seller/fundings/$id';
   }
 }

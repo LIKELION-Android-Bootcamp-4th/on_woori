@@ -37,6 +37,7 @@ class ProfileData {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String? phone;
+
   // [수정] 최상위 데이터에 있던 profileImage 필드 제거 (profile 객체 안에 있으므로)
 
   const ProfileData({
@@ -65,14 +66,11 @@ class ProfileData {
 class ProfileInfo {
   final String? name;
   final DateTime? birthDate;
+
   // [수정] profileImage 필드 타입을 String? 에서 ProfileImageData? 로 변경
   final ProfileImageData? profileImage;
 
-  const ProfileInfo({
-    this.name,
-    this.birthDate,
-    this.profileImage,
-  });
+  const ProfileInfo({this.name, this.birthDate, this.profileImage});
 
   factory ProfileInfo.fromJson(Map<String, dynamic> json) =>
       _$ProfileInfoFromJson(json);

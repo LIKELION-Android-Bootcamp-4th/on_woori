@@ -1,5 +1,3 @@
-
-
 import 'package:dio/dio.dart';
 import 'package:on_woori/config/endpoint/buyer/products_favorites_endpoints.dart';
 
@@ -11,15 +9,14 @@ class WishesApiClient {
 
   WishesApiClient({Dio? dio}) : _dio = dio ?? ApiClient().dio;
 
-  Future<WishResponse> isFavorite(String productId)
-  async {
+  Future<WishResponse> isFavorite(String productId) async {
     final response = await _dio.get(
       ProductsFavoritesEndpoints.getProductsFavorites(productId: productId),
     );
     return WishResponse.fromJson(response.data);
   }
-  Future<WishResponse> getWishList()
-  async {
+
+  Future<WishResponse> getWishList() async {
     final response = await _dio.get(
       ProductsFavoritesEndpoints.getMyFavorites(),
     );

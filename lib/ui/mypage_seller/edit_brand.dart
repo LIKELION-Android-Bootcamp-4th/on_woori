@@ -57,7 +57,9 @@ class _BrandEditPageState extends State<BrandEditPage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageFile = picked != null
+                        ? File(picked.path)
+                        : _profileImageFile;
                     _profileImageUrl = picked != null ? null : _profileImageUrl;
                     _isPickingImage = false;
                   });
@@ -74,7 +76,9 @@ class _BrandEditPageState extends State<BrandEditPage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageFile = picked != null
+                        ? File(picked.path)
+                        : _profileImageFile;
                     _profileImageUrl = picked != null ? null : _profileImageUrl;
                     _isPickingImage = false;
                   });
@@ -106,13 +110,14 @@ class _BrandEditPageState extends State<BrandEditPage> {
       multipartFile = null;
     }
     if (_nameController.text.isEmpty) _nameController.text = data.name;
-    if (_introController.text.isEmpty) _introController.text = data.description ?? "";
+    if (_introController.text.isEmpty)
+      _introController.text = data.description ?? "";
     try {
       await apiClient.editSellerStore(
         name: _nameController.text,
         description: _introController.text,
         data: data,
-        image: multipartFile
+        image: multipartFile,
       );
     } catch (e, s) {
       debugPrint('수정 실패 $e');
@@ -188,7 +193,11 @@ class _BrandEditPageState extends State<BrandEditPage> {
                 const SizedBox(height: 16),
                 _sectionTitle('브랜드 소개'),
                 const SizedBox(height: 8),
-                _textField(snapshot.data?.data.description ?? '(소개글) (최대 nn자)', _introController, maxLines: 3),
+                _textField(
+                  snapshot.data?.data.description ?? '(소개글) (최대 nn자)',
+                  _introController,
+                  maxLines: 3,
+                ),
 
                 const SizedBox(height: 16),
               ],
@@ -225,10 +234,10 @@ class _BrandEditPageState extends State<BrandEditPage> {
   }
 
   Widget _textField(
-      String hint,
-      TextEditingController controller, {
-        int maxLines = 1,
-      }) {
+    String hint,
+    TextEditingController controller, {
+    int maxLines = 1,
+  }) {
     return TextField(
       controller: controller,
       maxLines: maxLines,
@@ -247,8 +256,10 @@ class _BrandEditPageState extends State<BrandEditPage> {
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 16,
+        ),
       ),
     );
   }
@@ -265,18 +276,24 @@ class _BrandEditPageState extends State<BrandEditPage> {
             shape: BoxShape.circle,
           ),
           child: _profileImageFile == null
-              ? (
-                  _profileImageUrl == null
+              ? (_profileImageUrl == null
                     ? const SizedBox.shrink()
-                    : ClipOval(child: Image.network(_profileImageUrl!, fit: BoxFit.cover, height: 120, width: 120,),))
+                    : ClipOval(
+                        child: Image.network(
+                          _profileImageUrl!,
+                          fit: BoxFit.cover,
+                          height: 120,
+                          width: 120,
+                        ),
+                      ))
               : ClipOval(
-            child: Image.file(
-              _profileImageFile!,
-              fit: BoxFit.cover,
-              width: 120,
-              height: 120,
-            ),
-          ),
+                  child: Image.file(
+                    _profileImageFile!,
+                    fit: BoxFit.cover,
+                    width: 120,
+                    height: 120,
+                  ),
+                ),
         ),
         Positioned(
           bottom: -2,

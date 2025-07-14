@@ -23,5 +23,4 @@ abstract class SellerAuthEndpoints {
 
   // 이메일 인증 코드 재발송
   static String postAuthResendVerification = "/api/auth/verification";
-
 }

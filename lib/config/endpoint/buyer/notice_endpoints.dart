@@ -3,9 +3,7 @@ abstract class NoticeEndpoints {
   static String getNotice = '/api/notice';
 
   // 공지사항 상세 조회
-  static String getNoticeDetail({
-    required int noticeId
-  }) {
+  static String getNoticeDetail({required int noticeId}) {
     return '/api/notice/$noticeId';
   }
 }

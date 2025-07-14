@@ -10,11 +10,8 @@ class FundingsApiClient {
   FundingsApiClient({Dio? dio}) : _dio = dio ?? ApiClient().dio;
 
   // 공개 펀딩 목록 조회
-  Future<FundingsResponse> fundings()
-  async {
-    final response = await _dio.get(
-      FundingsEndpoints.getFundings,
-    );
+  Future<FundingsResponse> fundings() async {
+    final response = await _dio.get(FundingsEndpoints.getFundings);
     return FundingsResponse.fromJson(response.data);
   }
 

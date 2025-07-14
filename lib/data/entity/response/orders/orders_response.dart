@@ -18,6 +18,7 @@ class OrdersResponse {
 
   factory OrdersResponse.fromJson(Map<String, dynamic> json) =>
       _$OrdersResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$OrdersResponseToJson(this);
 }
 
@@ -27,13 +28,11 @@ class OrdersData {
   final List<OrderItem> orders;
   final PaginationData pagination;
 
-  const OrdersData({
-    required this.orders,
-    required this.pagination,
-  });
+  const OrdersData({required this.orders, required this.pagination});
 
   factory OrdersData.fromJson(Map<String, dynamic> json) =>
       _$OrdersDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$OrdersDataToJson(this);
 }
 
@@ -60,6 +59,7 @@ class OrderItem {
 
   factory OrderItem.fromJson(Map<String, dynamic> json) =>
       _$OrderItemFromJson(json);
+
   Map<String, dynamic> toJson() => _$OrderItemToJson(this);
 }
 
@@ -78,6 +78,7 @@ class OrderedProductItem {
 
   factory OrderedProductItem.fromJson(Map<String, dynamic> json) =>
       _$OrderedProductItemFromJson(json);
+
   Map<String, dynamic> toJson() => _$OrderedProductItemToJson(this);
 }
 
@@ -86,13 +87,11 @@ class ProductId {
   final String id;
   final String name;
 
-  const ProductId({
-    required this.id,
-    required this.name,
-  });
+  const ProductId({required this.id, required this.name});
 
   factory ProductId.fromJson(Map<String, dynamic> json) =>
       _$ProductIdFromJson(json);
+
   Map<String, dynamic> toJson() => _$ProductIdToJson(this);
 }
 
@@ -114,5 +113,6 @@ class PaginationData {
 
   factory PaginationData.fromJson(Map<String, dynamic> json) =>
       _$PaginationDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$PaginationDataToJson(this);
 }

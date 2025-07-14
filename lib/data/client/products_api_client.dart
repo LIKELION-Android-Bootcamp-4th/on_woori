@@ -13,42 +13,34 @@ class ProductsApiClient {
   ProductsApiClient({Dio? dio}) : _dio = dio ?? ApiClient().dio;
 
   // 상품 목록 검색
-  Future<ProductsResponse> products()
-  async {
-    final response = await _dio.get(
-      ProductsEndpoints.getProducts,
-    );
+  Future<ProductsResponse> products() async {
+    final response = await _dio.get(ProductsEndpoints.getProducts);
     return ProductsResponse.fromJson(response.data);
   }
 
   // 판매자 상품 목록 조회
-  Future<ProductsResponse> sellerProducts()
-  async {
-    final response = await _dio.get(
-      SellerProductsEndpoints.getSellerProducts,
-    );
+  Future<ProductsResponse> sellerProducts() async {
+    final response = await _dio.get(SellerProductsEndpoints.getSellerProducts);
     return ProductsResponse.fromJson(response.data);
   }
 
-  Future<ProductsDetailResponse> productDetail(String id)
-  async {
-    final response = await _dio.get(
-      ProductsEndpoints.getProductDetail(id: id),
-    );
+  Future<ProductsDetailResponse> productDetail(String id) async {
+    final response = await _dio.get(ProductsEndpoints.getProductDetail(id: id));
     return ProductsDetailResponse.fromJson(response.data);
   }
 
-  Future<ProductRegisterResponse> productRegister(FormData formData)
-  async {
+  Future<ProductRegisterResponse> productRegister(FormData formData) async {
     final response = await _dio.post(
       ProductsEndpoints.getProductRegister,
-      data: formData
+      data: formData,
     );
     return ProductRegisterResponse.fromJson(response.data);
   }
 
   // 상품 찜 토글 (추가 또는 삭제)
-  Future<ProductToggleResponse> toggleFavorite({required String productId}) async {
+  Future<ProductToggleResponse> toggleFavorite({
+    required String productId,
+  }) async {
     final response = await _dio.post(
       ProductsEndpoints.postProductToggleFavorites(productId: productId),
     );
@@ -58,12 +50,11 @@ class ProductsApiClient {
   // 상품 수정
   Future<ProductRegisterResponse> productUpdate({
     required String id,
-    required FormData formData
-  })
-  async {
+    required FormData formData,
+  }) async {
     final response = await _dio.patch(
-        ProductsEndpoints.patchProductUpdate(id: id),
-        data: formData
+      ProductsEndpoints.patchProductUpdate(id: id),
+      data: formData,
     );
     return ProductRegisterResponse.fromJson(response.data);
   }

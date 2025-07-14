@@ -6,9 +6,7 @@ part 'cart_checkout_request.g.dart';
 class CartCheckoutRequest {
   final List<String> cartIds;
 
-  const CartCheckoutRequest({
-    required this.cartIds,
-  });
+  const CartCheckoutRequest({required this.cartIds});
 
   factory CartCheckoutRequest.fromJson(Map<String, dynamic> json) =>
       _$CartCheckoutRequestFromJson(json);

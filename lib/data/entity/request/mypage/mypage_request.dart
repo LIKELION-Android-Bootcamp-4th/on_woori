@@ -14,10 +14,11 @@ class BuyerProfileEditRequest {
     required this.nickName,
     required this.profileImage,
     required this.phone,
-    required this.address
+    required this.address,
   });
 
   factory BuyerProfileEditRequest.fromJson(Map<String, dynamic> json) =>
       _$BuyerProfileEditRequestFromJson(json);
+
   Map<String, dynamic> toJson() => _$BuyerProfileEditRequestToJson(this);
 }

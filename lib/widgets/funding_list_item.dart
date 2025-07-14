@@ -42,7 +42,10 @@ class FundingListItem extends StatelessWidget {
             errorBuilder: (context, error, stackTrace) {
               return Container(
                 color: Colors.grey[200],
-                child: Image.network(DefaultImage.fundingThumbnail, fit: BoxFit.cover,),
+                child: Image.network(
+                  DefaultImage.fundingThumbnail,
+                  fit: BoxFit.cover,
+                ),
               );
             },
           ),
@@ -52,36 +55,31 @@ class FundingListItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Expanded(
-                  child: Text(
-                    fundingName,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  brandName,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Expanded(
+                child: Text(
+                  fundingName,
                   style: const TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
-              ]),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                brandName,
+                style: const TextStyle(fontSize: 13, color: Colors.grey),
+              ),
+            ],
+          ),
           const SizedBox(height: 4),
           Text(
             description,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.black87,
-            ),
+            style: const TextStyle(fontSize: 14, color: Colors.black87),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),

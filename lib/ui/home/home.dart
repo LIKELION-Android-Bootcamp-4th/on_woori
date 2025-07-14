@@ -14,12 +14,14 @@ import 'package:on_woori/widgets/products_double_grid.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<(ProductsResponse, FundingsResponse, StoresResponse)> _apiDataFuture;
+  late Future<(ProductsResponse, FundingsResponse, StoresResponse)>
+  _apiDataFuture;
 
   @override
   void initState() {
@@ -28,23 +30,28 @@ class _HomePageState extends State<HomePage> {
     _apiDataFuture = _initializeData();
   }
 
-  Future<(ProductsResponse, FundingsResponse, StoresResponse)> _initializeData() async {
+  Future<(ProductsResponse, FundingsResponse, StoresResponse)>
+  _initializeData() async {
     // await _loginAndSaveToken();
 
     try {
       final productsResponse = await ProductsApiClient().products();
-      debugPrint("[파싱 성공] Product 엔티티 변환 완료. (아이템 수: ${productsResponse.data?.items?.length ?? 0})");
+      debugPrint(
+        "[파싱 성공] Product 엔티티 변환 완료. (아이템 수: ${productsResponse.data?.items?.length ?? 0})",
+      );
 
       final fundingsResponse = await FundingsApiClient().fundings();
-      debugPrint("[파싱 성공] Funding 엔티티 변환 완료. (아이템 수: ${fundingsResponse.data?.items.length ?? 0})");
+      debugPrint(
+        "[파싱 성공] Funding 엔티티 변환 완료. (아이템 수: ${fundingsResponse.data?.items.length ?? 0})",
+      );
 
       final storesResponse = await StoresApiClient().stores();
-      debugPrint("[파싱 성공] Store 엔티티 변환 완료. (아이템 수: ${storesResponse.data?.items.length ?? 0})");
-
+      debugPrint(
+        "[파싱 성공] Store 엔티티 변환 완료. (아이템 수: ${storesResponse.data?.items.length ?? 0})",
+      );
 
       debugPrint("모든 엔티티 파싱 성공");
       return (productsResponse, fundingsResponse, storesResponse);
-
     } catch (e, s) {
       debugPrint("오류 내용: $e");
       debugPrint(s.toString());
@@ -59,7 +66,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(l10n.appTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+        title: Text(
+          l10n.appTitle,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
       ),
       body: FutureBuilder<(ProductsResponse, FundingsResponse, StoresResponse)>(
         future: _apiDataFuture,
@@ -76,9 +86,15 @@ class _HomePageState extends State<HomePage> {
             return const Center(child: Text('데이터가 없습니다.'));
           }
 
-          final productItems = (snapshot.data?.$1.data?.items ?? []).take(4).toList();
-          final fundingItems = (snapshot.data?.$2.data?.items ?? []).take(3).toList();
-          final storeItems = (snapshot.data?.$3.data?.items ?? []).take(8).toList();
+          final productItems = (snapshot.data?.$1.data?.items ?? [])
+              .take(4)
+              .toList();
+          final fundingItems = (snapshot.data?.$2.data?.items ?? [])
+              .take(3)
+              .toList();
+          final storeItems = (snapshot.data?.$3.data?.items ?? [])
+              .take(8)
+              .toList();
 
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 24),
@@ -90,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                   child: Image.network(
                     fit: BoxFit.cover,
                     DefaultImage.bannerThumbnail,
-                  )
+                  ),
 
                   // TextButton(
                   //     onPressed: () { context.push('/auth/login'); },
@@ -133,16 +149,19 @@ class _HomePageState extends State<HomePage> {
                     GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 0.8,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 12,
+                            childAspectRatio: 0.8,
+                          ),
                       itemCount: storeItems.length,
                       itemBuilder: (context, index) {
                         final brand = storeItems[index];
                         return BrandGridItem(
-                          imageUrl: brand.thumbnailImageUrl ?? DefaultImage.brandThumbnail,
+                          imageUrl:
+                              brand.thumbnailImageUrl ??
+                              DefaultImage.brandThumbnail,
                           brandName: brand.name,
                           onTap: () {
                             debugPrint('${brand.name} 클릭됨, ID: ${brand.id}');
@@ -151,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
-                    SizedBox(height: 20,)
+                    SizedBox(height: 20),
                   ],
                 ),
               ],
@@ -166,9 +185,11 @@ class _HomePageState extends State<HomePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }
-
 }

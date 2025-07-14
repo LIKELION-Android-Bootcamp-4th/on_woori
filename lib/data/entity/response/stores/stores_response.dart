@@ -48,6 +48,7 @@ class StoresResponse {
 
   factory StoresResponse.fromJson(Map<String, dynamic> json) =>
       _$StoresResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$StoresResponseToJson(this);
 }
 
@@ -57,13 +58,11 @@ class StoresData {
   @JsonKey(fromJson: _paginationFromJson)
   final Pagination? pagination;
 
-  const StoresData({
-    required this.items,
-    this.pagination,
-  });
+  const StoresData({required this.items, this.pagination});
 
   factory StoresData.fromJson(Map<String, dynamic> json) =>
       _$StoresDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$StoresDataToJson(this);
 }
 
@@ -73,13 +72,10 @@ class User {
   final String createdAt;
   final String id;
 
-  User({
-    required this.companyId,
-    required this.createdAt,
-    required this.id,
-  });
+  User({required this.companyId, required this.createdAt, required this.id});
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }
 
@@ -113,7 +109,6 @@ class StoreItem {
   final String? bannerImageUrl;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-
 
   StoreItem({
     required this.id,
@@ -155,6 +150,7 @@ class ShippingPolicy {
 
   factory ShippingPolicy.fromJson(Map<String, dynamic> json) =>
       _$ShippingPolicyFromJson(json);
+
   Map<String, dynamic> toJson() => _$ShippingPolicyToJson(this);
 }
 
@@ -169,6 +165,7 @@ class Contact {
 
   factory Contact.fromJson(Map<String, dynamic> json) =>
       _$ContactFromJson(json);
+
   Map<String, dynamic> toJson() => _$ContactToJson(this);
 }
 
@@ -182,6 +179,7 @@ class Address {
 
   factory Address.fromJson(Map<String, dynamic> json) =>
       _$AddressFromJson(json);
+
   Map<String, dynamic> toJson() => _$AddressToJson(this);
 }
 
@@ -209,6 +207,7 @@ class Pagination {
 
   factory Pagination.fromJson(Map<String, dynamic> json) =>
       _$PaginationFromJson(json);
+
   Map<String, dynamic> toJson() => _$PaginationToJson(this);
 }
 
@@ -219,14 +218,11 @@ class StoreOwner {
   final String nickName;
   final StoreOwnerProfile profile;
 
-  StoreOwner({
-    required this.id,
-    required this.nickName,
-    required this.profile
-  });
+  StoreOwner({required this.id, required this.nickName, required this.profile});
 
   factory StoreOwner.fromJson(Map<String, dynamic> json) =>
       _$StoreOwnerFromJson(json);
+
   Map<String, dynamic> toJson() => _$StoreOwnerToJson(this);
 }
 
@@ -241,11 +237,12 @@ class StoreDetailResponse {
     required this.success,
     required this.message,
     required this.data,
-    required this.timestamp
+    required this.timestamp,
   });
 
   factory StoreDetailResponse.fromJson(Map<String, dynamic> json) =>
       _$StoreDetailResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$StoreDetailResponseToJson(this);
 }
 
@@ -263,11 +260,12 @@ class StoreDetailItem {
     required this.name,
     required this.owner,
     required this.description,
-    this.thumbnailImageUrl
+    this.thumbnailImageUrl,
   });
 
   factory StoreDetailItem.fromJson(Map<String, dynamic> json) =>
       _$StoreDetailItemFromJson(json);
+
   Map<String, dynamic> toJson() => _$StoreDetailItemToJson(this);
 }
 
@@ -276,13 +274,11 @@ class StoreOwnerProfile {
   final String name;
   final String profileImage;
 
-  StoreOwnerProfile({
-    required this.name,
-    required this.profileImage
-  });
+  StoreOwnerProfile({required this.name, required this.profileImage});
 
   factory StoreOwnerProfile.fromJson(Map<String, dynamic> json) =>
       _$StoreOwnerProfileFromJson(json);
+
   Map<String, dynamic> toJson() => _$StoreOwnerProfileToJson(this);
 }
 
@@ -304,6 +300,7 @@ class StoreProductsResponse {
 
   factory StoreProductsResponse.fromJson(Map<String, dynamic> json) =>
       _$StoreProductsResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$StoreProductsResponseToJson(this);
 }
 
@@ -313,13 +310,11 @@ class StoreProductsData {
   final List<ProductItem> items;
   final Pagination? pagination;
 
-  const StoreProductsData({
-    required this.items,
-    this.pagination,
-  });
+  const StoreProductsData({required this.items, this.pagination});
 
   factory StoreProductsData.fromJson(Map<String, dynamic> json) =>
       _$StoreProductsDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$StoreProductsDataToJson(this);
 }
 
@@ -333,11 +328,12 @@ class SellerStoreResponse {
   const SellerStoreResponse({
     required this.success,
     required this.message,
-    required this.data
+    required this.data,
   });
 
   factory SellerStoreResponse.fromJson(Map<String, dynamic> json) =>
       _$SellerStoreResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$SellerStoreResponseToJson(this);
 }
 
@@ -362,6 +358,7 @@ class SellerStoreData {
 
   factory SellerStoreData.fromJson(Map<String, dynamic> json) =>
       _$SellerStoreDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$SellerStoreDataToJson(this);
 }
 
@@ -371,14 +368,11 @@ class SellerContact {
   final String? email;
   final String? kakaoTalk;
 
-  const SellerContact({
-    this.phone,
-    this.email,
-    this.kakaoTalk
-  });
+  const SellerContact({this.phone, this.email, this.kakaoTalk});
 
   factory SellerContact.fromJson(Map<String, dynamic> json) =>
       _$SellerContactFromJson(json);
+
   Map<String, dynamic> toJson() => _$SellerContactToJson(this);
 }
 
@@ -397,10 +391,11 @@ class BrandProfileImageData {
     this.filename,
     this.mimeType,
     this.size,
-    required this.url
+    required this.url,
   });
 
   factory BrandProfileImageData.fromJson(Map<String, dynamic> json) =>
       _$BrandProfileImageDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$BrandProfileImageDataToJson(this);
 }

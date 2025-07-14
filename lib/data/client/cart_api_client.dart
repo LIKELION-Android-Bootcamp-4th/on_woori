@@ -13,18 +13,13 @@ class CartApiClient {
   CartApiClient({Dio? dio}) : _dio = dio ?? ApiClient().dio;
 
   // 내 장바구니 조회
-  Future<CartResponse> getCart()
-  async {
-    final response = await _dio.get(
-      CartEndpoints.getCart,
-    );
+  Future<CartResponse> getCart() async {
+    final response = await _dio.get(CartEndpoints.getCart);
     return CartResponse.fromJson(response.data);
   }
 
   // 장바구니에서 선택된 상품 제거
-  Future<CartResponse> deleteCart( {
-    required CartRequest request,
-  }) async {
+  Future<CartResponse> deleteCart({required CartRequest request}) async {
     final response = await _dio.delete(
       CartEndpoints.getCart,
       data: request.toJson(),
@@ -33,9 +28,7 @@ class CartApiClient {
   }
 
   // 장바구니에 상품 추가
-  Future<Response> addToCart({
-    required CartRegisterRequest request,
-  }) async {
+  Future<Response> addToCart({required CartRegisterRequest request}) async {
     final response = await _dio.post(
       CartEndpoints.postCart,
       data: request.toJson(),

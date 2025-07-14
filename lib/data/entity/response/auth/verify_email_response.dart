@@ -25,10 +25,7 @@ class VerifyResult {
   final String userId;
   final bool isEmailVerified;
 
-  const VerifyResult({
-    required this.userId,
-    required this.isEmailVerified,
-  });
+  const VerifyResult({required this.userId, required this.isEmailVerified});
 
   factory VerifyResult.fromJson(Map<String, dynamic> json) =>
       _$VerifyResultFromJson(json);

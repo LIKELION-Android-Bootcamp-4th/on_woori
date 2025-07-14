@@ -16,6 +16,7 @@ class SellerFundingResponse {
 
   factory SellerFundingResponse.fromJson(Map<String, dynamic> json) =>
       _$SellerFundingResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$SellerFundingResponseToJson(this);
 }
 
@@ -24,14 +25,14 @@ class FundingData {
   final List<SellerFundingItem> items;
   final Pagination pagination;
 
-  const FundingData({
-    required this.items,
-    required this.pagination,
-  });
+  const FundingData({required this.items, required this.pagination});
+
   factory FundingData.fromJson(Map<String, dynamic> json) =>
       _$FundingDataFromJson(json);
+
   Map<String, dynamic> toJson() => _$FundingDataToJson(this);
 }
+
 @JsonSerializable()
 class SellerFundingItem {
   @JsonKey(name: 'id')
@@ -98,7 +99,6 @@ class CompanyId {
   Map<String, dynamic> toJson() => _$CompanyIdToJson(this);
 }
 
-
 @JsonSerializable()
 class Pagination {
   final int currentPage;
@@ -114,7 +114,9 @@ class Pagination {
     required this.hasNext,
     required this.hasPrev,
   });
+
   factory Pagination.fromJson(Map<String, dynamic> json) =>
       _$PaginationFromJson(json);
+
   Map<String, dynamic> toJson() => _$PaginationToJson(this);
 }

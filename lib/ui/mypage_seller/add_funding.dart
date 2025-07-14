@@ -55,7 +55,9 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageFile = picked != null
+                        ? File(picked.path)
+                        : _profileImageFile;
                     _profileImageUrl = picked != null ? null : _profileImageUrl;
                     _isPickingImage = false;
                   });
@@ -72,7 +74,9 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageFile = picked != null
+                        ? File(picked.path)
+                        : _profileImageFile;
                     _profileImageUrl = picked != null ? null : _profileImageUrl;
                     _isPickingImage = false;
                   });
@@ -128,10 +132,14 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
       if (_profileImageFile != null) {
         try {
           final uploadClient = UploadApiClient();
-          final request = UploadFilesRequest(files: [XFile(_profileImageFile!.path)]);
-          final UploadFilesResponse uploadResponse = await uploadClient.uploadFiles(request);
+          final request = UploadFilesRequest(
+            files: [XFile(_profileImageFile!.path)],
+          );
+          final UploadFilesResponse uploadResponse = await uploadClient
+              .uploadFiles(request);
 
-          if (uploadResponse.success && uploadResponse.data!.files.first.url.isNotEmpty) {
+          if (uploadResponse.success &&
+              uploadResponse.data!.files.first.url.isNotEmpty) {
             imageUrl = uploadResponse.data?.files.first.url;
             debugPrint('업로드된 이미지 URL: $imageUrl');
           } else {
@@ -159,7 +167,6 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
           debugPrint('생성 실패: ${res.message}');
         }
       });
-
     }
   }
 

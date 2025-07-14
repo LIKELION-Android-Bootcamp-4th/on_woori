@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -17,10 +16,7 @@ import '../../../l10n/app_localizations.dart';
 class CommonSignupPage extends StatefulWidget {
   final StoreRequestData? store;
 
-  const CommonSignupPage({
-    this.store,
-    super.key
-  });
+  const CommonSignupPage({this.store, super.key});
 
   @override
   State<CommonSignupPage> createState() => _CommonSignupPageState();
@@ -31,7 +27,8 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
   final TextEditingController textController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordConfirmController = TextEditingController();
+  final TextEditingController passwordConfirmController =
+      TextEditingController();
   final AuthApiClient apiClient = AuthApiClient();
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
@@ -102,7 +99,9 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
       String errorMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
 
       final responseBody = e.response?.data;
-      if (responseBody != null && responseBody is Map && responseBody['message'] != null) {
+      if (responseBody != null &&
+          responseBody is Map &&
+          responseBody['message'] != null) {
         errorMessage = responseBody['message'];
       } else {
         switch (statusCode) {
@@ -131,9 +130,15 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            Text(l10n.signInTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+            Text(
+              l10n.signInTitle,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
             const SizedBox(width: 10),
-            const Text("공통", style: TextStyle(color: AppColors.primarySub, fontSize: 18)),
+            const Text(
+              "공통",
+              style: TextStyle(color: AppColors.primarySub, fontSize: 18),
+            ),
           ],
         ),
       ),
@@ -141,7 +146,9 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
         key: _formKey,
         child: SingleChildScrollView(
           child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.6),
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height * 0.6,
+            ),
             child: IntrinsicHeight(
               child: Container(
                 padding: const EdgeInsets.all(24),
@@ -179,7 +186,8 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
                       isPassword: true,
                       validator: (String? value) {
                         if (value == null || value.isEmpty) return '내용을 입력해주세요';
-                        if (passwordController.text != value) return '입력한 비밀번호가 서로 다릅니다';
+                        if (passwordController.text != value)
+                          return '입력한 비밀번호가 서로 다릅니다';
                         return null;
                       },
                     ),
@@ -190,7 +198,8 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
                       hintText: l10n.loginEmailInputHint,
                       inputType: TextInputType.emailAddress,
                       validator: (String? value) {
-                        String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                        String pattern =
+                            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
                         RegExp regExp = RegExp(pattern);
                         if (value == null || value.isEmpty) return '내용을 입력해주세요';
                         if (!regExp.hasMatch(value)) return '잘못된 이메일 형식입니다';
@@ -206,10 +215,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-        child: BottomButton(
-          buttonText: l10n.signInTitle,
-          pressedFunc: _submit,
-        ),
+        child: BottomButton(buttonText: l10n.signInTitle, pressedFunc: _submit),
       ),
     );
   }

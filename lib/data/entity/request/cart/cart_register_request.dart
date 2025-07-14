@@ -7,6 +7,7 @@ class CartRegisterRequest {
   final String productId;
   final int quantity;
   final int unitPrice;
+
   // final CartOptions options;
 
   @JsonKey(includeIfNull: false)
@@ -34,10 +35,7 @@ class CartOptions {
   @JsonKey(includeIfNull: false)
   final String? color;
 
-  const CartOptions({
-    this.size,
-    this.color,
-  });
+  const CartOptions({this.size, this.color});
 
   factory CartOptions.fromJson(Map<String, dynamic> json) =>
       _$CartOptionsFromJson(json);
@@ -50,10 +48,7 @@ class CartDiscount {
   final String type;
   final int amount;
 
-  const CartDiscount({
-    required this.type,
-    required this.amount,
-  });
+  const CartDiscount({required this.type, required this.amount});
 
   factory CartDiscount.fromJson(Map<String, dynamic> json) =>
       _$CartDiscountFromJson(json);

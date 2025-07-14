@@ -4,6 +4,7 @@ import 'category_horizontal_scroll_item.dart';
 
 class CategoryHorizontalScroll extends StatefulWidget {
   Function(String category)? getFilteredItem;
+
   CategoryHorizontalScroll({super.key, this.getFilteredItem});
 
   @override

@@ -38,10 +38,7 @@ class _BrandGridItemState extends State<BrandGridItem> {
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return const Center(
-                    child: Text(
-                      '로고',
-                      style: TextStyle(color: Colors.grey),
-                    ),
+                    child: Text('로고', style: TextStyle(color: Colors.grey)),
                   );
                 },
               ),
@@ -51,10 +48,7 @@ class _BrandGridItemState extends State<BrandGridItem> {
           Flexible(
             child: Text(
               widget.brandName,
-              style: const TextStyle(
-                fontSize: 13,
-                color: Colors.black,
-              ),
+              style: const TextStyle(fontSize: 13, color: Colors.black),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

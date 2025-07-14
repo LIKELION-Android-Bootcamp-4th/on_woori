@@ -10,7 +10,12 @@ import 'package:on_woori/widgets/bottom_button.dart';
 class EditProfilePage extends StatefulWidget {
   String nickName;
   String profileUrl;
-  EditProfilePage({super.key, required this.nickName, required this.profileUrl});
+
+  EditProfilePage({
+    super.key,
+    required this.nickName,
+    required this.profileUrl,
+  });
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
@@ -23,7 +28,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _zipcodeController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _detailAddressController = TextEditingController();
+  final TextEditingController _detailAddressController =
+      TextEditingController();
 
   File? _profileImageFile;
   String? _profileImageUrl;
@@ -88,7 +94,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageFile = picked != null
+                        ? File(picked.path)
+                        : _profileImageFile;
                     _profileImageUrl = picked != null ? null : _profileImageUrl;
                     _isPickingImage = false;
                   });
@@ -105,7 +113,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile = picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageFile = picked != null
+                        ? File(picked.path)
+                        : _profileImageFile;
                     _profileImageUrl = picked != null ? null : _profileImageUrl;
                     _isPickingImage = false;
                   });
@@ -139,14 +149,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
     try {
       final response = await apiClient.editBuyerProfile(
-          nickName: _nicknameController.text,
-          phone: _phoneController.text,
-          address: AddressData(
-              zipCode: _zipcodeController.text,
-              address1: _addressController.text,
-              address2: _detailAddressController.text
-          ),
-          profileImageFile: multipartFile
+        nickName: _nicknameController.text,
+        phone: _phoneController.text,
+        address: AddressData(
+          zipCode: _zipcodeController.text,
+          address1: _addressController.text,
+          address2: _detailAddressController.text,
+        ),
+        profileImageFile: multipartFile,
       );
       debugPrint('닉네임: ${response.data.nickName}');
       debugPrint('전화번호: ${response.data.phone}');
@@ -192,10 +202,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       backgroundImage: _profileImageFile != null
                           ? FileImage(_profileImageFile!)
                           : (_profileImageUrl != null
-                          ? NetworkImage(_profileImageUrl!)
-                          : null) as ImageProvider?,
-                      child: (_profileImageFile == null && _profileImageUrl == null)
-                          ? const Icon(Icons.person, size: 48, color: AppColors.grey)
+                                    ? NetworkImage(_profileImageUrl!)
+                                    : null)
+                                as ImageProvider?,
+                      child:
+                          (_profileImageFile == null &&
+                              _profileImageUrl == null)
+                          ? const Icon(
+                              Icons.person,
+                              size: 48,
+                              color: AppColors.grey,
+                            )
                           : null,
                     ),
                     Positioned(
@@ -209,17 +226,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             shape: BoxShape.circle,
                           ),
                           padding: const EdgeInsets.all(6),
-                          child: const Icon(Icons.add, size: 20, color: Colors.white),
+                          child: const Icon(
+                            Icons.add,
+                            size: 20,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
               _buildLabel('닉네임'),
-              const SizedBox(height: 5,),
-              _buildTextFormField(_nicknameController, validatorText: '닉네임을 입력해주세요'),
+              const SizedBox(height: 5),
+              _buildTextFormField(
+                _nicknameController,
+                validatorText: '닉네임을 입력해주세요',
+              ),
+
               //
               // const SizedBox(height: 16),
               // _buildLabel('성함'),
@@ -238,10 +263,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               //     });
               //   },
               // ),
-
               const SizedBox(height: 16),
               _buildLabel('전화번호'),
-              const SizedBox(height: 5,),
+              const SizedBox(height: 5),
               _buildTextFormField(
                 _phoneController,
                 keyboardType: TextInputType.phone,
@@ -250,7 +274,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
               const SizedBox(height: 16),
               _buildLabel('우편번호'),
-              const SizedBox(height: 5,),
+              const SizedBox(height: 5),
               _buildTextFormField(
                 _zipcodeController,
                 keyboardType: TextInputType.number,
@@ -267,13 +291,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
               const SizedBox(height: 16),
               _buildLabel('주소'),
-              const SizedBox(height: 5,),
-              _buildTextFormField(_addressController, validatorText: '주소를 입력해주세요'),
+              const SizedBox(height: 5),
+              _buildTextFormField(
+                _addressController,
+                validatorText: '주소를 입력해주세요',
+              ),
 
               const SizedBox(height: 16),
               _buildLabel('상세주소'),
-              const SizedBox(height: 5,),
-              _buildTextFormField(_detailAddressController, validatorText: '상세주소를 입력해주세요'),
+              const SizedBox(height: 5),
+              _buildTextFormField(
+                _detailAddressController,
+                validatorText: '상세주소를 입력해주세요',
+              ),
 
               const SizedBox(height: 32),
             ],
@@ -283,10 +313,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: BottomButton(
-            buttonText: '저장',
-            pressedFunc: _submit,
-          ),
+          child: BottomButton(buttonText: '저장', pressedFunc: _submit),
         ),
       ),
     );
@@ -304,11 +331,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _buildTextFormField(
-      TextEditingController controller, {
-        TextInputType keyboardType = TextInputType.text,
-        String? validatorText,
-        String? Function(String?)? validator,
-      }) {
+    TextEditingController controller, {
+    TextInputType keyboardType = TextInputType.text,
+    String? validatorText,
+    String? Function(String?)? validator,
+  }) {
     return Column(
       children: [
         const SizedBox(height: 4),
@@ -322,22 +349,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           decoration: InputDecoration(
             isDense: true,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 12,
+              horizontal: 12,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
+              borderSide: const BorderSide(
+                color: AppColors.dividerTextBoxLineDivider,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
+              borderSide: const BorderSide(
+                color: AppColors.dividerTextBoxLineDivider,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider),
+              borderSide: const BorderSide(
+                color: AppColors.dividerTextBoxLineDivider,
+              ),
             ),
           ),
-          validator: validator ??
-                  (value) {
+          validator:
+              validator ??
+              (value) {
                 if (value == null || value.isEmpty) {
                   return validatorText ?? '내용을 입력해주세요';
                 }

@@ -7,10 +7,7 @@ class RegisterResponse {
   final String message;
   final RegisterResult result;
 
-  const RegisterResponse({
-    required this.message,
-    required this.result,
-  });
+  const RegisterResponse({required this.message, required this.result});
 
   factory RegisterResponse.fromJson(Map<String, dynamic> json) =>
       _$RegisterResponseFromJson(json);

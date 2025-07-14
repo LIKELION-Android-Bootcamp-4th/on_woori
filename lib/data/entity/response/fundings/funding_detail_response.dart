@@ -33,6 +33,7 @@ class FundingDetailData {
   final String? imageUrl;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+
   // 필요하다면 다른 필드들도 추가할 수 있습니다.
   // final FundingCompanyInfo? companyId;
 

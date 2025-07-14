@@ -4,9 +4,7 @@ import 'package:image_picker/image_picker.dart';
 class UploadFilesRequest {
   final List<XFile> files;
 
-  const UploadFilesRequest({
-    required this.files,
-  });
+  const UploadFilesRequest({required this.files});
 
   Future<FormData> toFormData() async {
     final formData = FormData();

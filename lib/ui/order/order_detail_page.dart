@@ -7,6 +7,7 @@ import 'package:on_woori/data/entity/response/orders/order_detail_response.dart'
 
 class OrderDetailPage extends StatefulWidget {
   final String orderId;
+
   const OrderDetailPage(this.orderId, {super.key});
 
   @override
@@ -37,7 +38,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("주문상세조회", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+        title: const Text(
+          "주문상세조회",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
       ),
       body: FutureBuilder<OrderDetailResponse>(
         future: _orderDetailFuture,
@@ -66,7 +70,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 ),
                 const SizedBox(height: 10),
                 const Divider(color: Colors.black),
-                Text("주문 상품", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20)),
+                Text(
+                  "주문 상품",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                  ),
+                ),
                 const SizedBox(height: 15),
                 ListView.separated(
                   itemCount: order.items.length,
@@ -75,7 +86,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   itemBuilder: (BuildContext context, int index) {
                     final product = order.items[index];
                     return OrderProductListItem(
-                      imageUrl: product.thumbnailImageUrl ?? DefaultImage.productThumbnail,
+                      imageUrl:
+                          product.thumbnailImageUrl ??
+                          DefaultImage.productThumbnail,
                       productName: product.productName,
                       options: product.optionsText,
                       quantity: product.quantity,
@@ -83,11 +96,23 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     );
                   },
                   separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(color: Colors.black, height: 30, indent: 24, endIndent: 24),
+                      const Divider(
+                        color: Colors.black,
+                        height: 30,
+                        indent: 24,
+                        endIndent: 24,
+                      ),
                 ),
                 const SizedBox(height: 10),
                 const Divider(color: Colors.black),
-                const Text("결제 정보", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20)),
+                const Text(
+                  "결제 정보",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                  ),
+                ),
                 const SizedBox(height: 15),
                 PriceInfoBox(
                   price: order.subtotalAmount,

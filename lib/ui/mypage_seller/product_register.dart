@@ -111,10 +111,14 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
       List<String> detailImageUrls = [];
       if (_detailImages.isNotEmpty) {
         final uploadRequest = UploadFilesRequest(files: _detailImages);
-        final uploadResponse = await UploadApiClient().uploadFiles(uploadRequest);
+        final uploadResponse = await UploadApiClient().uploadFiles(
+          uploadRequest,
+        );
 
         if (uploadResponse.success && uploadResponse.data != null) {
-          detailImageUrls = uploadResponse.data!.files.map((file) => file.url).toList();
+          detailImageUrls = uploadResponse.data!.files
+              .map((file) => file.url)
+              .toList();
         } else {
           _showSnackBar('상세 이미지 업로드에 실패했습니다: ${uploadResponse.message}');
           setState(() => _isLoading = false);
@@ -133,7 +137,9 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         detailImageUrls: detailImageUrls,
       );
 
-      final productResponse = await ProductsApiClient().productRegister(await productRequest.toFormData());
+      final productResponse = await ProductsApiClient().productRegister(
+        await productRequest.toFormData(),
+      );
 
       if (mounted && productResponse.success) {
         _showSnackBar('상품이 성공적으로 등록되었습니다.', isError: false);
@@ -172,7 +178,14 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => context.pop(),
         ),
-        title: const Text('신규 상품 등록', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20, color: Colors.black)),
+        title: const Text(
+          '신규 상품 등록',
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: Colors.black,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -210,7 +223,11 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
                   const SizedBox(height: 16),
                   _sectionTitle('표시 가격 (할인율 반영)'),
                   const SizedBox(height: 8),
-                  _textField('Ex : 180,000', TextEditingController(text: '$displayPrice'), isEnabled: false),
+                  _textField(
+                    'Ex : 180,000',
+                    TextEditingController(text: '$displayPrice'),
+                    isEnabled: false,
+                  ),
 
                   const SizedBox(height: 16),
                   _sectionTitle('상품 소개글'),
@@ -276,14 +293,36 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
   }
 
   Widget _sectionTitle(String title) {
-    return Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20, color: Colors.black));
+    return Text(
+      title,
+      style: const TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 20,
+        color: Colors.black,
+      ),
+    );
   }
 
   Widget _centeredSectionTitle(String title) {
-    return Center(child: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: Colors.black)));
+    return Center(
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+          color: Colors.black,
+        ),
+      ),
+    );
   }
 
-  Widget _textField(String hint, TextEditingController controller, {bool isNumber = false, int maxLines = 1, bool isEnabled = true}) {
+  Widget _textField(
+    String hint,
+    TextEditingController controller, {
+    bool isNumber = false,
+    int maxLines = 1,
+    bool isEnabled = true,
+  }) {
     return TextField(
       controller: controller,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
@@ -291,13 +330,35 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
       enabled: isEnabled,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 16, color: Colors.grey[400]),
+        hintStyle: TextStyle(
+          fontWeight: FontWeight.w400,
+          fontSize: 16,
+          color: Colors.grey[400],
+        ),
         filled: !isEnabled,
         fillColor: Colors.grey[200],
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider)),
-        disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.dividerTextBoxLineDivider)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: AppColors.dividerTextBoxLineDivider,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: AppColors.dividerTextBoxLineDivider,
+          ),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: AppColors.dividerTextBoxLineDivider,
+          ),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 16,
+        ),
       ),
     );
   }
@@ -309,13 +370,22 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         Container(
           width: 160,
           height: 160,
-          decoration: BoxDecoration(color: AppColors.optionStateList, borderRadius: BorderRadius.circular(12)),
-          child: _thumbnailImageFile == null
-              ? const Center(child: Icon(Icons.camera_alt_outlined, color: AppColors.grey, size: 40))
-              : ClipRRect(
+          decoration: BoxDecoration(
+            color: AppColors.optionStateList,
             borderRadius: BorderRadius.circular(12),
-            child: Image.file(_thumbnailImageFile!, fit: BoxFit.cover),
           ),
+          child: _thumbnailImageFile == null
+              ? const Center(
+                  child: Icon(
+                    Icons.camera_alt_outlined,
+                    color: AppColors.grey,
+                    size: 40,
+                  ),
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.file(_thumbnailImageFile!, fit: BoxFit.cover),
+                ),
         ),
         Positioned(
           bottom: -10,
@@ -326,7 +396,11 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
             child: InkWell(
               customBorder: const CircleBorder(),
               onTap: _pickImage,
-              child: const SizedBox(width: 44, height: 44, child: Icon(Icons.add, color: Colors.black, size: 24)),
+              child: const SizedBox(
+                width: 44,
+                height: 44,
+                child: Icon(Icons.add, color: Colors.black, size: 24),
+              ),
             ),
           ),
         ),
@@ -389,7 +463,11 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
               child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.add_photo_alternate_outlined, color: AppColors.grey, size: 30),
+                  Icon(
+                    Icons.add_photo_alternate_outlined,
+                    color: AppColors.grey,
+                    size: 30,
+                  ),
                   SizedBox(height: 4),
                   Text('상세 이미지 추가', style: TextStyle(color: AppColors.grey)),
                 ],

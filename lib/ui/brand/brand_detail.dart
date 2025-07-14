@@ -13,29 +13,27 @@ import 'package:on_woori/widgets/products_grid_item.dart';
 
 import '../../data/entity/response/products/products_response.dart';
 
-
 class BrandDetailPage extends StatelessWidget {
   final String brandId;
+
   const BrandDetailPage(this.brandId, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              BrandDetailScreen(brandId),
-              BrandProductScreen(brandId)
-            ],
-          ),
-        )
+      appBar: AppBar(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [BrandDetailScreen(brandId), BrandProductScreen(brandId)],
+        ),
+      ),
     );
   }
 }
 
 class BrandDetailScreen extends StatefulWidget {
   final String id;
+
   const BrandDetailScreen(this.id, {super.key});
 
   @override
@@ -65,15 +63,15 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
       future: _storesFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator(),);
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text("오류 발생: ${snapshot.error}"),);
+          return Center(child: Text("오류 발생: ${snapshot.error}"));
         }
 
         if (!snapshot.hasData) {
-          return const Center(child: Text("데이터가 없습니다."),);
+          return const Center(child: Text("데이터가 없습니다."));
         }
 
         final StoreDetailItem? data = snapshot.data?.data;
@@ -84,29 +82,27 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             BrandNameSection(
-                false, //자기 브랜드일 때 넘겨주는 기능 결여되어 있으나 당장 추가 어려움
-                data?.name ?? "브랜드 이름",
-                data?.thumbnailImageUrl ?? DefaultImage.brandThumbnail
+              false, //자기 브랜드일 때 넘겨주는 기능 결여되어 있으나 당장 추가 어려움
+              data?.name ?? "브랜드 이름",
+              data?.thumbnailImageUrl ?? DefaultImage.brandThumbnail,
             ),
-            const SizedBox(height: 15,),
-            Text(data?.description ?? "브랜드 소개",
+            const SizedBox(height: 15),
+            Text(
+              data?.description ?? "브랜드 소개",
               style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.grey,
-                  fontSize: 13
+                fontWeight: FontWeight.bold,
+                color: AppColors.grey,
+                fontSize: 13,
               ),
             ),
-            const SizedBox(height: 30,),
-            const Divider(color: AppColors.dividerTextBoxLineDivider,),
-            const SizedBox(height: 10,),
+            const SizedBox(height: 30),
+            const Divider(color: AppColors.dividerTextBoxLineDivider),
+            const SizedBox(height: 10),
             Text(
               l10n!.home_RecommendedProducts,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(height: 10),
           ],
         );
       },
@@ -116,6 +112,7 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
 
 class BrandProductScreen extends StatefulWidget {
   final String id;
+
   const BrandProductScreen(this.id, {super.key});
 
   @override
@@ -158,7 +155,9 @@ class BrandProductScreenState extends State<BrandProductScreen> {
     if (category == "전체") {
       filteredList = originalList;
     } else {
-      filteredList = originalList.where((item) => item.category == category).toList();
+      filteredList = originalList
+          .where((item) => item.category == category)
+          .toList();
     }
 
     setState(() {
@@ -166,6 +165,7 @@ class BrandProductScreenState extends State<BrandProductScreen> {
       _isFiltering = false;
     });
   }
+
   // -----------------------------------------
 
   @override
@@ -204,14 +204,16 @@ class BrandProductScreenState extends State<BrandProductScreen> {
               child: originalList.isEmpty
                   ? const Center(child: Text("추천 상품이 없습니다."))
                   : ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.zero,
-                itemCount: originalList.length,
-                separatorBuilder: (context, index) => const SizedBox(width: 10),
-                itemBuilder: (context, index) => ProductsGridItem(originalList[index]),
-              ),
+                      scrollDirection: Axis.horizontal,
+                      padding: EdgeInsets.zero,
+                      itemCount: originalList.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 10),
+                      itemBuilder: (context, index) =>
+                          ProductsGridItem(originalList[index]),
+                    ),
             ),
-            const Divider(color: AppColors.dividerTextBoxLineDivider,),
+            const Divider(color: AppColors.dividerTextBoxLineDivider),
             Row(
               children: [
                 Text(
@@ -224,18 +226,18 @@ class BrandProductScreenState extends State<BrandProductScreen> {
                 const Spacer(),
               ],
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(height: 10),
             BrandFundingSection(),
-            const SizedBox(height: 10,),
-            const Divider(color: AppColors.dividerTextBoxLineDivider,),
-            CategoryHorizontalScroll(getFilteredItem: getFilteredItem,),
-            const SizedBox(height: 20,),
+            const SizedBox(height: 10),
+            const Divider(color: AppColors.dividerTextBoxLineDivider),
+            CategoryHorizontalScroll(getFilteredItem: getFilteredItem),
+            const SizedBox(height: 20),
             _isFiltering
                 ? const SizedBox(
-              height: 200,
-              child: Center(child: CircularProgressIndicator()),
-            )
-                : ProductsNonScrollableGrid(dataList)
+                    height: 200,
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                : ProductsNonScrollableGrid(dataList),
           ],
         );
       },
@@ -299,7 +301,13 @@ class BrandNameSection extends StatelessWidget {
   final bool _isBrandMine;
   final String _BrandName;
   final String _BrandImageUrl;
-  const BrandNameSection(this._isBrandMine, this._BrandName, this._BrandImageUrl, {super.key});
+
+  const BrandNameSection(
+    this._isBrandMine,
+    this._BrandName,
+    this._BrandImageUrl, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -310,15 +318,25 @@ class BrandNameSection extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 36,
-            foregroundImage: (_BrandImageUrl.isNotEmpty) ? NetworkImage(_BrandImageUrl) : null,
-            child: (_BrandImageUrl.isNotEmpty) ? null : const Icon(Icons.store, size: 36),
+            foregroundImage: (_BrandImageUrl.isNotEmpty)
+                ? NetworkImage(_BrandImageUrl)
+                : null,
+            child: (_BrandImageUrl.isNotEmpty)
+                ? null
+                : const Icon(Icons.store, size: 36),
           ),
-          const SizedBox(width: 15,),
-          Text(_BrandName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
+          const SizedBox(width: 15),
+          Text(
+            _BrandName,
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+          ),
           const Spacer(),
           TextButton(
-            onPressed: (){},
-            child: Text(l10n!.edit, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),),
+            onPressed: () {},
+            child: Text(
+              l10n!.edit,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+            ),
           ),
         ],
       );
@@ -331,21 +349,29 @@ class BrandNameSection extends StatelessWidget {
           radius: 36,
           child: (_BrandImageUrl.isNotEmpty)
               ? ClipOval(
-            child: Image.network(
-              _BrandImageUrl,
-              fit: BoxFit.cover,
-              height: 72,
-              width: 72,
-              errorBuilder: (context, error, stackTrace) {
-                return Image.network(DefaultImage.brandThumbnail, fit: BoxFit.cover, height: 72, width: 72,);
-              },
-            ),
-          )
+                  child: Image.network(
+                    _BrandImageUrl,
+                    fit: BoxFit.cover,
+                    height: 72,
+                    width: 72,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.network(
+                        DefaultImage.brandThumbnail,
+                        fit: BoxFit.cover,
+                        height: 72,
+                        width: 72,
+                      );
+                    },
+                  ),
+                )
               : const Icon(Icons.store, size: 36),
         ),
-        const SizedBox(width: 15,),
-        Text(_BrandName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
-        const Spacer()
+        const SizedBox(width: 15),
+        Text(
+          _BrandName,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+        ),
+        const Spacer(),
       ],
     );
   }

@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:on_woori/data/client/cart_api_client.dart';
 import 'package:on_woori/data/entity/request/cart/cart_checkout_request.dart';
 import 'package:on_woori/data/entity/response/cart/cart_response.dart';
-import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 import 'package:on_woori/widgets/cart_list_item.dart';
 
@@ -44,16 +43,16 @@ class _CartPageState extends State<CartPage> {
       // await CartApiClient().deleteCart(request: requestBody);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('상품이 장바구니에서 삭제되었습니다.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('상품이 장바구니에서 삭제되었습니다.')));
       }
       _refreshCart();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('삭제에 실패했습니다: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('삭제에 실패했습니다: $e')));
       }
     } finally {
       if (mounted) {
@@ -64,9 +63,9 @@ class _CartPageState extends State<CartPage> {
 
   Future<void> _checkout(List<CartItem> cartItems) async {
     if (cartItems.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('장바구니에 상품이 없습니다.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('장바구니에 상품이 없습니다.')));
       return;
     }
 
@@ -78,9 +77,9 @@ class _CartPageState extends State<CartPage> {
       final response = await CartApiClient().postCartCheckOut(request: request);
 
       if (mounted && response.success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('주문이 생성되었습니다.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('주문이 생성되었습니다.')));
         context.go('/orderlist');
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -89,9 +88,9 @@ class _CartPageState extends State<CartPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('주문 중 오류가 발생했습니다: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('주문 중 오류가 발생했습니다: $e')));
       }
     } finally {
       if (mounted) {
@@ -121,13 +120,15 @@ class _CartPageState extends State<CartPage> {
           FutureBuilder<CartResponse>(
             future: _cartFuture,
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting && !_isLoading) {
+              if (snapshot.connectionState == ConnectionState.waiting &&
+                  !_isLoading) {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.hasError) {
                 return Center(child: Text("오류가 발생했습니다.\n${snapshot.error}"));
               }
-              if (!snapshot.hasData || (snapshot.data!.data?.items?.isEmpty ?? true)) {
+              if (!snapshot.hasData ||
+                  (snapshot.data!.data?.items?.isEmpty ?? true)) {
                 return const Center(child: Text("장바구니가 비었습니다."));
               }
 
@@ -149,12 +150,14 @@ class _CartPageState extends State<CartPage> {
                             price: cartItem.cartPrice,
                             productCount: cartItem.quantity,
                             option: cartItem.product.optionText,
-                            imageUrl: cartItem.product.thumbnailImage ?? 'https://via.placeholder.com/150',
+                            imageUrl:
+                                cartItem.product.thumbnailImage ??
+                                'https://via.placeholder.com/150',
                             onDelete: () => _deleteCartItem(cartItem.id),
                           );
                         },
                         separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(color: Color(0xFFC9C9C9)),
+                            const Divider(color: Color(0xFFC9C9C9)),
                       ),
                     ),
                     BottomButton(
@@ -170,9 +173,7 @@ class _CartPageState extends State<CartPage> {
           if (_isLoading)
             Container(
               color: Colors.black.withOpacity(0.3),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: const Center(child: CircularProgressIndicator()),
             ),
         ],
       ),

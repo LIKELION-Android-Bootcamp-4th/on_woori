@@ -58,40 +58,40 @@ class _MultiImagePickerState extends State<MultiImagePicker> {
           child: _images.isEmpty
               ? const Center(child: Text("선택된 이미지가 없습니다."))
               : GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, // 한 줄에 3개의 이미지
-              crossAxisSpacing: 8, // 수평 간격
-              mainAxisSpacing: 8, // 수직 간격
-            ),
-            itemCount: _images.length,
-            itemBuilder: (context, index) {
-              return Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  // 이미지 표시
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: FileImage(File(_images[index].path)),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3, // 한 줄에 3개의 이미지
+                    crossAxisSpacing: 8, // 수평 간격
+                    mainAxisSpacing: 8, // 수직 간격
                   ),
-                  // 삭제 버튼
-                  Positioned(
-                    top: -10,
-                    right: -10,
-                    child: IconButton(
-                      icon: const Icon(Icons.remove_circle),
-                      onPressed: () => _removeImage(index),
-                      color: Colors.redAccent,
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
+                  itemCount: _images.length,
+                  itemBuilder: (context, index) {
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        // 이미지 표시
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: FileImage(File(_images[index].path)),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        // 삭제 버튼
+                        Positioned(
+                          top: -10,
+                          right: -10,
+                          child: IconButton(
+                            icon: const Icon(Icons.remove_circle),
+                            onPressed: () => _removeImage(index),
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
         ),
       ],
     );

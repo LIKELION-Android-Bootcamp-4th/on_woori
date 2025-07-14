@@ -8,11 +8,10 @@ class VerifyEmailRequest {
 
   final String? verificationCode;
 
-  const VerifyEmailRequest({
-    this.email,
-    this.verificationCode,
-  });
+  const VerifyEmailRequest({this.email, this.verificationCode});
 
-  factory VerifyEmailRequest.fromJson(Map<String, dynamic> json) => _$VerifyEmailRequestFromJson(json);
+  factory VerifyEmailRequest.fromJson(Map<String, dynamic> json) =>
+      _$VerifyEmailRequestFromJson(json);
+
   Map<String, dynamic> toJson() => _$VerifyEmailRequestToJson(this);
 }

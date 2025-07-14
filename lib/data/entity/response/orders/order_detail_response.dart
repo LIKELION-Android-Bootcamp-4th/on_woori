@@ -14,7 +14,6 @@ double? _shippingCostRatioFromJson(dynamic json) {
   return null;
 }
 
-
 @JsonSerializable(explicitToJson: true)
 class OrderDetailResponse {
   final bool success;
@@ -38,6 +37,7 @@ class OrderDetailResponse {
       rethrow;
     }
   }
+
   Map<String, dynamic> toJson() => _$OrderDetailResponseToJson(this);
 }
 
@@ -84,6 +84,7 @@ class OrderDetailData {
       rethrow;
     }
   }
+
   Map<String, dynamic> toJson() => _$OrderDetailDataToJson(this);
 }
 
@@ -124,6 +125,7 @@ class OrderItem {
       rethrow;
     }
   }
+
   Map<String, dynamic> toJson() => _$OrderItemToJson(this);
 }
 
@@ -136,8 +138,11 @@ class ShippingInfo {
   final double? shippingCostRatio;
 
   String get recipient => '정보 없음';
+
   String get phone => '정보 없음';
+
   String get zipCode => '정보 없음';
+
   String get address => '정보 없음';
 
   const ShippingInfo({
@@ -155,6 +160,7 @@ class ShippingInfo {
       rethrow;
     }
   }
+
   Map<String, dynamic> toJson() => _$ShippingInfoToJson(this);
 }
 
@@ -181,6 +187,7 @@ class OrderUserInfo {
       rethrow;
     }
   }
+
   Map<String, dynamic> toJson() => _$OrderUserInfoToJson(this);
 }
 
@@ -210,5 +217,6 @@ class StatusHistoryItem {
       rethrow;
     }
   }
+
   Map<String, dynamic> toJson() => _$StatusHistoryItemToJson(this);
 }

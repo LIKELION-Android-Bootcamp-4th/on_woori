@@ -319,18 +319,18 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 child: Text(l10n.cart, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black)),
               ),
             ),
-            const SizedBox(height: 5),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: TextButton(
-                onPressed: () { /* TODO: 주문 생성 로직 */ },
-                style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                    backgroundColor: AppColors.primary),
-                child: Text(l10n.order, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black)),
-              ),
-            ),
+            // const SizedBox(height: 5),
+            // SizedBox(
+            //   width: double.infinity,
+            //   height: 50,
+            //   child: TextButton(
+            //     onPressed: () { /* TODO: 주문 생성 로직 */ },
+            //     style: TextButton.styleFrom(
+            //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            //         backgroundColor: AppColors.primary),
+            //     child: Text(l10n.order, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black)),
+            //   ),
+            // ),
             const SizedBox(height: 20)
           ],
         );

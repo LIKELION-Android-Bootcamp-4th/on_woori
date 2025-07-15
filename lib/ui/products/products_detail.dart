@@ -76,7 +76,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
     });
   }
 
-  // ## 2. _toggleFavorite 함수에 로그인 확인 및 버그 수정 ##
   Future<void> _toggleFavorite() async {
     // 로그인 상태 확인
     final accessToken = await storage.read(key: 'ACCESS_TOKEN');
@@ -88,7 +87,9 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
           title: const Text('로그인 필요'),
           content: const Text('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?'),
           actions: [
-            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('취소')),
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('취소')),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
@@ -128,7 +129,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
     }
   }
 
-  // ## 3. _addToCart 함수에 로그인 확인 로직 추가 ##
   Future<void> _addToCart(
       ProductItem product,
       List<String> sizeOptions,
@@ -144,7 +144,9 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
           title: const Text('로그인 필요'),
           content: const Text('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?'),
           actions: [
-            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('취소')),
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('취소')),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
@@ -203,7 +205,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // build 메서드는 변경 사항 없습니다.
     var l10n = AppLocalizations.of(context)!;
     return FutureBuilder<ProductsDetailResponse>(
       future: _productsFuture,
@@ -485,11 +486,22 @@ class ProductsNameSection extends StatelessWidget {
 
     if (product.discount != null && product.discount!.isNotEmpty) {
       try {
-        final discountData = jsonDecode(product.discount!);
-        rate = discountData['value'];
-        if (rate != null && rate > 0) {
-          hasDiscount = true;
-          finalPrice = (product.price * (100 - rate) / 100).round();
+        // product.discount가 숫자형 문자열인지 확인
+        final parsedRate = int.tryParse(product.discount!);
+        if (parsedRate != null) {
+          rate = parsedRate;
+          if (rate > 0) {
+            hasDiscount = true;
+            finalPrice = (product.price * (100 - rate) / 100).round();
+          }
+        } else {
+          // JSON 형식의 문자열인지 확인
+          final discountData = jsonDecode(product.discount!);
+          rate = discountData['value'];
+          if (rate != null && rate! > 0) {
+            hasDiscount = true;
+            finalPrice = (product.price * (100 - rate!) / 100).round();
+          }
         }
       } catch (e) {
         rate = null;
@@ -518,7 +530,7 @@ class ProductsNameSection extends StatelessWidget {
         const SizedBox(height: 2),
         if (hasDiscount) ...[
           Text(
-            "${NumberFormat('#.###').format(originalPrice)}원",
+            "${NumberFormat('#,###').format(originalPrice)}원",
             style: const TextStyle(
               fontSize: 10,
               decoration: TextDecoration.lineThrough,
@@ -538,7 +550,7 @@ class ProductsNameSection extends StatelessWidget {
               ),
               const SizedBox(width: 5),
               Text(
-                "$discountedPrice원",
+                "${NumberFormat('#,###').format(discountedPrice)}원",
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -548,7 +560,7 @@ class ProductsNameSection extends StatelessWidget {
           ),
         ] else ...[
           Text(
-            "$originalPrice원",
+            "${NumberFormat('#,###').format(originalPrice)}원",
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ],
@@ -570,13 +582,14 @@ class ProductsDetailImageSection extends StatelessWidget {
       children: detailImageUrls
           .map(
             (url) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Image.network(
-                url,
-                errorBuilder: (context, error, stackTrace) => SizedBox.shrink(),
-              ),
-            ),
-          )
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Image.network(
+            url,
+            errorBuilder: (context, error, stackTrace) =>
+            const SizedBox.shrink(),
+          ),
+        ),
+      )
           .toList(),
     );
   }

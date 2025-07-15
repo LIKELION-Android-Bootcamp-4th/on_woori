@@ -244,67 +244,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 _nicknameController,
                 validatorText: '닉네임을 입력해주세요',
               ),
-
-              //
-              // const SizedBox(height: 16),
-              // _buildLabel('성함'),
-              // const SizedBox(height: 5,),
-              // _buildTextFormField(_nameController, validatorText: '성함을 입력해주세요'),
-
-              // const SizedBox(height: 16),
-              // _buildLabel('성별'),
-              // const SizedBox(height: 5),
-              // CustomDropdown(
-              //   selectedValue: _selectedGender,
-              //   items: ['여성', '남성', '선택하지않음'],
-              //   onChanged: (value) {
-              //     setState(() {
-              //       _selectedGender = value!;
-              //     });
-              //   },
-              // ),
-              const SizedBox(height: 16),
-              _buildLabel('전화번호'),
-              const SizedBox(height: 5),
-              _buildTextFormField(
-                _phoneController,
-                keyboardType: TextInputType.phone,
-                validatorText: '전화번호를 입력해주세요',
-              ),
-
-              const SizedBox(height: 16),
-              _buildLabel('우편번호'),
-              const SizedBox(height: 5),
-              _buildTextFormField(
-                _zipcodeController,
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '우편번호를 입력해주세요';
-                  }
-                  if (!RegExp(r'^\d{5}$').hasMatch(value)) {
-                    return '우편번호는 5자리 숫자로 입력해주세요';
-                  }
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 16),
-              _buildLabel('주소'),
-              const SizedBox(height: 5),
-              _buildTextFormField(
-                _addressController,
-                validatorText: '주소를 입력해주세요',
-              ),
-
-              const SizedBox(height: 16),
-              _buildLabel('상세주소'),
-              const SizedBox(height: 5),
-              _buildTextFormField(
-                _detailAddressController,
-                validatorText: '상세주소를 입력해주세요',
-              ),
-
               const SizedBox(height: 32),
             ],
           ),

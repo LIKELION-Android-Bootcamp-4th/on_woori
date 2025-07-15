@@ -156,18 +156,11 @@ Map<String, dynamic> _$PaginationToJson(Pagination instance) =>
       'hasPrev': instance.hasPrevPage,
     };
 
-StoreOwner _$StoreOwnerFromJson(Map<String, dynamic> json) => StoreOwner(
-  id: json['id'] as String,
-  nickName: json['nickName'] as String,
-  profile: StoreOwnerProfile.fromJson(json['profile'] as Map<String, dynamic>),
-);
+StoreOwner _$StoreOwnerFromJson(Map<String, dynamic> json) =>
+    StoreOwner(id: json['id'] as String, nickName: json['nickName'] as String);
 
 Map<String, dynamic> _$StoreOwnerToJson(StoreOwner instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'nickName': instance.nickName,
-      'profile': instance.profile,
-    };
+    <String, dynamic>{'id': instance.id, 'nickName': instance.nickName};
 
 StoreDetailResponse _$StoreDetailResponseFromJson(Map<String, dynamic> json) =>
     StoreDetailResponse(
@@ -202,18 +195,6 @@ Map<String, dynamic> _$StoreDetailItemToJson(StoreDetailItem instance) =>
       'owner': instance.owner,
       'description': instance.description,
       'thumbnailImageUrl': instance.thumbnailImageUrl,
-    };
-
-StoreOwnerProfile _$StoreOwnerProfileFromJson(Map<String, dynamic> json) =>
-    StoreOwnerProfile(
-      name: json['name'] as String,
-      profileImage: json['profileImage'] as String,
-    );
-
-Map<String, dynamic> _$StoreOwnerProfileToJson(StoreOwnerProfile instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'profileImage': instance.profileImage,
     };
 
 StoreProductsResponse _$StoreProductsResponseFromJson(

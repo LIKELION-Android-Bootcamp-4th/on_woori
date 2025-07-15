@@ -216,9 +216,8 @@ class StoreOwner {
   @JsonKey(name: 'id')
   final String id;
   final String nickName;
-  final StoreOwnerProfile profile;
 
-  StoreOwner({required this.id, required this.nickName, required this.profile});
+  StoreOwner({required this.id, required this.nickName});
 
   factory StoreOwner.fromJson(Map<String, dynamic> json) =>
       _$StoreOwnerFromJson(json);
@@ -268,21 +267,6 @@ class StoreDetailItem {
 
   Map<String, dynamic> toJson() => _$StoreDetailItemToJson(this);
 }
-
-@JsonSerializable()
-class StoreOwnerProfile {
-  final String name;
-  final String profileImage;
-
-  StoreOwnerProfile({required this.name, required this.profileImage});
-
-  factory StoreOwnerProfile.fromJson(Map<String, dynamic> json) =>
-      _$StoreOwnerProfileFromJson(json);
-
-  Map<String, dynamic> toJson() => _$StoreOwnerProfileToJson(this);
-}
-
-// --- 수정된 부분 START ---
 
 @JsonSerializable(explicitToJson: true)
 class StoreProductsResponse {

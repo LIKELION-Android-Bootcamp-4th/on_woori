@@ -20,13 +20,12 @@ class SellerFundingsApiClient {
   }
 
   Future<CreateFundingRequest> createFunding({
-    required String storeId,
     required String title,
+    // String storeId,
     String? linkUrl,
     String? imageUrl,
   }) async {
     final FormData formData = FormData.fromMap(<String, dynamic>{
-      'storeId': storeId,
       'title': title,
       if (linkUrl != null && linkUrl.isNotEmpty) 'linkUrl': linkUrl,
       if (imageUrl != null && imageUrl.isNotEmpty) 'imageUrl': imageUrl,

@@ -24,7 +24,7 @@ class CreateFundingRequest {
 class FundingData {
   @JsonKey(name: 'id')
   final String id;
-  final String storeId;
+  final StoreRef storeId;
   final String title;
   final String linkUrl;
   final String? imageUrl;
@@ -43,4 +43,17 @@ class FundingData {
       _$FundingDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$FundingDataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class StoreRef {
+  final String id;
+  final String name;
+
+  StoreRef({required this.id, required this.name});
+
+  factory StoreRef.fromJson(Map<String, dynamic> json) =>
+      _$StoreRefFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StoreRefToJson(this);
 }

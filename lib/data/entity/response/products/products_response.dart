@@ -9,12 +9,17 @@ List<ProductOptionGroup>? _optionsListFromJson(String? jsonString) {
     return null;
   }
   try {
-    final List<dynamic> decodedList = jsonDecode(jsonString);
-    return decodedList
-        .map(
-          (item) => ProductOptionGroup.fromJson(item as Map<String, dynamic>),
-        )
-        .toList();
+    final dynamic decodedJson = jsonDecode(jsonString);
+
+    if (decodedJson is List) {
+      return decodedJson
+          .map((item) => ProductOptionGroup.fromJson(item as Map<String, dynamic>))
+          .toList();
+    }
+    else if (decodedJson is Map<String, dynamic>) {
+      return [ProductOptionGroup.fromJson(decodedJson)];
+    }
+    return null;
   } catch (e) {
     debugPrint('Options parsing error for string "$jsonString": $e');
     return null;

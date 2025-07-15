@@ -44,11 +44,20 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   bool _isFetching = true;
   bool _isSaving = false;
+  bool _isFirstLoad = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchProductDetails();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isFirstLoad) {
+      _fetchProductDetails();
+      _isFirstLoad = false;
+    }
   }
 
   Future<void> _fetchProductDetails() async {

@@ -76,7 +76,7 @@ class ProductsListScreen extends StatelessWidget {
     (midCategory != null) ? '$categoryId||$midCategory' : categoryId;
 
     final response = apiClient.searchByCategory(
-      category: 'products',
+      category: categoryId,
       query: finalQuery,
     );
 

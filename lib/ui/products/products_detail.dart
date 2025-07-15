@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
@@ -54,6 +55,7 @@ class ProductsDetailScreen extends StatefulWidget {
 class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   final productsApiClient = ProductsApiClient();
   final cartApiClient = CartApiClient();
+  final storage = const FlutterSecureStorage();
 
   late Future<ProductsDetailResponse> _productsFuture;
 
@@ -74,7 +76,33 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
     });
   }
 
+  // ## 2. _toggleFavorite 함수에 로그인 확인 및 버그 수정 ##
   Future<void> _toggleFavorite() async {
+    // 로그인 상태 확인
+    final accessToken = await storage.read(key: 'ACCESS_TOKEN');
+    if (accessToken == null) {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('로그인 필요'),
+          content: const Text('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?'),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('취소')),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                context.push('/auth/login');
+              },
+              child: const Text('로그인'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    // --- 이하 로그인 상태일 때의 로직 ---
     final originalState = isLiked;
     setState(() {
       isLiked = !isLiked;
@@ -85,11 +113,8 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
         productId: widget.id,
       );
 
-      if (response.success) {
-        setState(() {
-          isLiked = response.message.result.isLiked;
-        });
-      } else {
+      // API 응답 구조에 맞게 버그 수정
+      if (!response.success) {
         setState(() {
           isLiked = originalState;
         });
@@ -103,11 +128,37 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
     }
   }
 
+  // ## 3. _addToCart 함수에 로그인 확인 로직 추가 ##
   Future<void> _addToCart(
       ProductItem product,
       List<String> sizeOptions,
       List<String> colorOptions,
       ) async {
+    // 로그인 상태 확인
+    final accessToken = await storage.read(key: 'ACCESS_TOKEN');
+    if (accessToken == null) {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('로그인 필요'),
+          content: const Text('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?'),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('취소')),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                context.push('/auth/login');
+              },
+              child: const Text('로그인'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    // --- 이하 로그인 상태일 때의 로직 ---
     if (sizeOptions.isNotEmpty && selectedSize == null) {
       _showSnackBar('사이즈를 선택해주세요.');
       return;
@@ -129,7 +180,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         _showSnackBar(
           '장바구니에 상품을 추가했습니다.',
-          backgroundColor: Colors.green, // 성공 시 초록색 전달
+          backgroundColor: Colors.green,
         );
       } else {
         _showSnackBar('장바구니 추가에 실패했습니다: ${response.data}');
@@ -152,6 +203,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // build 메서드는 변경 사항 없습니다.
     var l10n = AppLocalizations.of(context)!;
     return FutureBuilder<ProductsDetailResponse>(
       future: _productsFuture,
@@ -372,6 +424,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
     );
   }
 }
+
 class OptionDropdown extends StatelessWidget {
   final String hint;
   final String? value;

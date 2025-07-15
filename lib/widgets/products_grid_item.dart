@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:on_woori/core/styles/default_image.dart';
@@ -16,6 +17,7 @@ class ProductsGridItem extends StatefulWidget {
 
 class ProductsGridItemState extends State<ProductsGridItem> {
   final apiClient = ProductsApiClient();
+  final storage = const FlutterSecureStorage();
 
   late int price;
   late String productName;
@@ -42,6 +44,32 @@ class ProductsGridItemState extends State<ProductsGridItem> {
   }
 
   Future<void> _toggleFavorite() async {
+    final accessToken = await storage.read(key: 'ACCESS_TOKEN');
+    if (accessToken == null) {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('로그인 필요'),
+          content: const Text('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('취소'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                context.push('/auth/login');
+              },
+              child: const Text('로그인'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
     final originalState = isFavorite;
     setState(() {
       isFavorite = !isFavorite;
@@ -52,11 +80,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
         productId: widget.item.id,
       );
 
-      if (response.success) {
-        setState(() {
-          isFavorite = response.message.result.isLiked;
-        });
-      } else {
+      if (!response.success) {
         setState(() {
           isFavorite = originalState;
         });
@@ -72,7 +96,6 @@ class ProductsGridItemState extends State<ProductsGridItem> {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -117,7 +140,6 @@ class ProductsGridItemState extends State<ProductsGridItem> {
           ],
         ),
         const SizedBox(height: 5),
-
         GestureDetector(
           onTap: () {
             context.push('/productdetail/${widget.item.id}');
@@ -134,7 +156,6 @@ class ProductsGridItemState extends State<ProductsGridItem> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              // #########################
               Text(
                 brandName,
                 style: const TextStyle(

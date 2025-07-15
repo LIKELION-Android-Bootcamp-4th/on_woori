@@ -33,7 +33,7 @@ class CartApiClient {
       CartEndpoints.postCart,
       data: request.toJson(),
     );
-    return response.data;
+    return response; // Response 객체 전체를 반환
   }
 
   Future<CartCheckoutResponse> postCartCheckOut({

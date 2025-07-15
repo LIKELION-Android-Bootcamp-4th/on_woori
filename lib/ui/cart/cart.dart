@@ -151,7 +151,7 @@ class _CartPageState extends State<CartPage> {
                             productCount: cartItem.quantity,
                             option: cartItem.product.optionText,
                             imageUrl:
-                                cartItem.product.thumbnailImage ??
+                                cartItem.product.thumbnailImage?.url ??
                                 'https://via.placeholder.com/150',
                             onDelete: () => _deleteCartItem(cartItem.id),
                           );

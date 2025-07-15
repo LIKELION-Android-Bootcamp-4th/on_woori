@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/core/styles/default_image.dart';
@@ -66,9 +67,8 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   void initState() {
     super.initState();
     _productsFuture = productsApiClient.productDetail(widget.id).then((
-      response,
-    ) {
-      // isLiked의 초기값을 서버 데이터로 설정
+        response,
+        ) {
       isLiked = response.data?.isFavorite ?? false;
       return response;
     });
@@ -93,7 +93,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
         setState(() {
           isLiked = originalState;
         });
-        _showSnackBar(response.message.message); // 서버가 주는 메시지 사용
+        _showSnackBar(response.message.message);
       }
     } catch (e) {
       setState(() {
@@ -103,13 +103,11 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
     }
   }
 
-  /// 장바구니에 상품을 추가하는 로직
   Future<void> _addToCart(
-    ProductItem product,
-    List<String> sizeOptions,
-    List<String> colorOptions,
-  ) async {
-    // 1. 옵션 선택 유효성 검사
+      ProductItem product,
+      List<String> sizeOptions,
+      List<String> colorOptions,
+      ) async {
     if (sizeOptions.isNotEmpty && selectedSize == null) {
       _showSnackBar('사이즈를 선택해주세요.');
       return;
@@ -119,36 +117,20 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
       return;
     }
 
-    // // 2. 할인 정보 파싱
-    // CartDiscount? cartDiscount;
-    // if (product.discount != null && product.discount!.isNotEmpty) {
-    //   try {
-    //     final discountData = jsonDecode(product.discount!);
-    //     cartDiscount = CartDiscount(
-    //       type: discountData['type'] ?? 'percent', // 기본값으로 'percent' 사용
-    //       amount: discountData['value'] ?? 0,
-    //     );
-    //   } catch (e) {
-    //     // 할인 정보 파싱 실패 시 무시
-    //   }
-    // }
-
-    // 3. API 요청 객체 생성
     final request = CartRegisterRequest(
       productId: product.id,
       quantity: quantity,
       unitPrice: product.price,
-      // options: CartOptions(
-      //   size: selectedSize,
-      //   color:selectedColor ?? '기본'
-      // ),
     );
 
-    // 4. API 호출 및 결과 처리
     try {
       final response = await cartApiClient.addToCart(request: request);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        _showSnackBar('장바구니에 상품을 추가했습니다.');
+        _showSnackBar(
+          '장바구니에 상품을 추가했습니다.',
+          backgroundColor: Colors.green, // 성공 시 초록색 전달
+        );
       } else {
         _showSnackBar('장바구니 추가에 실패했습니다: ${response.data}');
       }
@@ -157,11 +139,14 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
     }
   }
 
-  // 오류나 상태 메시지를 보여줄 작은 스낵바 함수
-  void _showSnackBar(String message) {
+  void _showSnackBar(String message, {Color? backgroundColor}) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
+      SnackBar(
+        content: Text(message),
+        backgroundColor: backgroundColor,
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 
@@ -183,7 +168,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
 
         final product = snapshot.data!.data!;
 
-        // 파싱된 옵션 그룹 리스트에서 사이즈와 컬러를 분리합니다.
         List<String> sizeOptions = [];
         List<String> colorOptions = [];
         if (product.options != null) {
@@ -191,9 +175,8 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             if (optionGroup.name == '사이즈') {
               sizeOptions = optionGroup.items.map((item) => item.code).toList();
             } else if (optionGroup.name == '컬러') {
-              colorOptions = optionGroup.items
-                  .map((item) => item.code)
-                  .toList();
+              colorOptions =
+                  optionGroup.items.map((item) => item.code).toList();
             }
           }
         }
@@ -203,7 +186,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
         return ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           children: [
-            // --- 상품 대표 이미지 ---
             AspectRatio(
               aspectRatio: 1,
               child: ClipRRect(
@@ -223,12 +205,10 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             ),
             const Divider(color: Colors.black, thickness: 1, height: 1),
             const SizedBox(height: 10),
-
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(child: ProductsNameSection.fromProduct(product)),
-                // isLiked 변수를 사용하도록 수정
                 IconButton(
                   icon: Icon(
                     isLiked ? Icons.favorite : Icons.favorite_border,
@@ -239,7 +219,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 ),
               ],
             ),
-
             const Divider(color: Colors.black),
             ListTile(
               onTap: () {
@@ -271,9 +250,9 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               ),
               title: Text(
                 product.store?.name ?? "브랜드 정보 없음",
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
-              dense: true, // 좀 더 컴팩트한 높이로 만듭니다.
+              dense: true,
             ),
             const Divider(color: Colors.black),
             const SizedBox(height: 20),
@@ -335,7 +314,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        "$totalPrice원",
+                        "${NumberFormat('#,###').format(totalPrice)}원",
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
@@ -386,18 +365,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 ),
               ),
             ),
-            // const SizedBox(height: 5),
-            // SizedBox(
-            //   width: double.infinity,
-            //   height: 50,
-            //   child: TextButton(
-            //     onPressed: () { /* TODO: 주문 생성 로직 */ },
-            //     style: TextButton.styleFrom(
-            //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            //         backgroundColor: AppColors.primary),
-            //     child: Text(l10n.order, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black)),
-            //   ),
-            // ),
             const SizedBox(height: 20),
           ],
         );
@@ -405,7 +372,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
     );
   }
 }
-
 class OptionDropdown extends StatelessWidget {
   final String hint;
   final String? value;
@@ -499,7 +465,7 @@ class ProductsNameSection extends StatelessWidget {
         const SizedBox(height: 2),
         if (hasDiscount) ...[
           Text(
-            "$originalPrice원",
+            "${NumberFormat('#.###').format(originalPrice)}원",
             style: const TextStyle(
               fontSize: 10,
               decoration: TextDecoration.lineThrough,

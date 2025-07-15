@@ -63,7 +63,9 @@ CartProduct _$CartProductFromJson(Map<String, dynamic> json) => CartProduct(
   id: json['id'] as String,
   name: json['name'] as String,
   unitPrice: (json['unitPrice'] as num).toInt(),
-  thumbnailImage: json['thumbnailImage'] as String?,
+  thumbnailImage: json['thumbnailImage'] == null
+      ? null
+      : ThumbnailImage.fromJson(json['thumbnailImage'] as Map<String, dynamic>),
   options: (json['options'] as Map<String, dynamic>?)?.map(
     (k, e) =>
         MapEntry(k, (e as List<dynamic>).map((e) => e as String).toList()),
@@ -78,6 +80,12 @@ Map<String, dynamic> _$CartProductToJson(CartProduct instance) =>
       'thumbnailImage': instance.thumbnailImage,
       'options': instance.options,
     };
+
+ThumbnailImage _$ThumbnailImageFromJson(Map<String, dynamic> json) =>
+    ThumbnailImage(id: json['id'] as String, url: json['url'] as String?);
+
+Map<String, dynamic> _$ThumbnailImageToJson(ThumbnailImage instance) =>
+    <String, dynamic>{'id': instance.id, 'url': instance.url};
 
 CartPagination _$CartPaginationFromJson(Map<String, dynamic> json) =>
     CartPagination(

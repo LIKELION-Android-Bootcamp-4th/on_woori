@@ -23,7 +23,6 @@ class OrderListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currencyFormat = NumberFormat('#,##0', 'en_US');
     final Color statusColor = AppColors.grey;
 
     return InkWell(
@@ -57,7 +56,7 @@ class OrderListItem extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '총 ${currencyFormat.format(totalAmount)}원',
+                      '총 ${NumberFormat('#,###').format(totalAmount)}원',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

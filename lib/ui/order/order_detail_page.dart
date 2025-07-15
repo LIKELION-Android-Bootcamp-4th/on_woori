@@ -199,6 +199,8 @@ class OrderProductListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat('#,###');
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -240,7 +242,7 @@ class OrderProductListItem extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               Text(
-                "$price원",
+                "${formatter.format(price)}원",
                 style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -269,6 +271,8 @@ class PriceInfoBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat('#,###');
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -285,7 +289,7 @@ class PriceInfoBox extends StatelessWidget {
                 style: TextStyle(color: AppColors.grey, fontSize: 18),
               ),
               Text(
-                "$price원",
+                "${formatter.format(price)}원",
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,

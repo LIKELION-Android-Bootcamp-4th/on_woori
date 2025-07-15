@@ -70,8 +70,7 @@ class CartProduct {
   final String id;
   final String name;
   final int unitPrice;
-  final String? thumbnailImage;
-
+  final ThumbnailImage? thumbnailImage;
   final Map<String, List<String>>? options;
 
   String get optionText {
@@ -95,6 +94,23 @@ class CartProduct {
       _$CartProductFromJson(json);
 
   Map<String, dynamic> toJson() => _$CartProductToJson(this);
+}
+
+// ## 2. 새로운 ThumbnailImage 클래스를 추가했습니다 ##
+@JsonSerializable()
+class ThumbnailImage {
+  final String id;
+  final String? url;
+
+  const ThumbnailImage({
+    required this.id,
+    this.url,
+  });
+
+  factory ThumbnailImage.fromJson(Map<String, dynamic> json) =>
+      _$ThumbnailImageFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ThumbnailImageToJson(this);
 }
 
 @JsonSerializable()

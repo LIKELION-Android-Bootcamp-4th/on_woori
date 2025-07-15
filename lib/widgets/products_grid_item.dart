@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:on_woori/core/styles/default_image.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
@@ -25,6 +26,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
   @override
   void initState() {
     super.initState();
+
     price = widget.item.price;
     productName = widget.item.name;
     brandName = widget.item.store?.name ?? "브랜드";
@@ -70,6 +72,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -114,6 +117,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
           ],
         ),
         const SizedBox(height: 5),
+
         GestureDetector(
           onTap: () {
             context.push('/productdetail/${widget.item.id}');
@@ -123,13 +127,14 @@ class ProductsGridItemState extends State<ProductsGridItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "$price원",
+                '${NumberFormat('#,###').format(price)}원',
                 style: const TextStyle(
                   fontSize: 18,
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
                 ),
               ),
+              // #########################
               Text(
                 brandName,
                 style: const TextStyle(

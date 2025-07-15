@@ -2,7 +2,7 @@
 abstract class AdminProductEndpoints {
   // 상품 삭제
   static String deleteAdminProductsForce({required String id}) {
-    return '/api/admin/products/$id/force';
+    return '/api/admin/products/$id';
   }
 
   // 비밀번호 변경(관리자용)

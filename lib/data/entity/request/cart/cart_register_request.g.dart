@@ -11,6 +11,7 @@ CartRegisterRequest _$CartRegisterRequestFromJson(Map<String, dynamic> json) =>
       productId: json['productId'] as String,
       quantity: (json['quantity'] as num).toInt(),
       unitPrice: (json['unitPrice'] as num).toInt(),
+      options: CartOptions.fromJson(json['options'] as Map<String, dynamic>),
       discount: json['discount'] == null
           ? null
           : CartDiscount.fromJson(json['discount'] as Map<String, dynamic>),
@@ -22,6 +23,7 @@ Map<String, dynamic> _$CartRegisterRequestToJson(
   'productId': instance.productId,
   'quantity': instance.quantity,
   'unitPrice': instance.unitPrice,
+  'options': instance.options.toJson(),
   if (instance.discount?.toJson() case final value?) 'discount': value,
 };
 

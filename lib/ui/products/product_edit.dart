@@ -74,14 +74,16 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _priceController.text = product.price.toString();
         _discountController.text = product.discount?.toString() ?? '';
         _descriptionController.text = product.description;
-
         _selectedCategory = product.category;
 
-        final sizeOptionGroup = product.options?.firstWhere(
-              (opt) => opt.name == '사이즈',
-          orElse: () => ProductOptionGroup(type: '', name: '', items: []),
-        );
-        _selectedSizes.addAll(sizeOptionGroup!.items.map((item) => item.code));
+        _selectedSizes.clear();
+        if (product.options != null) {
+          final sizeOptionGroup = product.options!.firstWhere(
+                (opt) => opt.name == '사이즈',
+            orElse: () => ProductOptionGroup(type: '', name: '', items: []),
+          );
+          _selectedSizes.addAll(sizeOptionGroup.items.map((item) => item.code));
+        }
 
         _existingThumbnailUrl = product.thumbnailImage?.url;
       } else {
@@ -185,30 +187,21 @@ class _ProductEditPageState extends State<ProductEditPage> {
         }
       }
 
+      final Map<String, List<String>> optionsMap = {
+        'size': _selectedSizes.toList(),
+        'color': ['기본'],
+      };
+
       final imagesJson = {"detail": detailImageUrls};
-      final sizeOptionsJson = {
-        "type": "size",
-        "name": "사이즈",
-        "items": _selectedSizes.map((size) => {"code": size}).toList(),
-      };
-      final colorOptionsJson = {
-        "type": "color",
-        "name": "컬러",
-        "items": [
-          {"code": "기본"},
-        ],
-      };
-      final optionsList = [sizeOptionsJson, colorOptionsJson];
-      final jsondetailImages = jsonEncode(imagesJson);
 
       final formData = FormData.fromMap({
         'name': _nameController.text,
         'price': int.tryParse(_priceController.text) ?? 0,
         'description': _descriptionController.text,
         'category': _selectedCategory ?? _categories[0],
-        'options': jsonEncode(optionsList),
+        'options': optionsMap,
         'discount': int.tryParse(_discountController.text),
-        'images': jsondetailImages,
+        'images': jsonEncode(imagesJson),
       });
 
       if (_thumbnailImageFile != null) {

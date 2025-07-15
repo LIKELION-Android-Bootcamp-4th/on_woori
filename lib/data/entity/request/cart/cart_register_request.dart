@@ -7,8 +7,7 @@ class CartRegisterRequest {
   final String productId;
   final int quantity;
   final int unitPrice;
-
-  // final CartOptions options;
+  final CartOptions options;
 
   @JsonKey(includeIfNull: false)
   final CartDiscount? discount;
@@ -17,7 +16,7 @@ class CartRegisterRequest {
     required this.productId,
     required this.quantity,
     required this.unitPrice,
-    // this.options,
+    required this.options,
     this.discount,
   });
 

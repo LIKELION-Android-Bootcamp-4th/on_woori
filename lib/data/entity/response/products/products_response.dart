@@ -1,30 +1,8 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'products_response.g.dart';
-
-List<ProductOptionGroup>? _optionsListFromJson(String? jsonString) {
-  if (jsonString == null || jsonString.isEmpty) {
-    return null;
-  }
-  try {
-    final dynamic decodedJson = jsonDecode(jsonString);
-
-    if (decodedJson is List) {
-      return decodedJson
-          .map((item) => ProductOptionGroup.fromJson(item as Map<String, dynamic>))
-          .toList();
-    }
-    else if (decodedJson is Map<String, dynamic>) {
-      return [ProductOptionGroup.fromJson(decodedJson)];
-    }
-    return null;
-  } catch (e) {
-    debugPrint('Options parsing error for string "$jsonString": $e');
-    return null;
-  }
-}
 
 Images? _imagesFromJson(String? jsonString) {
   if (jsonString == null || jsonString.isEmpty) return null;
@@ -32,9 +10,69 @@ Images? _imagesFromJson(String? jsonString) {
     final decoded = jsonDecode(jsonString);
     return Images.fromJson(decoded as Map<String, dynamic>);
   } catch (e) {
+    debugPrint('Images parsing error for string "$jsonString": $e');
     return null;
   }
 }
+
+// 서버에서 어떤 형식의 'options'를 보내든 처리할 수 있도록 수정된 함수
+List<ProductOptionGroup>? _optionsListFromJson(dynamic json) {
+  if (json == null) {
+    return null;
+  }
+
+  // 1. 서버가 JSON 객체를 직접 보낼 경우 (가장 최신 형식)
+  if (json is Map<String, dynamic>) {
+    final Map<String, dynamic> optionsMap = json;
+    final List<ProductOptionGroup> options = [];
+
+    // 'size' 옵션 처리
+    if (optionsMap.containsKey('size') && optionsMap['size'] is List) {
+      options.add(ProductOptionGroup(
+        type: 'size',
+        name: '사이즈',
+        items: List<String>.from(optionsMap['size'])
+            .map((s) => ProductOptionItem(code: s))
+            .toList(),
+      ));
+    }
+
+    // 'color' 옵션 처리 (문자열 또는 리스트 모두 대응)
+    if (optionsMap.containsKey('color')) {
+      final dynamic colorValue = optionsMap['color'];
+      List<String> colorItems = [];
+      if (colorValue is String) {
+        colorItems.add(colorValue);
+      } else if (colorValue is List) {
+        colorItems = List<String>.from(colorValue);
+      }
+
+      if (colorItems.isNotEmpty) {
+        options.add(ProductOptionGroup(
+          type: 'color',
+          name: '컬러',
+          items: colorItems.map((c) => ProductOptionItem(code: c)).toList(),
+        ));
+      }
+    }
+    return options.isNotEmpty ? options : null;
+  }
+
+  // 2. 서버가 JSON 문자열을 보낼 경우 (이전 형식 - 폴백)
+  if (json is String && json.isNotEmpty) {
+    try {
+      final decoded = jsonDecode(json);
+      // 재귀적으로 함수를 다시 호출하여 처리
+      return _optionsListFromJson(decoded);
+    } catch (e) {
+      debugPrint('Options string parsing error: $e');
+      return null;
+    }
+  }
+
+  return null;
+}
+
 
 String? _discountToStringJson(dynamic json) {
   if (json == null || (json is String && json.isEmpty)) return null;
@@ -96,6 +134,7 @@ class ProductItem {
   @JsonKey(fromJson: _imagesFromJson)
   final Images? images;
 
+  // 수정된 파싱 함수를 적용합니다.
   @JsonKey(fromJson: _optionsListFromJson)
   final List<ProductOptionGroup>? options;
 
@@ -104,7 +143,7 @@ class ProductItem {
     required this.name,
     required this.description,
     required this.price,
-    required this.isFavorite,
+    this.isFavorite,
     this.stock,
     this.stockType,
     this.discount,
@@ -124,10 +163,10 @@ class ProductItem {
 
 @JsonSerializable()
 class ThumbnailImage {
-  final String id;
-  final String url;
+  final String? id;
+  final String? url;
 
-  const ThumbnailImage({required this.id, required this.url});
+  const ThumbnailImage({this.id, this.url});
 
   factory ThumbnailImage.fromJson(Map<String, dynamic> json) =>
       _$ThumbnailImageFromJson(json);

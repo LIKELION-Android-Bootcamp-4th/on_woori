@@ -2,6 +2,26 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'cart_response.g.dart';
 
+Map<String, String>? _optionsFromJson(dynamic json) {
+  if (json == null || json is! Map<String, dynamic>) {
+    return null;
+  }
+  return json.map((key, value) => MapEntry(key.toString(), value.toString()));
+}
+
+ThumbnailImage? _thumbnailImageFromJson(dynamic json) {
+  if (json == null || json is! Map<String, dynamic>) {
+    return null;
+  }
+  final urlValue = json['url'];
+  final String? finalUrl = urlValue is String ? urlValue : null;
+
+  final idValue = json['id'];
+  final String? finalId = idValue is String ? idValue : null;
+
+  return ThumbnailImage(id: finalId, url: finalUrl);
+}
+
 @JsonSerializable(explicitToJson: true)
 class CartResponse {
   final bool success;
@@ -70,15 +90,21 @@ class CartProduct {
   final String id;
   final String name;
   final int unitPrice;
+
+  // *** MODIFIED ***
+  // 새로 추가한 안전 파싱 함수를 적용합니다.
+  @JsonKey(fromJson: _thumbnailImageFromJson)
   final ThumbnailImage? thumbnailImage;
-  final Map<String, List<String>>? options;
+
+  @JsonKey(fromJson: _optionsFromJson)
+  final Map<String, String>? options;
 
   String get optionText {
     if (options == null || options!.isEmpty) {
       return '옵션 없음';
     }
     return options!.entries
-        .map((e) => '${e.key}: ${e.value.join(', ')}')
+        .map((e) => '${e.key}: ${e.value}')
         .join(' / ');
   }
 
@@ -96,14 +122,13 @@ class CartProduct {
   Map<String, dynamic> toJson() => _$CartProductToJson(this);
 }
 
-// ## 2. 새로운 ThumbnailImage 클래스를 추가했습니다 ##
 @JsonSerializable()
 class ThumbnailImage {
-  final String id;
+  final String? id;
   final String? url;
 
   const ThumbnailImage({
-    required this.id,
+    this.id,
     this.url,
   });
 

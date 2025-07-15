@@ -63,7 +63,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
   String? selectedColor;
   String? selectedSize;
 
-  late bool isLiked;
+  bool isLiked = false;
 
   @override
   void initState() {
@@ -71,7 +71,11 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
     _productsFuture = productsApiClient.productDetail(widget.id).then((
         response,
         ) {
-      isLiked = response.data?.isFavorite ?? false;
+      if (mounted) {
+        setState(() {
+          isLiked = response.data?.isFavorite ?? false;
+        });
+      }
       return response;
     });
   }
@@ -154,11 +158,20 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
       return;
     }
 
+    // *** MODIFIED PART START ***
+    // 사용자가 선택한 사이즈와 컬러로 CartOptions 객체를 생성합니다.
+    final cartOptions = CartOptions(
+      size: selectedSize,
+      color: selectedColor,
+    );
+
     final request = CartRegisterRequest(
       productId: product.id,
       quantity: quantity,
       unitPrice: product.price,
+      options: cartOptions, // 수정된 cartOptions를 전달합니다.
     );
+    // *** MODIFIED PART END ***
 
     try {
       final response = await cartApiClient.addToCart(request: request);
@@ -205,6 +218,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
 
         final product = snapshot.data!.data!;
 
+        // 엔티티에서 파싱된 데이터를 직접 사용합니다.
         List<String> sizeOptions = [];
         List<String> colorOptions = [];
         if (product.options != null) {
@@ -477,22 +491,26 @@ class ProductsNameSection extends StatelessWidget {
             hasDiscount = true;
             finalPrice = (product.price * (100 - rate) / 100).round();
           }
-        } else {
-          final discountData = jsonDecode(product.discount!);
-          rate = discountData['value'];
-          if (rate != null && rate! > 0) {
-            hasDiscount = true;
-            finalPrice = (product.price * (100 - rate!) / 100).round();
-          }
         }
       } catch (e) {
-        rate = null;
-        hasDiscount = false;
+        try {
+          final discountData = jsonDecode(product.discount!);
+          if (discountData['value'] is int) {
+            rate = discountData['value'];
+            if (rate != null && rate! > 0) {
+              hasDiscount = true;
+              finalPrice = (product.price * (100 - rate!) / 100).round();
+            }
+          }
+        } catch (e2) {
+          rate = null;
+          hasDiscount = false;
+        }
       }
     }
 
     return ProductsNameSection(
-      category: product.stockType ?? "카테고리",
+      category: product.category ?? "카테고리",
       productName: product.name,
       originalPrice: product.price,
       discountRate: rate,

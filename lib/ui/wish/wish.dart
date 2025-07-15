@@ -116,8 +116,7 @@ class _WishPageState extends State<WishPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CategoryHorizontalScroll(),
-                ListToolbar(productList.length),
+                const SizedBox(height: 30,),
                 Expanded(
                   child: productList.isEmpty
                       ? Center(child: Text(l10n.wishlistNoItemsToDisplay))

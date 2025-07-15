@@ -694,6 +694,12 @@ abstract class AppLocalizations {
   /// **'상세 이미지 업로드에 실패했습니다: {message}'**
   String productRegisterErrorImageUploadFailed(String message);
 
+  /// No description provided for @productRegisterErrorLength.
+  ///
+  /// In ko, this message translates to:
+  /// **'상품명은 2글자 이상이여야 합니다.'**
+  String get productRegisterErrorLength;
+
   /// No description provided for @productRegisterSuccess.
   ///
   /// In ko, this message translates to:

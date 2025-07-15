@@ -118,6 +118,7 @@
   "productRegisterErrorNoNamePrice": "상품 이름과 가격은 필수입니다.",
   "productRegisterErrorNoSize": "사이즈 옵션을 하나 이상 선택해주세요.",
   "productRegisterErrorImageUploadFailed": "상세 이미지 업로드에 실패했습니다: {message}",
+  "productRegisterErrorLength": "상품명은 2글자 이상이여야 합니다.",
   "@productRegisterErrorImageUploadFailed": {
     "placeholders": { "message": { "type": "String" } }
   },

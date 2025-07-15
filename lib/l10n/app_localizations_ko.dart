@@ -317,6 +317,9 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get productRegisterErrorLength => '상품명은 2글자 이상이여야 합니다.';
+
+  @override
   String get productRegisterSuccess => '상품이 성공적으로 등록되었습니다.';
 
   @override

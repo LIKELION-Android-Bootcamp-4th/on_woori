@@ -106,6 +106,10 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
       _showSnackBar(l10n.productRegisterErrorNoSize);
       return;
     }
+    if (_nameController.text.length < 2) {
+      _showSnackBar(l10n.productRegisterErrorLength);
+      return;
+    }
 
     setState(() => _isLoading = true);
 

@@ -120,7 +120,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
     String? imageUrl = _profileImageUrl;
 
     if (_nameController.text.isEmpty || _linkController.text.isEmpty) {
-      _showSnackBar(l10n.productRegisterErrorNoNamePrice);
+      _showSnackBar(l10n.validatorRequired);
       return;
     }
 

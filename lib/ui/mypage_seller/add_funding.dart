@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/data/client/seller_fundings_api_client.dart';
 import 'package:on_woori/data/client/seller_store_api.dart';
@@ -58,8 +59,9 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile =
-                    picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageFile = picked != null
+                        ? File(picked.path)
+                        : _profileImageFile;
                     _profileImageUrl = picked != null ? null : _profileImageUrl;
                     _isPickingImage = false;
                   });
@@ -76,8 +78,9 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile =
-                    picked != null ? File(picked.path) : _profileImageFile;
+                    _profileImageFile = picked != null
+                        ? File(picked.path)
+                        : _profileImageFile;
                     _profileImageUrl = picked != null ? null : _profileImageUrl;
                     _isPickingImage = false;
                   });
@@ -96,26 +99,6 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
     });
   }
 
-  Future<String?> getStoreId() async {
-    try {
-      final storeApiClient = SellerStoreApi();
-      final response = await storeApiClient.getStore();
-
-      debugPrint("storemessage : ${response.message}");
-
-      if (response.success) {
-        final storeId = response.data?.owner?.id;
-        return storeId;
-      } else {
-        debugPrint('스토어 정보 불러오기 실패: ${response.message}');
-        return null;
-      }
-    } catch (e) {
-      debugPrint('스토어 ID 조회 중 오류 발생: $e');
-      return null;
-    }
-  }
-
   @override
   void dispose() {
     _nameController.dispose();
@@ -123,50 +106,66 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
     super.dispose();
   }
 
+  void _showSnackBar(String message, {bool isError = true}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.redAccent : Colors.green,
+      ),
+    );
+  }
+
   void submit() async {
-    final storeId = await getStoreId();
-    if (storeId != null) {
-      String? imageUrl = _profileImageUrl;
+    final l10n = AppLocalizations.of(context)!;
+    String? imageUrl = _profileImageUrl;
 
-      if (_profileImageFile != null) {
-        try {
-          final uploadClient = UploadApiClient();
-          final request = UploadFilesRequest(
-            files: [XFile(_profileImageFile!.path)],
-          );
-          final UploadFilesResponse uploadResponse =
-          await uploadClient.uploadFiles(request);
+    if (_nameController.text.isEmpty || _linkController.text.isEmpty) {
+      _showSnackBar(l10n.validatorRequired);
+      return;
+    }
 
-          if (uploadResponse.success &&
-              uploadResponse.data!.files.first.url.isNotEmpty) {
-            imageUrl = uploadResponse.data?.files.first.url;
-            debugPrint('업로드된 이미지 URL: $imageUrl');
-          } else {
-            debugPrint('파일 업로드 실패 또는 URL 없음');
-            return;
-          }
-        } catch (e) {
-          debugPrint('이미지 업로드 중 오류 발생: $e');
+    if (_profileImageFile != null) {
+      try {
+        final uploadClient = UploadApiClient();
+        final request = UploadFilesRequest(
+          files: [XFile(_profileImageFile!.path)],
+        );
+        final UploadFilesResponse uploadResponse = await uploadClient
+            .uploadFiles(request);
+
+        if (uploadResponse.success &&
+            uploadResponse.data!.files.first.url.isNotEmpty) {
+          imageUrl = uploadResponse.data?.files.first.url;
+          debugPrint('업로드된 이미지 URL: $imageUrl');
+        } else {
+          debugPrint('파일 업로드 실패 또는 URL 없음');
           return;
         }
+      } catch (e) {
+        debugPrint('이미지 업로드 중 오류 발생: $e');
+        return;
       }
-      final res = await fundingApiClient.createFunding(
-        storeId: storeId,
-        title: _nameController.text,
-        linkUrl: _linkController.text,
-        imageUrl: imageUrl,
-      );
-      debugPrint("storeId: $storeId");
-
-      setState(() {
-        if (res.success) {
-          debugPrint('펀딩 생성 성공!');
-          // 추가로 생성된 펀딩 목록 갱신 등 작업
-        } else {
-          debugPrint('생성 실패: ${res.message}');
-        }
-      });
+    } else {
+      _showSnackBar(l10n.productRegisterErrorNoThumbnail);
+      return;
     }
+
+    final res = await fundingApiClient.createFunding(
+      title: _nameController.text,
+      linkUrl: _linkController.text,
+      imageUrl: imageUrl,
+    );
+
+    setState(() {
+      if (res.success) {
+        debugPrint('펀딩 생성 성공!');
+        // 추가로 생성된 펀딩 목록 갱신 등 작업
+        Navigator.of(context).pop(true);
+        _showSnackBar(l10n.fundingRegisterPageTitle, isError: false);
+      } else {
+        debugPrint('생성 실패: ${res.message}');
+      }
+    });
   }
 
   @override
@@ -212,7 +211,9 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: BottomButton(
-              buttonText: l10n.fundingRegisterButton, pressedFunc: submit),
+            buttonText: l10n.fundingRegisterButton,
+            pressedFunc: submit,
+          ),
         ),
       ),
     );
@@ -241,13 +242,15 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:
-          const BorderSide(color: AppColors.dividerTextBoxLineDivider),
+          borderSide: const BorderSide(
+            color: AppColors.dividerTextBoxLineDivider,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:
-          const BorderSide(color: AppColors.dividerTextBoxLineDivider),
+          borderSide: const BorderSide(
+            color: AppColors.dividerTextBoxLineDivider,
+          ),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 12,
@@ -271,14 +274,14 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
           child: _profileImageFile == null
               ? const SizedBox.shrink()
               : ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.file(
-              _profileImageFile!,
-              fit: BoxFit.cover,
-              width: 160,
-              height: 160,
-            ),
-          ),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.file(
+                    _profileImageFile!,
+                    fit: BoxFit.cover,
+                    width: 160,
+                    height: 160,
+                  ),
+                ),
         ),
         Positioned(
           bottom: -10,

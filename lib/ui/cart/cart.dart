@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:on_woori/data/client/cart_api_client.dart';
 import 'package:on_woori/data/entity/request/cart/cart_checkout_request.dart';
+import 'package:on_woori/data/entity/request/cart/cart_request.dart';
 import 'package:on_woori/data/entity/response/cart/cart_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
@@ -41,8 +42,9 @@ class _CartPageState extends State<CartPage> {
     setState(() => _isLoading = true);
 
     try {
-      // TODO: 카트 삭제
-
+      CartRequest request = CartRequest(cartIds: [cartId]);
+      CartApiClient().deleteCart(request: request);
+      
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l10n.cartItemDeletedSuccess)));

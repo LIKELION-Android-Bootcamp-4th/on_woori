@@ -24,7 +24,7 @@ class ProductsDetailPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          l10n.productDetailTitle,
+          l10n.productDetailPageTitle,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
         actions: [
@@ -76,34 +76,39 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
     });
   }
 
+  Future<void> _showLoginDialog() async {
+    final l10n = AppLocalizations.of(context)!;
+    if (!mounted) return;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.productDetailLoginRequiredTitle),
+        content: Text(l10n.productDetailLoginRequiredContent),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(l10n.commonCancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.push('/auth/login');
+            },
+            child: Text(l10n.loginButton),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _toggleFavorite() async {
-    // 로그인 상태 확인
+    final l10n = AppLocalizations.of(context)!;
     final accessToken = await storage.read(key: 'ACCESS_TOKEN');
     if (accessToken == null) {
-      if (!mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('로그인 필요'),
-          content: const Text('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?'),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('취소')),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                context.push('/auth/login');
-              },
-              child: const Text('로그인'),
-            ),
-          ],
-        ),
-      );
+      _showLoginDialog();
       return;
     }
 
-    // --- 이하 로그인 상태일 때의 로직 ---
     final originalState = isLiked;
     setState(() {
       isLiked = !isLiked;
@@ -114,7 +119,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
         productId: widget.id,
       );
 
-      // API 응답 구조에 맞게 버그 수정
       if (!response.success) {
         setState(() {
           isLiked = originalState;
@@ -125,7 +129,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
       setState(() {
         isLiked = originalState;
       });
-      _showSnackBar('오류가 발생했습니다. 다시 시도해주세요.');
+      _showSnackBar(l10n.productDetailToggleFavoriteError);
     }
   }
 
@@ -134,39 +138,19 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
       List<String> sizeOptions,
       List<String> colorOptions,
       ) async {
-    // 로그인 상태 확인
+    final l10n = AppLocalizations.of(context)!;
     final accessToken = await storage.read(key: 'ACCESS_TOKEN');
     if (accessToken == null) {
-      if (!mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('로그인 필요'),
-          content: const Text('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?'),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('취소')),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                context.push('/auth/login');
-              },
-              child: const Text('로그인'),
-            ),
-          ],
-        ),
-      );
+      _showLoginDialog();
       return;
     }
 
-    // --- 이하 로그인 상태일 때의 로직 ---
     if (sizeOptions.isNotEmpty && selectedSize == null) {
-      _showSnackBar('사이즈를 선택해주세요.');
+      _showSnackBar(l10n.productDetailSelectSizePrompt);
       return;
     }
     if (colorOptions.isNotEmpty && selectedColor == null) {
-      _showSnackBar('색상을 선택해주세요.');
+      _showSnackBar(l10n.productDetailSelectColorPrompt);
       return;
     }
 
@@ -181,14 +165,14 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         _showSnackBar(
-          '장바구니에 상품을 추가했습니다.',
+          l10n.productDetailAddToCartSuccess,
           backgroundColor: Colors.green,
         );
       } else {
-        _showSnackBar('장바구니 추가에 실패했습니다: ${response.data}');
+        _showSnackBar(l10n.productDetailAddToCartFailed('${response.data}'));
       }
     } catch (e) {
-      _showSnackBar('오류가 발생했습니다: $e');
+      _showSnackBar(l10n.productDetailAddToCartError('$e'));
     }
   }
 
@@ -213,10 +197,10 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return Center(child: Text("오류 발생: ${snapshot.error}"));
+          return Center(child: Text(l10n.productDetailFetchError('${snapshot.error}')));
         }
         if (!snapshot.hasData || snapshot.data?.data == null) {
-          return const Center(child: Text("상품 정보를 찾을 수 없습니다."));
+          return Center(child: Text(l10n.productDetailNoData));
         }
 
         final product = snapshot.data!.data!;
@@ -302,7 +286,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                 ),
               ),
               title: Text(
-                product.store?.name ?? "브랜드 정보 없음",
+                product.store?.name ?? l10n.productDetailNoBrand,
                 style: const TextStyle(fontSize: 16),
               ),
               dense: true,
@@ -314,7 +298,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             const Divider(color: Colors.black),
             if (sizeOptions.isNotEmpty) ...[
               OptionDropdown(
-                hint: "사이즈 선택",
+                hint: l10n.productDetailSizeDropdownHint,
                 value: selectedSize,
                 items: sizeOptions,
                 onChanged: (value) => setState(() => selectedSize = value),
@@ -323,7 +307,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
             ],
             if (colorOptions.isNotEmpty) ...[
               OptionDropdown(
-                hint: "색상 선택",
+                hint: l10n.productDetailColorDropdownHint,
                 value: selectedColor,
                 items: colorOptions,
                 onChanged: (value) => setState(() => selectedColor = value),
@@ -346,7 +330,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                         ),
                         if (selectedSize != null)
                           Text(
-                            '사이즈: $selectedSize',
+                            l10n.productDetailSelectedOptionSize(selectedSize!),
                             style: const TextStyle(
                               fontSize: 13,
                               color: AppColors.grey,
@@ -354,7 +338,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                           ),
                         if (selectedColor != null)
                           Text(
-                            '색상: $selectedColor',
+                            l10n.productDetailSelectedOptionColor(selectedColor!),
                             style: const TextStyle(
                               fontSize: 13,
                               color: AppColors.grey,
@@ -367,7 +351,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        "${NumberFormat('#,###').format(totalPrice)}원",
+                        l10n.currencyFormat(NumberFormat('#,###').format(totalPrice)),
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
@@ -409,7 +393,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
                   backgroundColor: AppColors.primary,
                 ),
                 child: Text(
-                  l10n.cart,
+                  l10n.productDetailAddToCartButton,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -486,7 +470,6 @@ class ProductsNameSection extends StatelessWidget {
 
     if (product.discount != null && product.discount!.isNotEmpty) {
       try {
-        // product.discount가 숫자형 문자열인지 확인
         final parsedRate = int.tryParse(product.discount!);
         if (parsedRate != null) {
           rate = parsedRate;
@@ -495,7 +478,6 @@ class ProductsNameSection extends StatelessWidget {
             finalPrice = (product.price * (100 - rate) / 100).round();
           }
         } else {
-          // JSON 형식의 문자열인지 확인
           final discountData = jsonDecode(product.discount!);
           rate = discountData['value'];
           if (rate != null && rate! > 0) {
@@ -521,6 +503,7 @@ class ProductsNameSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -530,7 +513,7 @@ class ProductsNameSection extends StatelessWidget {
         const SizedBox(height: 2),
         if (hasDiscount) ...[
           Text(
-            "${NumberFormat('#,###').format(originalPrice)}원",
+            l10n.currencyFormat(NumberFormat('#,###').format(originalPrice)),
             style: const TextStyle(
               fontSize: 10,
               decoration: TextDecoration.lineThrough,
@@ -541,7 +524,7 @@ class ProductsNameSection extends StatelessWidget {
           Row(
             children: [
               Text(
-                "$discountRate%",
+                l10n.productDetailDiscountPercent(discountRate.toString()),
                 style: const TextStyle(
                   fontSize: 13,
                   color: Colors.red,
@@ -550,7 +533,7 @@ class ProductsNameSection extends StatelessWidget {
               ),
               const SizedBox(width: 5),
               Text(
-                "${NumberFormat('#,###').format(discountedPrice)}원",
+                l10n.currencyFormat(NumberFormat('#,###').format(discountedPrice)),
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -560,7 +543,7 @@ class ProductsNameSection extends StatelessWidget {
           ),
         ] else ...[
           Text(
-            "${NumberFormat('#,###').format(originalPrice)}원",
+            l10n.currencyFormat(NumberFormat('#,###').format(originalPrice)),
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ],

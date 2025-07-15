@@ -20,19 +20,19 @@ class AppBottomNavigationBar extends StatelessWidget {
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: const Icon(Icons.home),
-          label: l10n.bottomNavigationBarHome,
+          label: l10n.navBarHome,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.category),
-          label: l10n.bottomNavigationBarCategory,
+          label: l10n.navBarCategory,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.favorite),
-          label: l10n.bottomNavigationBarWish,
+          label: l10n.navBarWish,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.person),
-          label: l10n.bottomNavigationBarMyPage,
+          label: l10n.navBarMyPage,
         ),
       ],
       currentIndex: selectedIndex,

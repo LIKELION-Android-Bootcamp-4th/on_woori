@@ -1,30 +1,323 @@
 {
   "@@locale": "ko",
+
   "appTitle": "온우리",
-  "mainSlogan": "나를 위한 오늘의 한복",
-  "bottomNavigationBarHome": "홈",
-  "bottomNavigationBarCategory": "카테고리",
-  "bottomNavigationBarWish": "위시리스트",
-  "bottomNavigationBarMyPage": "마이페이지",
-  "home_RecommendedProducts": "추천 상품",
-  "home_OngoingFunding": "진행중인 펀딩",
-  "home_BrandList": "브랜드 둘러보기",
-  "loginTitle": "로그인",
-  "loginEmailTitle": "이메일",
-  "loginEmailInputHint": "이메일 주소를 입력하세요",
-  "loginPasswordTitle": "비밀번호",
-  "loginPasswordInputHint": "비밀번호를 입력하세요",
+
+  "navBarHome": "홈",
+  "navBarCategory": "카테고리",
+  "navBarWish": "위시리스트",
+  "navBarMyPage": "마이페이지",
+
+  "homeSlogan": "나를 위한 오늘의 한복",
+  "homeRecommendedProducts": "추천 상품",
+  "homeOngoingFunding": "진행중인 펀딩",
+  "homeBrandList": "브랜드 둘러보기",
+  "homePageError": "오류 발생: {error}",
+  "@homePageError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "homePageNoData": "데이터가 없습니다.",
+  "homePageNoBrand": "브랜드 없음",
+
+  "loginPageTitle": "로그인",
+  "loginEmailLabel": "이메일",
+  "loginEmailHint": "이메일 주소를 입력하세요",
+  "loginPasswordLabel": "비밀번호",
+  "loginPasswordHint": "비밀번호를 입력하세요",
   "loginPasswordReset": "비밀번호 재설정",
-  "loginSubmitButton": "로그인",
-  "signInTitle": "회원가입",
-  "signInSubtitle": "어떤 사용자인가요?",
-  "signInUserTypeConsumer": "구매자",
-  "signInUserTypeSeller": "판매자",
-  "productDetailTitle": "상품 상세 정보",
-  "productPrice": "총 합산액",
-  "cart": "장바구니",
-  "order": "주문하기",
-  "brandProductEditTitle": "상품 관리",
+  "loginButton": "로그인",
+  "loginPromptSignUp": "온우리가 처음이신가요? ",
+  "loginSuccess": "로그인 되었습니다.",
+  "loginErrorBadRequest": "요청이 잘못되었습니다.",
+  "loginErrorUnauthorized": "이메일 또는 비밀번호가 일치하지 않습니다.",
+  "loginErrorForbidden": "계정이 비활성화되었거나 인증되지 않았습니다.",
+  "loginErrorServer": "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+  "loginErrorUnexpected": "예상치 못한 오류가 발생했습니다.",
+
+  "signUpPageTitle": "회원가입",
+  "signUpPageSubtitle": "어떤 사용자인가요?",
+  "signUpPageSubtitleCommon": "공통",
+  "signUpUserTypeConsumer": "구매자",
+  "signUpUserTypeSeller": "판매자",
+  "signUpSuccess": "회원가입 및 로그인이 완료되었습니다.",
+  "signUpErrorServer": "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+  "signUpErrorBadRequest": "입력값을 확인해주세요.",
+  "signUpErrorConflict": "이미 가입된 이메일입니다.",
+  "signUpErrorUnexpected": "알 수 없는 오류가 발생했습니다. 개발자에게 문의해주세요.",
+  "signUpNicknameLabel": "닉네임",
+  "signUpNicknameHint": "닉네임을 입력해주세요",
+  "signUpPasswordLabel": "비밀번호",
+  "signUpPasswordHint": "비밀번호를 입력해주세요",
+  "signUpPasswordConfirmLabel": "비밀번호 확인",
+  "signUpPasswordConfirmHint": "비밀번호를 한번 더 입력해주세요",
+
+  "validatorRequired": "내용을 입력해주세요",
+  "validatorPasswordMismatch": "입력한 비밀번호가 서로 다릅니다",
+  "validatorPasswordInvalid": "8자 이상, 숫자/대문자/소문자/특수문자를 포함해야 합니다",
+  "validatorEmailInvalid": "잘못된 이메일 형식입니다",
+
+  "passwordEditPageTitle": "비밀번호 수정",
+  "passwordEditCurrentPasswordLabel": "현재 비밀번호",
+  "passwordEditNewPasswordLabel": "새 비밀번호",
+  "passwordEditConfirmPasswordLabel": "비밀번호 확인",
+  "passwordEditHint": "비밀번호 입력",
+  "passwordEditButton": "비밀번호 변경",
+  "passwordEditErrorLength": "새 비밀번호는 최소 6자리 이상이어야 합니다.",
+  "passwordEditErrorSameAsCurrent": "새 비밀번호는 현재 비밀번호와 달라야 합니다.",
+  "passwordEditErrorMismatch": "새 비밀번호가 일치하지 않습니다.",
+  "passwordEditErrorInvalidUser": "사용자 정보가 올바르지 않습니다.",
+  "passwordEditSuccess": "비밀번호가 성공적으로 변경되었습니다.",
+  "passwordEditErrorFailed": "비밀번호 변경에 실패했습니다. 다시 시도해주세요.",
+  "passwordEditErrorUnexpected": "알 수 없는 오류가 발생했습니다.",
+
+  "myPageDefaultUserName": "사용자",
+  "myPageUserSuffix": "고객님",
+  "myPageSellerSuffix": "판매자님",
+  "myPageProfileEditButton": "프로필 수정",
+  "myPageBrandEditButton": "브랜드 수정",
+  "myPageSectionShopping": "쇼핑",
+  "myPageSectionOrder": "주문",
+  "myPageOrderHistory": "주문 내역",
+  "myPageWishlist": "위시리스트",
+  "myPageSectionMyInfo": "내 정보",
+  "myPageChangePassword": "비밀번호 변경",
+  "myPageRegisterProduct": "상품 등록",
+  "myPageRegisterFunding": "펀딩 등록",
+  "myPageManageItems": "등록 상품 / 펀딩 관리",
+  "myPageLogout": "로그아웃",
+  "myPageLogoutSuccess": "로그아웃 되었습니다.",
+  "myPageLogoutFailed": "로그아웃 실패 : {message}",
+  "@myPageLogoutFailed": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "myPageLogoutError": "로그아웃 중 오류: {error}",
+  "@myPageLogoutError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "myPageNoData": "데이터가 없습니다.",
+
+  "productRegisterPageTitle": "신규 상품 등록",
+  "productRegisterThumbnailImageLabel": "대표 이미지",
+  "productRegisterNameLabel": "상품 이름",
+  "productRegisterNameHint": "(이름)",
+  "productRegisterPriceLabel": "상품 가격 (정가 기준)",
+  "productRegisterPriceHint": "200,000",
+  "productRegisterDiscountLabel": "상품 할인율 (미기재시 0%)",
+  "productRegisterDiscountHint": "Ex : 10",
+  "productRegisterDisplayPriceLabel": "표시 가격 (할인율 반영)",
+  "productRegisterDisplayPriceHint": "Ex : 180,000",
+  "productRegisterDescriptionLabel": "상품 소개글",
+  "productRegisterDescriptionHint": "(소개글)",
+  "productRegisterSizeOptionLabel": "사이즈 옵션",
+  "productRegisterCategoryLabel": "카테고리 분류",
+  "productRegisterDetailImageLabel": "상품 소개 이미지 (선택)",
+  "productRegisterButton": "상품 등록",
+  "productRegisterAddDetailImage": "상세 이미지 추가",
+  "productRegisterErrorMaxImages": "이미지는 최대 5개까지 등록할 수 있습니다.",
+  "productRegisterErrorNoThumbnail": "대표 이미지를 등록해주세요.",
+  "productRegisterErrorNoNamePrice": "상품 이름과 가격은 필수입니다.",
+  "productRegisterErrorNoSize": "사이즈 옵션을 하나 이상 선택해주세요.",
+  "productRegisterErrorImageUploadFailed": "상세 이미지 업로드에 실패했습니다: {message}",
+  "@productRegisterErrorImageUploadFailed": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "productRegisterSuccess": "상품이 성공적으로 등록되었습니다.",
+  "productRegisterErrorFailed": "상품 등록에 실패했습니다: {message}",
+  "@productRegisterErrorFailed": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "productRegisterErrorUnexpected": "상품 등록 중 오류가 발생했습니다: {error}",
+  "@productRegisterErrorUnexpected": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "productEditPageTitle": "상품 수정",
+  "productEditButton": "상품 수정",
+  "productEditFetchError": "상품 정보를 불러오는 데 실패했습니다: {error}",
+  "@productEditFetchError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "productEditSuccess": "상품이 성공적으로 수정되었습니다.",
+  "productEditErrorUpdateFailed": "상품 수정 중 오류가 발생했습니다: {error}",
+  "@productEditErrorUpdateFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "fundingRegisterPageTitle": "신규 펀딩 등록",
+  "fundingRegisterCamera": "카메라로 촬영",
+  "fundingRegisterGallery": "갤러리에서 선택",
+  "fundingRegisterThumbnailLabel": "대표 이미지",
+  "fundingRegisterNameLabel": "펀딩명",
+  "fundingRegisterNameHint": "(이름)",
+  "fundingRegisterLinkLabel": "펀딩 링크",
+  "fundingRegisterLinkHint": "https://www.",
+  "fundingRegisterButton": "펀딩 추가",
+
+  "productListPageError": "오류 발생: {error}",
+  "@productListPageError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "productListPageNoData": "데이터가 없습니다.",
+  "productListPageEmpty": "표시할 상품이 없습니다.",
+  "productListPageProcessingError": "데이터 처리 중 오류가 발생했습니다: {error}",
+  "@productListPageProcessingError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "productDetailPageTitle": "상품 상세 정보",
+  "productDetailTotalPrice": "총 합산액",
+  "productDetailAddToCartButton": "장바구니",
+  "productDetailOrderButton": "주문하기",
+  "productDetailLoginRequiredTitle": "로그인 필요",
+  "productDetailLoginRequiredContent": "로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?",
+  "productDetailToggleFavoriteError": "오류가 발생했습니다. 다시 시도해주세요.",
+  "productDetailSelectSizePrompt": "사이즈를 선택해주세요.",
+  "productDetailSelectColorPrompt": "색상을 선택해주세요.",
+  "productDetailAddToCartSuccess": "장바구니에 상품을 추가했습니다.",
+  "productDetailAddToCartFailed": "장바구니 추가에 실패했습니다: {error}",
+  "@productDetailAddToCartFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "productDetailAddToCartError": "오류가 발생했습니다: {error}",
+  "@productDetailAddToCartError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "productDetailFetchError": "오류 발생: {error}",
+  "@productDetailFetchError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "productDetailNoData": "상품 정보를 찾을 수 없습니다.",
+  "productDetailNoBrand": "브랜드 정보 없음",
+  "productDetailDefaultCategory": "카테고리",
+  "productDetailSizeDropdownHint": "사이즈 선택",
+  "productDetailColorDropdownHint": "색상 선택",
+  "productDetailSelectedOptionSize": "사이즈: {size}",
+  "@productDetailSelectedOptionSize": {
+    "placeholders": { "size": { "type": "String" } }
+  },
+  "productDetailSelectedOptionColor": "색상: {color}",
+  "@productDetailSelectedOptionColor": {
+    "placeholders": { "color": { "type": "String" } }
+  },
+  "productDetailDiscountPercent": "{rate}%",
+  "@productDetailDiscountPercent": {
+    "placeholders": { "rate": { "type": "String" } }
+  },
+
+  "orderDetailPageTitle": "주문상세조회",
+  "orderDetailPageError": "오류가 발생했습니다: {error}",
+  "@orderDetailPageError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "orderDetailPageNoData": "주문 정보를 찾을 수 없습니다.",
+  "orderDetailSectionProducts": "주문 상품",
+  "orderDetailSectionPayment": "결제 정보",
+  "orderDetailHeaderNumber": "주문번호 {orderNumber}",
+  "@orderDetailHeaderNumber": {
+    "placeholders": { "orderNumber": { "type": "String" } }
+  },
+  "orderDetailProductOptions": "{options} | {quantity}개",
+  "@orderDetailProductOptions": {
+    "placeholders": {
+      "options": { "type": "String" },
+      "quantity": { "type": "int" }
+    }
+  },
+  "orderDetailTotalProductAmount": "총 상품 금액",
+  "orderDetailShippingFee": "총 배송비",
+  "orderDetailTotalPayment": "결제 금액",
+
+  "productManagementPageTitle": "상품 관리",
+  "productManagementProductTab": "상품",
+  "productManagementFundingTab": "펀딩",
+
+  "brandDetailPageError": "오류 발생: {error}",
+  "@brandDetailPageError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "brandDetailPageNoData": "데이터가 없습니다.",
+  "brandDetailDefaultName": "브랜드 이름",
+  "brandDetailDefaultDescription": "브랜드 소개",
+  "brandDetailProductsError": "상품 정보를 가져오지 못했습니다.",
+  "brandDetailProductsNoData": "상품 데이터가 없습니다.",
+  "brandDetailNoRecommendedProducts": "추천 상품이 없습니다.",
+  "brandDetailNoOngoingFunding": "진행중인 펀딩이 없습니다.",
+
+  "cartPageTitle": "장바구니",
+  "cartItemDeletedSuccess": "상품이 장바구니에서 삭제되었습니다.",
+  "cartItemDeleteFailed": "삭제에 실패했습니다: {error}",
+  "@cartItemDeleteFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "cartEmptyError": "장바구니에 상품이 없습니다.",
+  "cartCheckoutSuccess": "주문이 생성되었습니다.",
+  "cartCheckoutFailed": "주문 생성에 실패했습니다: {message}",
+  "@cartCheckoutFailed": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "cartCheckoutError": "주문 중 오류가 발생했습니다: {error}",
+  "@cartCheckoutError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "cartGenericError": "오류가 발생했습니다.\n{error}",
+  "@cartGenericError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "cartEmptyMessage": "장바구니가 비었습니다.",
+  "cartCheckoutButton": "{price}원 결제하기",
+  "@cartCheckoutButton": {
+    "placeholders": { "price": { "type": "String" } }
+  },
+
+  "wishlistEmpty": "위시리스트에 추가된 상품이 없습니다.",
+  "wishlistNoItemsToDisplay": "표시할 상품이 없습니다.",
+
+  "commonEdit": "수정",
+  "commonMore": "더보기",
+  "commonCancel": "취소",
+  "commonDelete": "삭제",
+  "commonMultiSelect": "다중선택",
+  "commonSelectAll": "모두 선택",
+  "commonDeselectAll": "전체 해제",
+  "commonDeleteSelected": "선택 삭제",
+  "commonAdminAuthFailed": "관리자 인증에 실패했습니다.",
+  "commonSelectItemToDelete": "삭제할 항목을 선택해주세요.",
+  "commonDeleteFailed": "삭제에 실패했습니다: {error}",
+  "@commonDeleteFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "productDeleteTitle": "상품 삭제",
+  "productDeleteConfirm": "정말로 이 상품을 삭제하시겠습니까?",
+  "productDeleteSuccess": "상품이 삭제되었습니다.",
+  "productBulkDeleteTitle": "상품 일괄 삭제",
+  "productBulkDeleteConfirm": "{count}개의 상품을 정말로 삭제하시겠습니까?",
+  "@productBulkDeleteConfirm": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "productBulkDeleteFailed": "일부 상품 삭제에 실패했습니다.",
+  "productBulkDeleteSuccess": "{count}개의 상품이 삭제되었습니다.",
+  "@productBulkDeleteSuccess": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "productSelectedCount": "선택된 상품 {count}개",
+  "@productSelectedCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "productOnSaleCount": "판매중 상품 {count}개",
+  "@productOnSaleCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "fundingSelectedCount": "선택된 펀딩 {count}개",
+  "@fundingSelectedCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "fundingRegisteredCount": "등록된 펀딩 {count}개",
+  "@fundingRegisteredCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
   "categoryOuter": "아우터",
   "categoryOuter_coat": "코트",
   "categoryOuter_jacket": "재킷",
@@ -55,7 +348,10 @@
   "categoryGoods_ear": "귀걸이",
   "categoryGoods_ring": "반지",
   "categoryGoods_etc": "기타 잡화",
-  "edit": "수정",
-  "more": "더보기",
+
+  "currencyFormat": "{price}원",
+  "@currencyFormat": {
+    "placeholders": { "price": { "type": "String" } }
+  },
   "dummyImage": "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg"
 }

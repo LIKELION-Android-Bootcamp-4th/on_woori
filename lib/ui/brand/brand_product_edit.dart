@@ -14,27 +14,27 @@ class BrandProductEditPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final li0n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            li0n!.brandProductEditTitle,
+            l10n.productManagementPageTitle,
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
-              Tab(icon: Text("상품")),
-              Tab(icon: Text("펀딩")),
+              Tab(icon: Text(l10n.productManagementProductTab)),
+              Tab(icon: Text(l10n.productManagementFundingTab)),
             ],
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
               color: Colors.black,
             ),
-            unselectedLabelStyle: TextStyle(
+            unselectedLabelStyle: const TextStyle(
               fontWeight: FontWeight.normal,
               fontSize: 16,
               color: AppColors.grey,
@@ -103,11 +103,11 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
     );
   }
 
-  // 🚀 [수정] 이 함수는 UI 상태를 변경하지 않고 순수하게 로그인 기능만 담당하도록 변경
   Future<bool> _ensureAdminLogin() async {
+    final l10n = AppLocalizations.of(context)!;
     final success = await adminApiClient.loginAsAdmin();
     if (!success && mounted) {
-      _showSnackBar('관리자 인증에 실패했습니다.', isError: true);
+      _showSnackBar(l10n.commonAdminAuthFailed, isError: true);
     }
     return success;
   }
@@ -128,6 +128,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
   }
 
   void deleteMultiSelection() async {
+    final l10n = AppLocalizations.of(context)!;
     final idsToDelete = <String>[];
     for (int i = 0; i < selectionList.length; i++) {
       if (selectionList[i]) {
@@ -135,23 +136,23 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
       }
     }
     if (idsToDelete.isEmpty) {
-      _showSnackBar('삭제할 상품을 선택해주세요.');
+      _showSnackBar(l10n.commonSelectItemToDelete);
       return;
     }
 
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('상품 일괄 삭제'),
-        content: Text('${idsToDelete.length}개의 상품을 정말로 삭제하시겠습니까?'),
+        title: Text(l10n.productBulkDeleteTitle),
+        content: Text(l10n.productBulkDeleteConfirm(idsToDelete.length)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('취소'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('삭제'),
+            child: Text(l10n.commonDelete),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
           ),
         ],
@@ -162,7 +163,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
 
     setState(() => isLoading = true);
     if (await _ensureAdminLogin() == false) {
-      setState(() => isLoading = false); // 로그인 실패 시 로딩 종료
+      setState(() => isLoading = false);
       return;
     }
 
@@ -171,30 +172,31 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
         await adminApiClient.deleteProductForce(id: id);
       } catch (e) {
         debugPrint("상품($id) 삭제 실패: $e");
-        _showSnackBar('일부 상품 삭제에 실패했습니다.', isError: true);
+        _showSnackBar(l10n.productBulkDeleteFailed, isError: true);
         break;
       }
     }
 
-    _showSnackBar('${idsToDelete.length}개의 상품이 삭제되었습니다.');
-    await _loadProducts(); // 목록 새로고침
+    _showSnackBar(l10n.productBulkDeleteSuccess(idsToDelete.length));
+    await _loadProducts();
     setState(() => selecting = false);
   }
 
   void deleteSelection(int index, String id) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('상품 삭제'),
-        content: const Text('정말로 이 상품을 삭제하시겠습니까?'),
+        title: Text(l10n.productDeleteTitle),
+        content: Text(l10n.productDeleteConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('취소'),
+            child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('삭제'),
+            child: Text(l10n.commonDelete),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
           ),
         ],
@@ -203,23 +205,23 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
 
     if (confirm != true) return;
 
-    setState(() => isLoading = true); // 🚀 [수정] 여기서 로딩을 시작하고
+    setState(() => isLoading = true);
 
     if (await _ensureAdminLogin() == false) {
-      setState(() => isLoading = false); // 로그인 실패 시 로딩 종료
+      setState(() => isLoading = false);
       return;
     }
 
     try {
       await adminApiClient.deleteProductForce(id: id);
-      _showSnackBar('상품이 삭제되었습니다.');
+      _showSnackBar(l10n.productDeleteSuccess);
       await _loadProducts();
     } catch (e) {
-      _showSnackBar('삭제에 실패했습니다: $e', isError: true);
+      _showSnackBar(l10n.commonDeleteFailed('$e'), isError: true);
       debugPrint("삭제 실패: $e");
     } finally {
       if (mounted) {
-        setState(() => isLoading = false); // 🚀 [수정] 모든 작업이 끝나면 여기서 로딩을 종료
+        setState(() => isLoading = false);
       }
     }
   }
@@ -231,6 +233,7 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -238,31 +241,31 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
     if (selecting) {
       bool isAllSelected =
           productList.isNotEmpty && selectionList.every((selected) => selected);
-      return _buildMultiSelectView(isAllSelected);
+      return _buildMultiSelectView(isAllSelected, l10n);
     }
 
-    return _buildSingleSelectView();
+    return _buildSingleSelectView(l10n);
   }
 
-  Widget _buildMultiSelectView(bool isAllSelected) {
+  Widget _buildMultiSelectView(bool isAllSelected, AppLocalizations l10n) {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       children: [
         Row(
           children: [
-            Text("선택된 상품 ${selectionList.where((e) => e).length}개"),
+            Text(l10n.productSelectedCount(selectionList.where((e) => e).length)),
             const Spacer(),
             TextButton(
               onPressed: toggleSelectAll,
-              child: Text(isAllSelected ? "전체 해제" : "모두 선택"),
+              child: Text(isAllSelected ? l10n.commonDeselectAll : l10n.commonSelectAll),
             ),
             TextButton(
               onPressed: deleteMultiSelection,
-              child: const Text("선택 삭제"),
+              child: Text(l10n.commonDeleteSelected),
             ),
             TextButton(
               onPressed: () => setState(() => selecting = false),
-              child: const Text("취소"),
+              child: Text(l10n.commonCancel),
             ),
           ],
         ),
@@ -285,17 +288,17 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
     );
   }
 
-  Widget _buildSingleSelectView() {
+  Widget _buildSingleSelectView(AppLocalizations l10n) {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       children: [
         Row(
           children: [
-            Text("판매중 상품 ${productList.length}개"),
+            Text(l10n.productOnSaleCount(productList.length)),
             const Spacer(),
             TextButton(
               onPressed: () => setState(() => selecting = true),
-              child: const Text("다중선택"),
+              child: Text(l10n.commonMultiSelect),
             ),
           ],
         ),
@@ -376,6 +379,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
   }
 
   void deleteSelection(int index, String id) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final res = await fundingApiClient.deleteFunding(id: id);
       if (res.success) {
@@ -383,10 +387,14 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
       }
     } catch (e) {
       debugPrint("삭제 실패: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.commonDeleteFailed('$e'))),
+      );
     }
   }
 
   void deleteMultiSelection() async {
+    final l10n = AppLocalizations.of(context)!;
     List<String> idsToDelete = [];
     for (int i = 0; i < selectionList.length; i++) {
       if (selectionList[i]) {
@@ -394,7 +402,12 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
       }
     }
 
-    if (idsToDelete.isEmpty) return;
+    if (idsToDelete.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.commonSelectItemToDelete)),
+      );
+      return;
+    }
 
     for (final id in idsToDelete) {
       try {
@@ -423,6 +436,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -437,14 +451,14 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
           Row(
             children: [
               Text(
-                "선택된 펀딩 ${selectionList.where((e) => e).length}개",
+                l10n.fundingSelectedCount(selectionList.where((e) => e).length),
                 style: const TextStyle(fontSize: 16, color: AppColors.grey),
               ),
               const Spacer(),
               TextButton(
                 onPressed: toggleSelectAll,
                 child: Text(
-                  isAllSelected ? "전체 해제" : "모두 선택",
+                  isAllSelected ? l10n.commonDeselectAll : l10n.commonSelectAll,
                   style: const TextStyle(
                     fontSize: 16,
                     color: AppColors.editDeleteTextButton,
@@ -453,8 +467,8 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
               ),
               TextButton(
                 onPressed: deleteMultiSelection,
-                child: const Text(
-                  "선택 삭제",
+                child: Text(
+                  l10n.commonDeleteSelected,
                   style: const TextStyle(
                     fontSize: 16,
                     color: AppColors.editDeleteTextButton,
@@ -490,7 +504,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
         Row(
           children: [
             Text(
-              "등록된 펀딩 ${fundingList.length}개",
+              l10n.fundingRegisteredCount(fundingList.length),
               style: const TextStyle(fontSize: 16, color: AppColors.grey),
             ),
             const Spacer(),
@@ -498,9 +512,9 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
               onPressed: () {
                 setState(() => selecting = true);
               },
-              child: const Text(
-                "다중선택",
-                style: TextStyle(color: AppColors.editDeleteTextButton),
+              child: Text(
+                l10n.commonMultiSelect,
+                style: const TextStyle(color: AppColors.editDeleteTextButton),
               ),
             ),
           ],

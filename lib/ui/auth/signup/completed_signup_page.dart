@@ -23,7 +23,7 @@ class CompletedSignupPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             Text(
-              l10n.signInTitle,
+              l10n.signUpPageTitle,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
           ],

@@ -26,14 +26,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
     _apiDataFuture = _initializeData();
   }
 
   Future<(ProductsResponse, FundingsResponse, StoresResponse)>
   _initializeData() async {
-    // await _loginAndSaveToken();
-
     try {
       final productsResponse = await ProductsApiClient().products();
       debugPrint(
@@ -79,25 +76,22 @@ class _HomePageState extends State<HomePage> {
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('오류 발생: ${snapshot.error}'));
+            return Center(child: Text(l10n.homePageError('${snapshot.error}')));
           }
 
           if (!snapshot.hasData) {
-            return const Center(child: Text('데이터가 없습니다.'));
+            return Center(child: Text(l10n.homePageNoData));
           }
 
-          final productItems = (snapshot.data?.$1.data?.items ?? [])
-              .take(4)
-              .toList();
-          final fundingItems = (snapshot.data?.$2.data?.items ?? [])
-              .take(3)
-              .toList();
-          final storeItems = (snapshot.data?.$3.data?.items ?? [])
-              .take(8)
-              .toList();
+          final productItems =
+          (snapshot.data?.$1.data?.items ?? []).take(4).toList();
+          final fundingItems =
+          (snapshot.data?.$2.data?.items ?? []).take(3).toList();
+          final storeItems =
+          (snapshot.data?.$3.data?.items ?? []).take(8).toList();
 
           return SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -107,23 +101,15 @@ class _HomePageState extends State<HomePage> {
                     fit: BoxFit.cover,
                     DefaultImage.bannerThumbnail,
                   ),
-
-                  // TextButton(
-                  //     onPressed: () { context.push('/auth/login'); },
-                  //     child: const Center(child: Text('배너')
-                  //     )),
                 ),
-
                 const SizedBox(height: 12),
-
-                _buildSectionHeader(title: l10n.home_RecommendedProducts),
+                _buildSectionHeader(title: l10n.homeRecommendedProducts),
                 const SizedBox(height: 12),
                 ProductsNonScrollableGrid(productItems.take(4).toList()),
                 const SizedBox(height: 12),
-
-                _buildSectionHeader(title: l10n.home_OngoingFunding),
+                _buildSectionHeader(title: l10n.homeOngoingFunding),
                 ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: fundingItems.length,
@@ -133,15 +119,14 @@ class _HomePageState extends State<HomePage> {
                       id: item.id,
                       imageUrl: item.imageUrl ?? l10n.dummyImage,
                       fundingName: item.title,
-                      brandName: item.companyId?.name ?? '브랜드 없음',
+                      brandName: item.companyId?.name ?? l10n.homePageNoBrand,
                       description: item.description ?? item.linkUrl ?? '',
                       linkUrl: item.linkUrl ?? '',
                     );
                   },
                 ),
                 const SizedBox(height: 32),
-
-                _buildSectionHeader(title: l10n.home_BrandList),
+                _buildSectionHeader(title: l10n.homeBrandList),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -150,18 +135,17 @@ class _HomePageState extends State<HomePage> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                            crossAxisSpacing: 12,
-                            childAspectRatio: 0.8,
-                          ),
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 0.8,
+                      ),
                       itemCount: storeItems.length,
                       itemBuilder: (context, index) {
                         final brand = storeItems[index];
                         return BrandGridItem(
                           imageUrl:
-                              brand.thumbnailImageUrl ??
-                              DefaultImage.brandThumbnail,
+                          brand.thumbnailImageUrl ?? DefaultImage.brandThumbnail,
                           brandName: brand.name,
                           onTap: () {
                             debugPrint('${brand.name} 클릭됨, ID: ${brand.id}');
@@ -170,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ],

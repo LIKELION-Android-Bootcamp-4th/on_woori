@@ -28,11 +28,12 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController passwordConfirmController =
-      TextEditingController();
+  TextEditingController();
   final AuthApiClient apiClient = AuthApiClient();
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   void _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -86,7 +87,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
         }
         await storage.write(key: 'USER_ROLE', value: userRole);
 
-        Fluttertoast.showToast(msg: "회원가입 및 로그인이 완료되었습니다.");
+        Fluttertoast.showToast(msg: l10n.signUpSuccess);
 
         if (mounted) {
           context.go('/');
@@ -96,7 +97,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
       }
     } on DioException catch (e) {
       final int? statusCode = e.response?.statusCode;
-      String errorMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+      String errorMessage = l10n.signUpErrorServer;
 
       final responseBody = e.response?.data;
       if (responseBody != null &&
@@ -106,17 +107,17 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
       } else {
         switch (statusCode) {
           case 400:
-            errorMessage = "입력값을 확인해주세요.";
+            errorMessage = l10n.signUpErrorBadRequest;
             break;
           case 409:
-            errorMessage = "이미 가입된 이메일입니다.";
+            errorMessage = l10n.signUpErrorConflict;
             break;
         }
       }
       Fluttertoast.showToast(msg: errorMessage);
       debugPrint("[SIGNUP ERROR] ${e.message} / $statusCode");
     } catch (e, s) {
-      Fluttertoast.showToast(msg: "알 수 없는 오류가 발생했습니다. 개발자에게 문의해주세요.");
+      Fluttertoast.showToast(msg: l10n.signUpErrorUnexpected);
       debugPrint("[UNEXPECTED SIGNUP ERROR] ${e.toString()}");
       debugPrint(s.toString());
     }
@@ -131,13 +132,13 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             Text(
-              l10n.signInTitle,
+              l10n.signUpPageTitle,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
             const SizedBox(width: 10),
-            const Text(
-              "공통",
-              style: TextStyle(color: AppColors.primarySub, fontSize: 18),
+            Text(
+              l10n.signUpPageSubtitleCommon,
+              style: const TextStyle(color: AppColors.primarySub, fontSize: 18),
             ),
           ],
         ),
@@ -156,54 +157,54 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
                   children: <Widget>[
                     LoginTextField(
                       controller: textController,
-                      labelText: "닉네임",
-                      hintText: "닉네임을 입력해주세요",
+                      labelText: l10n.signUpNicknameLabel,
+                      hintText: l10n.signUpNicknameHint,
                       inputType: TextInputType.text,
                       validator: (String? value) {
-                        if (value == null || value.isEmpty) return '내용을 입력해주세요';
+                        if (value == null || value.isEmpty) return l10n.validatorRequired;
                         return null;
                       },
                     ),
                     const SizedBox(height: 30),
                     LoginTextField(
                       controller: passwordController,
-                      labelText: "비밀번호",
-                      hintText: "비밀번호를 입력해주세요",
+                      labelText: l10n.signUpPasswordLabel,
+                      hintText: l10n.signUpPasswordHint,
                       inputType: TextInputType.text,
                       isPassword: true,
                       validator: (String? value) {
-                        if (value == null || value.isEmpty) return '내용을 입력해주세요';
+                        if (value == null || value.isEmpty) return l10n.validatorRequired;
                         return null;
                       },
                     ),
                     const SizedBox(height: 15),
                     LoginTextField(
                       controller: passwordConfirmController,
-                      labelText: "비밀번호 확인",
-                      hintText: "비밀번호를 한번 더 입력해주세요",
+                      labelText: l10n.signUpPasswordConfirmLabel,
+                      hintText: l10n.signUpPasswordConfirmHint,
                       inputType: TextInputType.text,
                       isPassword: true,
                       validator: (String? value) {
                         String pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$';
                         RegExp regExp = RegExp(pattern);
-                        if (value == null || value.isEmpty) return '내용을 입력해 주세요';
-                        if (passwordController.text != value) return '입력한 비밀번호가 서로 다릅니다';
-                        if (!regExp.hasMatch(value)) return '8자 이상, 숫자/대문자/소문자/특수문자를 포함해야 합니다';
+                        if (value == null || value.isEmpty) return l10n.validatorRequired;
+                        if (passwordController.text != value) return l10n.validatorPasswordMismatch;
+                        if (!regExp.hasMatch(value)) return l10n.validatorPasswordInvalid;
                         return null;
                       },
                     ),
                     const SizedBox(height: 30),
                     LoginTextField(
                       controller: emailController,
-                      labelText: l10n.loginEmailTitle,
-                      hintText: l10n.loginEmailInputHint,
+                      labelText: l10n.loginEmailLabel,
+                      hintText: l10n.loginEmailHint,
                       inputType: TextInputType.emailAddress,
                       validator: (String? value) {
                         String pattern =
                             r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
                         RegExp regExp = RegExp(pattern);
-                        if (value == null || value.isEmpty) return '내용을 입력해주세요';
-                        if (!regExp.hasMatch(value)) return '잘못된 이메일 형식입니다';
+                        if (value == null || value.isEmpty) return l10n.validatorRequired;
+                        if (!regExp.hasMatch(value)) return l10n.validatorEmailInvalid;
                         return null;
                       },
                     ),
@@ -216,7 +217,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-        child: BottomButton(buttonText: l10n.signInTitle, pressedFunc: _submit),
+        child: BottomButton(buttonText: l10n.signUpPageTitle, pressedFunc: _submit),
       ),
     );
   }

@@ -17,7 +17,7 @@ class UserRoleSelectionPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              l10n.signInTitle,
+              l10n.signUpPageTitle,
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -26,7 +26,7 @@ class UserRoleSelectionPage extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             Text(
-              l10n.signInSubtitle,
+              l10n.signUpPageSubtitle,
               style: const TextStyle(color: Colors.black, fontSize: 20),
             ),
             const SizedBox(height: 90),
@@ -49,7 +49,7 @@ class UserRoleSelectionPage extends StatelessWidget {
                           size: 50,
                         ),
                         Text(
-                          l10n.signInUserTypeConsumer,
+                          l10n.signUpUserTypeConsumer,
                           style: const TextStyle(
                             color: AppColors.primarySub,
                             fontSize: 20,
@@ -80,7 +80,7 @@ class UserRoleSelectionPage extends StatelessWidget {
                           size: 50,
                         ),
                         Text(
-                          l10n.signInUserTypeSeller,
+                          l10n.signUpUserTypeSeller,
                           style: const TextStyle(
                             color: AppColors.primarySub,
                             fontSize: 20,

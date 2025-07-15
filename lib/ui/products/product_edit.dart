@@ -9,6 +9,7 @@ import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/client/upload_api_client.dart';
 import 'package:on_woori/data/entity/request/upload/upload_files_request.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
+import 'package:on_woori/l10n/app_localizations.dart';
 
 import '../../core/styles/app_colors.dart';
 import '../../widgets/bottom_button.dart';
@@ -27,25 +28,22 @@ class ProductEditPage extends StatefulWidget {
 class _ProductEditPageState extends State<ProductEditPage> {
   final _formKey = GlobalKey<FormState>();
 
-  // 컨트롤러
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
   final _discountController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  // 데이터 상태
   String? _selectedCategory;
   final List<String> _categories = ['상의', '하의', '아우터', '잡화'];
   final List<String> _sizes = ['S', 'M', 'L', 'XL', '2XL'];
   final Set<String> _selectedSizes = {};
 
-  File? _thumbnailImageFile; // 새로 선택한 대표 이미지 (로컬 파일)
-  String? _existingThumbnailUrl; // 기존 대표 이미지 URL
-  final List<XFile> _detailImages = []; // 새로 추가할 상세 이미지 목록
+  File? _thumbnailImageFile;
+  String? _existingThumbnailUrl;
+  final List<XFile> _detailImages = [];
 
-  // 로딩 상태
-  bool _isFetching = true; // 초기 데이터 로딩 상태
-  bool _isSaving = false; // 저장(업데이트) 중 로딩 상태
+  bool _isFetching = true;
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -54,6 +52,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Future<void> _fetchProductDetails() async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final response = await ProductsApiClient().productDetail(
         widget.productId,
@@ -62,7 +61,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
       if (mounted && response.success && response.data != null) {
         final product = response.data!;
 
-        // 받아온 데이터로 컨트롤러와 상태 변수 초기화
         _nameController.text = product.name;
         _priceController.text = product.price.toString();
         _discountController.text = product.discount?.toString() ?? '';
@@ -71,19 +69,18 @@ class _ProductEditPageState extends State<ProductEditPage> {
         _selectedCategory = product.category;
 
         final sizeOptionGroup = product.options?.firstWhere(
-          (opt) => opt.name == '사이즈',
+              (opt) => opt.name == '사이즈',
           orElse: () => ProductOptionGroup(type: '', name: '', items: []),
         );
         _selectedSizes.addAll(sizeOptionGroup!.items.map((item) => item.code));
 
         _existingThumbnailUrl = product.thumbnailImage?.url;
-        // ✨ 기존 상세 이미지 URL은 불러오지 않음
       } else {
         _showSnackBar(response.message);
         if (mounted) context.pop();
       }
     } catch (e) {
-      _showSnackBar('상품 정보를 불러오는 데 실패했습니다: $e');
+      _showSnackBar(l10n.productEditFetchError(e.toString()));
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isFetching = false);
@@ -119,10 +116,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
     }
   }
 
-  // ✨ --- '상품 등록' 페이지와 동일한 이미지 선택/제거 로직 ---
   Future<void> _pickDetailImages() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_detailImages.length >= 5) {
-      _showSnackBar('이미지는 최대 5개까지 등록할 수 있습니다.');
+      _showSnackBar(l10n.productRegisterErrorMaxImages);
       return;
     }
     final ImagePicker picker = ImagePicker();
@@ -133,7 +130,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         if (combinedImages.length > 5) {
           _detailImages.clear();
           _detailImages.addAll(combinedImages.take(5));
-          _showSnackBar('이미지는 최대 5개까지만 등록할 수 있습니다.');
+          _showSnackBar(l10n.productRegisterErrorMaxImages);
         } else {
           _detailImages.addAll(pickedImages);
         }
@@ -148,12 +145,13 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Future<void> _updateProduct() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_nameController.text.isEmpty || _priceController.text.isEmpty) {
-      _showSnackBar('상품 이름과 가격은 필수입니다.');
+      _showSnackBar(l10n.productRegisterErrorNoNamePrice);
       return;
     }
     if (_selectedSizes.isEmpty) {
-      _showSnackBar('사이즈 옵션을 하나 이상 선택해주세요.');
+      _showSnackBar(l10n.productRegisterErrorNoSize);
       return;
     }
 
@@ -168,25 +166,22 @@ class _ProductEditPageState extends State<ProductEditPage> {
         );
 
         if (uploadResponse.success && uploadResponse.data != null) {
-          detailImageUrls = uploadResponse.data!.files
-              .map((file) => file.url)
-              .toList();
+          detailImageUrls =
+              uploadResponse.data!.files.map((file) => file.url).toList();
         } else {
-          _showSnackBar('상세 이미지 업로드에 실패했습니다: ${uploadResponse.message}');
+          _showSnackBar(
+              l10n.productRegisterErrorImageUploadFailed(uploadResponse.message));
           setState(() => _isSaving = false);
           return;
         }
       }
 
       final imagesJson = {"detail": detailImageUrls};
-
       final sizeOptionsJson = {
         "type": "size",
         "name": "사이즈",
         "items": _selectedSizes.map((size) => {"code": size}).toList(),
       };
-
-      // 2. '기본' 값을 가진 컬러 옵션 그룹 생성
       final colorOptionsJson = {
         "type": "color",
         "name": "컬러",
@@ -194,12 +189,9 @@ class _ProductEditPageState extends State<ProductEditPage> {
           {"code": "기본"},
         ],
       };
-
       final optionsList = [sizeOptionsJson, colorOptionsJson];
-
       final jsondetailImages = jsonEncode(imagesJson);
 
-      // 2. 상품 수정을 위한 FormData를 생성합니다.
       final formData = FormData.fromMap({
         'name': _nameController.text,
         'price': int.tryParse(_priceController.text) ?? 0,
@@ -207,10 +199,9 @@ class _ProductEditPageState extends State<ProductEditPage> {
         'category': _selectedCategory ?? _categories[0],
         'options': jsonEncode(optionsList),
         'discount': int.tryParse(_discountController.text),
-        'images': jsondetailImages, // 새로 업로드된 이미지 URL 목록을 전송
+        'images': jsondetailImages,
       });
 
-      // 3. 새 대표 이미지를 선택했다면 FormData에 파일로 추가합니다.
       if (_thumbnailImageFile != null) {
         formData.files.add(
           MapEntry(
@@ -220,22 +211,17 @@ class _ProductEditPageState extends State<ProductEditPage> {
         );
       }
 
-      // 4. 상품 수정 API를 호출합니다.
       await ProductsApiClient().productUpdate(
         id: widget.productId,
         formData: formData,
       );
-      debugPrint("API로 전송될 FormData: ${formData.fields}");
-      debugPrint("첨부된 대표 이미지: ${_thumbnailImageFile?.path}");
-
-      await Future.delayed(const Duration(seconds: 2)); // API 호출 흉내
 
       if (mounted) {
-        _showSnackBar('상품이 성공적으로 수정되었습니다.', isError: false);
+        _showSnackBar(l10n.productEditSuccess, isError: false);
         context.pop(true);
       }
     } catch (e) {
-      _showSnackBar('상품 수정 중 오류가 발생했습니다: $e');
+      _showSnackBar(l10n.productEditErrorUpdateFailed(e.toString()));
     } finally {
       if (mounted) {
         setState(() => _isSaving = false);
@@ -254,6 +240,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (_isFetching) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -268,9 +255,9 @@ class _ProductEditPageState extends State<ProductEditPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          '상품 수정',
-          style: TextStyle(
+        title: Text(
+          l10n.productEditPageTitle,
+          style: const TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 20,
             color: Colors.black,
@@ -290,48 +277,43 @@ class _ProductEditPageState extends State<ProductEditPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _centeredSectionTitle('대표 이미지'),
+                  _centeredSectionTitle(l10n.productRegisterThumbnailImageLabel),
                   const SizedBox(height: 8),
                   Center(child: _thumbnailImageBox()),
-
                   const SizedBox(height: 24),
-                  _sectionTitle('상품 이름'),
+                  _sectionTitle(l10n.productRegisterNameLabel),
                   const SizedBox(height: 8),
-                  _textField(_nameController, hint: '(이름)'),
-
+                  _textField(_nameController, hint: l10n.productRegisterNameHint),
                   const SizedBox(height: 16),
-                  _sectionTitle('상품 가격 (정가 기준)'),
+                  _sectionTitle(l10n.productRegisterPriceLabel),
                   const SizedBox(height: 8),
-                  _textField(_priceController, hint: '200,000', isNumber: true),
-
+                  _textField(_priceController,
+                      hint: l10n.productRegisterPriceHint, isNumber: true),
                   const SizedBox(height: 16),
-                  _sectionTitle('상품 할인율 (미기재시 0%)'),
+                  _sectionTitle(l10n.productRegisterDiscountLabel),
                   const SizedBox(height: 8),
                   _textField(
                     _discountController,
-                    hint: 'Ex : 10',
+                    hint: l10n.productRegisterDiscountHint,
                     isNumber: true,
                   ),
-
                   const SizedBox(height: 16),
-                  _sectionTitle('표시 가격 (할인율 반영)'),
+                  _sectionTitle(l10n.productRegisterDisplayPriceLabel),
                   const SizedBox(height: 8),
                   _textField(
                     TextEditingController(text: '$displayPrice'),
                     isEnabled: false,
                   ),
-
                   const SizedBox(height: 16),
-                  _sectionTitle('상품 소개글'),
+                  _sectionTitle(l10n.productRegisterDescriptionLabel),
                   const SizedBox(height: 8),
                   _textField(
                     _descriptionController,
-                    hint: '(소개글)',
+                    hint: l10n.productRegisterDescriptionHint,
                     maxLines: 3,
                   ),
-
                   const SizedBox(height: 24),
-                  _sectionTitle('사이즈 옵션'),
+                  _sectionTitle(l10n.productRegisterSizeOptionLabel),
                   const SizedBox(height: 8),
                   Center(
                     child: Wrap(
@@ -347,9 +329,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
                       }).toList(),
                     ),
                   ),
-
                   const SizedBox(height: 24),
-                  _sectionTitle('카테고리 분류'),
+                  _sectionTitle(l10n.productRegisterCategoryLabel),
                   const SizedBox(height: 8),
                   CustomDropdown(
                     selectedValue: _selectedCategory ?? _categories[0],
@@ -358,9 +339,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
                       setState(() => _selectedCategory = val);
                     },
                   ),
-
                   const SizedBox(height: 24),
-                  _centeredSectionTitle('상품 소개 이미지 (선택)'),
+                  _centeredSectionTitle(l10n.productRegisterDetailImageLabel),
                   const SizedBox(height: 8),
                   _buildDetailImagePicker(),
                 ],
@@ -373,7 +353,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
               color: Colors.white,
               padding: const EdgeInsets.all(16.0),
               child: BottomButton(
-                buttonText: '상품 수정',
+                buttonText: l10n.productEditButton,
                 pressedFunc: _updateProduct,
               ),
             ),
@@ -409,12 +389,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
   );
 
   Widget _textField(
-    TextEditingController controller, {
-    String? hint,
-    bool isNumber = false,
-    int maxLines = 1,
-    bool isEnabled = true,
-  }) {
+      TextEditingController controller, {
+        String? hint,
+        bool isNumber = false,
+        int maxLines = 1,
+        bool isEnabled = true,
+      }) {
     return TextField(
       controller: controller,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
@@ -479,12 +459,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
           ),
           child: imageProvider == null
               ? const Center(
-                  child: Icon(
-                    Icons.camera_alt_outlined,
-                    color: AppColors.grey,
-                    size: 40,
-                  ),
-                )
+            child: Icon(
+              Icons.camera_alt_outlined,
+              color: AppColors.grey,
+              size: 40,
+            ),
+          )
               : null,
         ),
         Positioned(
@@ -509,6 +489,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Widget _buildDetailImagePicker() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         if (_detailImages.isNotEmpty)
@@ -549,7 +530,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
             },
           ),
         const SizedBox(height: 16),
-
         if (_detailImages.length < 5)
           GestureDetector(
             onTap: _pickDetailImages,
@@ -560,16 +540,17 @@ class _ProductEditPageState extends State<ProductEditPage> {
                 color: AppColors.optionStateList,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.add_photo_alternate_outlined,
                     color: AppColors.grey,
                     size: 30,
                   ),
-                  SizedBox(height: 4),
-                  Text('상세 이미지 추가', style: TextStyle(color: AppColors.grey)),
+                  const SizedBox(height: 4),
+                  Text(l10n.productRegisterAddDetailImage,
+                      style: const TextStyle(color: AppColors.grey)),
                 ],
               ),
             ),

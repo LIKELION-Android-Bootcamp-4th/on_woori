@@ -14,7 +14,7 @@ class CategoryPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          l10n.bottomNavigationBarCategory,
+          l10n.navBarCategory,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
         actions: [

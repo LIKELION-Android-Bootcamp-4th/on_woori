@@ -37,24 +37,29 @@ class _MyPageState extends State<MyPage> {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   Future<void> _handleLogout(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final authClient = AuthApiClient();
 
     try {
       final LogoutResponse response = await authClient.authLogout();
 
       if (response.success) {
-        // 토큰 삭제
         await _secureStorage.delete(key: 'ACCESS_TOKEN');
         await _secureStorage.delete(key: 'REFRESH_TOKEN');
 
-        // 로그인 화면으로 이동 (모든 이전 페이지 제거)
-        context.go('/auth/login');
-        Fluttertoast.showToast(msg: '로그아웃 되었습니다.');
+        if (mounted) {
+          context.go('/auth/login');
+        }
+        Fluttertoast.showToast(msg: l10n.myPageLogoutSuccess);
       } else {
-        debugPrint('로그아웃 실패 : ${response.message}');
+        final errorMessage = l10n.myPageLogoutFailed(response.message);
+        debugPrint(errorMessage);
+        Fluttertoast.showToast(msg: errorMessage);
       }
     } catch (e) {
-      debugPrint('로그아웃 중 오류: $e');
+      final errorMessage = l10n.myPageLogoutError(e.toString());
+      debugPrint(errorMessage);
+      Fluttertoast.showToast(msg: errorMessage);
     }
   }
 
@@ -62,7 +67,7 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return FutureBuilder(
+    return FutureBuilder<BuyerProfileResponse>(
       future: _profileFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -78,8 +83,10 @@ class _MyPageState extends State<MyPage> {
         }
 
         if (!snapshot.hasData) {
-          return const Center(child: Text('데이터가 없습니다.'));
+          return Center(child: Text(l10n.myPageNoData));
         }
+
+        final profileData = snapshot.data?.data;
 
         return Scaffold(
           backgroundColor: Colors.white,
@@ -88,15 +95,15 @@ class _MyPageState extends State<MyPage> {
             elevation: 0,
             centerTitle: true,
             title: Text(
-              l10n.bottomNavigationBarMyPage,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              l10n.navBarMyPage,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
             actions: [
               IconButton(
                 onPressed: () {
                   context.push('/wish/cart');
                 },
-                icon: Icon(Icons.shopping_bag_outlined),
+                icon: const Icon(Icons.shopping_bag_outlined),
               ),
             ],
           ),
@@ -105,7 +112,6 @@ class _MyPageState extends State<MyPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 사용자 정보 Row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -115,7 +121,7 @@ class _MyPageState extends State<MyPage> {
                         width: 48,
                         height: 48,
                         child: Image.network(
-                          snapshot.data?.data?.profile.profileImage?.path ??
+                          profileData?.profile.profileImage?.path ??
                               DefaultImage.profileThumbnail,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
@@ -133,7 +139,7 @@ class _MyPageState extends State<MyPage> {
                       textBaseline: TextBaseline.alphabetic,
                       children: [
                         Text(
-                          snapshot.data?.data?.nickName ?? '사용자',
+                          profileData?.nickName ?? l10n.myPageDefaultUserName,
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 20,
@@ -141,9 +147,9 @@ class _MyPageState extends State<MyPage> {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        const Text(
-                          '고객님',
-                          style: TextStyle(
+                        Text(
+                          l10n.myPageUserSuffix,
+                          style: const TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 13,
                             color: AppColors.grey,
@@ -151,7 +157,7 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ],
                     ),
-                    Spacer(),
+                    const Spacer(),
                     TextButton(
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -169,13 +175,13 @@ class _MyPageState extends State<MyPage> {
                       ),
                       onPressed: () async {
                         await context.push(
-                          '/mypage/edit-buyer/${snapshot.data?.data?.nickName}/${snapshot.data?.data?.profile.profileImage}',
+                          '/mypage/edit-buyer/${profileData?.nickName}/${profileData?.profile.profileImage}',
                         );
                         _refresh();
                       },
-                      child: const Text(
-                        '프로필 수정',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.myPageProfileEditButton,
+                        style: const TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 13,
                           color: Colors.black,
@@ -184,26 +190,22 @@ class _MyPageState extends State<MyPage> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 20),
-
-                const Text(
-                  '쇼핑',
-                  style: TextStyle(
+                Text(
+                  l10n.myPageSectionShopping,
+                  style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
                     color: AppColors.grey,
                   ),
                 ),
-
                 const SizedBox(height: 10),
-
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   dense: true,
-                  title: const Text(
-                    '주문 내역',
-                    style: TextStyle(
+                  title: Text(
+                    l10n.myPageOrderHistory,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
@@ -218,13 +220,12 @@ class _MyPageState extends State<MyPage> {
                     context.push('/orderlist');
                   },
                 ),
-
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   dense: true,
-                  title: const Text(
-                    '위시리스트',
-                    style: TextStyle(
+                  title: Text(
+                    l10n.myPageWishlist,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
@@ -239,32 +240,27 @@ class _MyPageState extends State<MyPage> {
                     context.push('/wish');
                   },
                 ),
-
                 const Divider(
                   color: AppColors.dividerTextBoxLineDivider,
                   thickness: 1,
                   height: 20,
                 ),
-
-                // 내 정보 섹션 라벨
                 const SizedBox(height: 10),
-                const Text(
-                  '내 정보',
-                  style: TextStyle(
+                Text(
+                  l10n.myPageSectionMyInfo,
+                  style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 16,
                     color: AppColors.grey,
                   ),
                 ),
-
                 const SizedBox(height: 10),
-
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   dense: true,
-                  title: const Text(
-                    '비밀번호 변경',
-                    style: TextStyle(
+                  title: Text(
+                    l10n.myPageChangePassword,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
@@ -276,15 +272,15 @@ class _MyPageState extends State<MyPage> {
                     color: Colors.black,
                   ),
                   onTap: () {
-                    context.push('/mypage/password/${snapshot.data?.data?.id}');
+                    context.push('/mypage/password/${profileData?.id}');
                   },
                 ),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   dense: true,
-                  title: const Text(
-                    '로그아웃',
-                    style: TextStyle(
+                  title: Text(
+                    l10n.myPageLogout,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.red,
@@ -297,7 +293,6 @@ class _MyPageState extends State<MyPage> {
                   ),
                   onTap: () => _handleLogout(context),
                 ),
-
                 const Divider(
                   color: AppColors.dividerTextBoxLineDivider,
                   thickness: 1,

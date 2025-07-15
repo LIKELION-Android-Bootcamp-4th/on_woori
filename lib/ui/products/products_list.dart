@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/data/client/search_api_client.dart';
+import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/products_double_grid.dart';
 import 'package:on_woori/data/entity/response/products/products_response.dart';
 
@@ -68,12 +69,11 @@ class ProductsListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final apiClient = SearchApiClient();
+    final l10n = AppLocalizations.of(context)!;
 
-    // q 값으로 "키워드 || 키워드" 검색하여 두 개의 키워드를 동시에 조회.
     final midCategory = categoryMap[categoryId];
-    final finalQuery = (midCategory != null)
-        ? '$categoryId||$midCategory'
-        : categoryId;
+    final finalQuery =
+    (midCategory != null) ? '$categoryId||$midCategory' : categoryId;
 
     final response = apiClient.searchByCategory(
       category: 'products',
@@ -88,33 +88,34 @@ class ProductsListScreen extends StatelessWidget {
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text("오류 발생: ${snapshot.error}"));
+          return Center(child: Text(l10n.productListPageError('${snapshot.error}')));
         }
 
         if (!snapshot.hasData) {
-          return const Center(child: Text("데이터가 없습니다."));
+          return Center(child: Text(l10n.productListPageNoData));
         }
 
         try {
           final responseData =
-              snapshot.data?.data['data'] as Map<String, dynamic>?;
+          snapshot.data?.data['data'] as Map<String, dynamic>?;
           if (responseData == null) throw Exception('Data field is null');
 
           final productListJson = responseData['products'] as List<dynamic>?;
           if (productListJson == null || productListJson.isEmpty) {
-            return const Center(child: Text("표시할 상품이 없습니다."));
+            return Center(child: Text(l10n.productListPageEmpty));
           }
 
           final productList = productListJson
               .map(
                 (itemJson) =>
-                    ProductItem.fromJson(itemJson as Map<String, dynamic>),
-              )
+                ProductItem.fromJson(itemJson as Map<String, dynamic>),
+          )
               .toList();
 
           return ProductsDoubleGrid(productList);
         } catch (e) {
-          return Center(child: Text("데이터 처리 중 오류가 발생했습니다: $e"));
+          return Center(
+              child: Text(l10n.productListPageProcessingError(e.toString())));
         }
       },
     );

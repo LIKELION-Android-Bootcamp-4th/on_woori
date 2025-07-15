@@ -58,7 +58,7 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     return FutureBuilder<StoreDetailResponse>(
       future: _storesFuture,
       builder: (context, snapshot) {
@@ -67,11 +67,11 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text("오류 발생: ${snapshot.error}"));
+          return Center(child: Text(l10n.brandDetailPageError('${snapshot.error}')));
         }
 
         if (!snapshot.hasData) {
-          return const Center(child: Text("데이터가 없습니다."));
+          return Center(child: Text(l10n.brandDetailPageNoData));
         }
 
         final StoreDetailItem? data = snapshot.data?.data;
@@ -83,12 +83,12 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
           children: [
             BrandNameSection(
               false, //자기 브랜드일 때 넘겨주는 기능 결여되어 있으나 당장 추가 어려움
-              data?.name ?? "브랜드 이름",
+              data?.name ?? l10n.brandDetailDefaultName,
               data?.thumbnailImageUrl ?? DefaultImage.brandThumbnail,
             ),
             const SizedBox(height: 15),
             Text(
-              data?.description ?? "브랜드 소개",
+              data?.description ?? l10n.brandDetailDefaultDescription,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: AppColors.grey,
@@ -99,7 +99,7 @@ class BrandDetailScreenState extends State<BrandDetailScreen> {
             const Divider(color: AppColors.dividerTextBoxLineDivider),
             const SizedBox(height: 10),
             Text(
-              l10n!.home_RecommendedProducts,
+              l10n.homeRecommendedProducts,
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
             ),
             const SizedBox(height: 10),
@@ -166,10 +166,9 @@ class BrandProductScreenState extends State<BrandProductScreen> {
     });
   }
 
-  // -----------------------------------------
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return FutureBuilder<StoreProductsResponse>(
       future: _storesProductFuture,
       builder: (context, snapshot) {
@@ -180,19 +179,16 @@ class BrandProductScreenState extends State<BrandProductScreen> {
           );
         }
         if (snapshot.hasError) {
-          return const Center(child: Text("상품 정보를 가져오지 못했습니다."));
+          return Center(child: Text(l10n.brandDetailProductsError));
         }
         if (!snapshot.hasData || snapshot.data!.data == null) {
-          return const Center(child: Text("상품 데이터가 없습니다."));
+          return Center(child: Text(l10n.brandDetailProductsNoData));
         }
 
-        // 🔽 Future가 완료된 후, 원본 리스트가 비어있을 때만 데이터를 한 번만 채웁니다.
         if (originalList.isEmpty) {
           originalList = snapshot.data!.data!.items;
           dataList = originalList;
         }
-
-        final l10n = AppLocalizations.of(context)!;
 
         return ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -202,22 +198,22 @@ class BrandProductScreenState extends State<BrandProductScreen> {
             SizedBox(
               height: 298,
               child: originalList.isEmpty
-                  ? const Center(child: Text("추천 상품이 없습니다."))
+                  ? Center(child: Text(l10n.brandDetailNoRecommendedProducts))
                   : ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      padding: EdgeInsets.zero,
-                      itemCount: originalList.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(width: 10),
-                      itemBuilder: (context, index) =>
-                          ProductsGridItem(originalList[index]),
-                    ),
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.zero,
+                itemCount: originalList.length,
+                separatorBuilder: (context, index) =>
+                const SizedBox(width: 10),
+                itemBuilder: (context, index) =>
+                    ProductsGridItem(originalList[index]),
+              ),
             ),
             const Divider(color: AppColors.dividerTextBoxLineDivider),
             Row(
               children: [
                 Text(
-                  l10n.home_OngoingFunding,
+                  l10n.homeOngoingFunding,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -227,16 +223,16 @@ class BrandProductScreenState extends State<BrandProductScreen> {
               ],
             ),
             const SizedBox(height: 10),
-            BrandFundingSection(),
+            const BrandFundingSection(),
             const SizedBox(height: 10),
             const Divider(color: AppColors.dividerTextBoxLineDivider),
             CategoryHorizontalScroll(getFilteredItem: getFilteredItem),
             const SizedBox(height: 20),
             _isFiltering
                 ? const SizedBox(
-                    height: 200,
-                    child: Center(child: CircularProgressIndicator()),
-                  )
+              height: 200,
+              child: Center(child: CircularProgressIndicator()),
+            )
                 : ProductsNonScrollableGrid(dataList),
           ],
         );
@@ -270,6 +266,7 @@ class BrandFundingSectionState extends State<BrandFundingSection> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return FutureBuilder<FundingsResponse>(
       future: _fundingFuture,
       builder: (context, snapshot) {
@@ -278,7 +275,7 @@ class BrandFundingSectionState extends State<BrandFundingSection> {
         }
         final data = snapshot.data?.data?.items.take(3).toList() ?? [];
         if (data.isEmpty) {
-          return const Center(child: Text("진행중인 펀딩이 없습니다."));
+          return Center(child: Text(l10n.brandDetailNoOngoingFunding));
         }
         return Column(
           children: data.map((item) {
@@ -286,7 +283,7 @@ class BrandFundingSectionState extends State<BrandFundingSection> {
               id: item.id,
               imageUrl: item.imageUrl ?? '',
               fundingName: item.title,
-              brandName: item.companyId?.name ?? '브랜드 없음',
+              brandName: item.companyId?.name ?? l10n.homePageNoBrand,
               description: item.description ?? item.linkUrl ?? '',
               linkUrl: item.linkUrl ?? '',
             );
@@ -299,42 +296,42 @@ class BrandFundingSectionState extends State<BrandFundingSection> {
 
 class BrandNameSection extends StatelessWidget {
   final bool _isBrandMine;
-  final String _BrandName;
-  final String _BrandImageUrl;
+  final String _brandName;
+  final String _brandImageUrl;
 
   const BrandNameSection(
-    this._isBrandMine,
-    this._BrandName,
-    this._BrandImageUrl, {
-    super.key,
-  });
+      this._isBrandMine,
+      this._brandName,
+      this._brandImageUrl, {
+        super.key,
+      });
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     if (_isBrandMine) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           CircleAvatar(
             radius: 36,
-            foregroundImage: (_BrandImageUrl.isNotEmpty)
-                ? NetworkImage(_BrandImageUrl)
+            foregroundImage: (_brandImageUrl.isNotEmpty)
+                ? NetworkImage(_brandImageUrl)
                 : null,
-            child: (_BrandImageUrl.isNotEmpty)
+            child: (_brandImageUrl.isNotEmpty)
                 ? null
                 : const Icon(Icons.store, size: 36),
           ),
           const SizedBox(width: 15),
           Text(
-            _BrandName,
+            _brandName,
             style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
           ),
           const Spacer(),
           TextButton(
             onPressed: () {},
             child: Text(
-              l10n!.edit,
+              l10n.commonEdit,
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
             ),
           ),
@@ -347,28 +344,28 @@ class BrandNameSection extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 36,
-          child: (_BrandImageUrl.isNotEmpty)
+          child: (_brandImageUrl.isNotEmpty)
               ? ClipOval(
-                  child: Image.network(
-                    _BrandImageUrl,
-                    fit: BoxFit.cover,
-                    height: 72,
-                    width: 72,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.network(
-                        DefaultImage.brandThumbnail,
-                        fit: BoxFit.cover,
-                        height: 72,
-                        width: 72,
-                      );
-                    },
-                  ),
-                )
+            child: Image.network(
+              _brandImageUrl,
+              fit: BoxFit.cover,
+              height: 72,
+              width: 72,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.network(
+                  DefaultImage.brandThumbnail,
+                  fit: BoxFit.cover,
+                  height: 72,
+                  width: 72,
+                );
+              },
+            ),
+          )
               : const Icon(Icons.store, size: 36),
         ),
         const SizedBox(width: 15),
         Text(
-          _BrandName,
+          _brandName,
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
         ),
         const Spacer(),

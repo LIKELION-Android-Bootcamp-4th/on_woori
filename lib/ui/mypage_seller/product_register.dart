@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/entity/request/products/product_register_request.dart';
-
 import 'package:on_woori/data/client/upload_api_client.dart';
 import 'package:on_woori/data/entity/request/upload/upload_files_request.dart';
+import 'package:on_woori/l10n/app_localizations.dart';
 
 import '../../core/styles/app_colors.dart';
 import '../../widgets/bottom_button.dart';
@@ -64,8 +64,9 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
   }
 
   Future<void> _pickDetailImages() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_detailImages.length >= 5) {
-      _showSnackBar('이미지는 최대 5개까지 등록할 수 있습니다.');
+      _showSnackBar(l10n.productRegisterErrorMaxImages);
       return;
     }
     final ImagePicker picker = ImagePicker();
@@ -76,7 +77,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         if (combinedImages.length > 5) {
           _detailImages.clear();
           _detailImages.addAll(combinedImages.take(5));
-          _showSnackBar('이미지는 최대 5개까지만 등록할 수 있습니다.');
+          _showSnackBar(l10n.productRegisterErrorMaxImages);
         } else {
           _detailImages.addAll(pickedImages);
         }
@@ -91,17 +92,18 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
   }
 
   Future<void> _registerProduct() async {
+    final l10n = AppLocalizations.of(context)!;
     // 1단계 유효성 검사
     if (_thumbnailImageFile == null) {
-      _showSnackBar('대표 이미지를 등록해주세요.');
+      _showSnackBar(l10n.productRegisterErrorNoThumbnail);
       return;
     }
     if (_nameController.text.isEmpty || _priceController.text.isEmpty) {
-      _showSnackBar('상품 이름과 가격은 필수입니다.');
+      _showSnackBar(l10n.productRegisterErrorNoNamePrice);
       return;
     }
     if (_selectedSizes.isEmpty) {
-      _showSnackBar('사이즈 옵션을 하나 이상 선택해주세요.');
+      _showSnackBar(l10n.productRegisterErrorNoSize);
       return;
     }
 
@@ -116,11 +118,11 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         );
 
         if (uploadResponse.success && uploadResponse.data != null) {
-          detailImageUrls = uploadResponse.data!.files
-              .map((file) => file.url)
-              .toList();
+          detailImageUrls =
+              uploadResponse.data!.files.map((file) => file.url).toList();
         } else {
-          _showSnackBar('상세 이미지 업로드에 실패했습니다: ${uploadResponse.message}');
+          _showSnackBar(
+              l10n.productRegisterErrorImageUploadFailed(uploadResponse.message));
           setState(() => _isLoading = false);
           return;
         }
@@ -142,13 +144,13 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
       );
 
       if (mounted && productResponse.success) {
-        _showSnackBar('상품이 성공적으로 등록되었습니다.', isError: false);
+        _showSnackBar(l10n.productRegisterSuccess, isError: false);
         context.pop();
       } else if (mounted) {
-        _showSnackBar('상품 등록에 실패했습니다: ${productResponse.message}');
+        _showSnackBar(l10n.productRegisterErrorFailed(productResponse.message));
       }
     } catch (e) {
-      _showSnackBar('상품 등록 중 오류가 발생했습니다: $e');
+      _showSnackBar(l10n.productRegisterErrorUnexpected('$e'));
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -167,7 +169,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    // build 메소드는 수정할 필요 없음 (이하 생략)
+    final l10n = AppLocalizations.of(context)!;
     final price = int.tryParse(_priceController.text) ?? 0;
     final discount = int.tryParse(_discountController.text) ?? 0;
     final displayPrice = (price * (100 - discount) / 100).round();
@@ -178,9 +180,9 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => context.pop(),
         ),
-        title: const Text(
-          '신규 상품 등록',
-          style: TextStyle(
+        title: Text(
+          l10n.productRegisterPageTitle,
+          style: const TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 20,
             color: Colors.black,
@@ -201,41 +203,38 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _centeredSectionTitle('대표 이미지'),
+                  _centeredSectionTitle(l10n.productRegisterThumbnailImageLabel),
                   const SizedBox(height: 8),
                   Center(child: _imageBox()),
-
                   const SizedBox(height: 24),
-                  _sectionTitle('상품 이름'),
+                  _sectionTitle(l10n.productRegisterNameLabel),
                   const SizedBox(height: 8),
-                  _textField('(이름)', _nameController),
-
+                  _textField(l10n.productRegisterNameHint, _nameController),
                   const SizedBox(height: 16),
-                  _sectionTitle('상품 가격 (정가 기준)'),
+                  _sectionTitle(l10n.productRegisterPriceLabel),
                   const SizedBox(height: 8),
-                  _textField('200,000', _priceController, isNumber: true),
-
+                  _textField(l10n.productRegisterPriceHint, _priceController,
+                      isNumber: true),
                   const SizedBox(height: 16),
-                  _sectionTitle('상품 할인율 (미기재시 0%)'),
+                  _sectionTitle(l10n.productRegisterDiscountLabel),
                   const SizedBox(height: 8),
-                  _textField('Ex : 10', _discountController, isNumber: true),
-
+                  _textField(l10n.productRegisterDiscountHint, _discountController,
+                      isNumber: true),
                   const SizedBox(height: 16),
-                  _sectionTitle('표시 가격 (할인율 반영)'),
+                  _sectionTitle(l10n.productRegisterDisplayPriceLabel),
                   const SizedBox(height: 8),
                   _textField(
-                    'Ex : 180,000',
+                    l10n.productRegisterDisplayPriceHint,
                     TextEditingController(text: '$displayPrice'),
                     isEnabled: false,
                   ),
-
                   const SizedBox(height: 16),
-                  _sectionTitle('상품 소개글'),
+                  _sectionTitle(l10n.productRegisterDescriptionLabel),
                   const SizedBox(height: 8),
-                  _textField('(소개글)', _descriptionController, maxLines: 3),
-
+                  _textField(l10n.productRegisterDescriptionHint, _descriptionController,
+                      maxLines: 3),
                   const SizedBox(height: 24),
-                  _sectionTitle('사이즈 옵션'),
+                  _sectionTitle(l10n.productRegisterSizeOptionLabel),
                   const SizedBox(height: 8),
                   Center(
                     child: Wrap(
@@ -251,9 +250,8 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
                       }).toList(),
                     ),
                   ),
-
                   const SizedBox(height: 24),
-                  _sectionTitle('카테고리 분류'),
+                  _sectionTitle(l10n.productRegisterCategoryLabel),
                   const SizedBox(height: 8),
                   CustomDropdown(
                     selectedValue: _selectedCategory ?? _categories[0],
@@ -264,16 +262,14 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
                       });
                     },
                   ),
-
                   const SizedBox(height: 24),
-                  _centeredSectionTitle('상품 소개 이미지 (선택)'),
+                  _centeredSectionTitle(l10n.productRegisterDetailImageLabel),
                   const SizedBox(height: 8),
                   _buildDetailImagePicker(),
-
                   const SizedBox(height: 32),
                   Center(
                     child: BottomButton(
-                      buttonText: '상품 등록',
+                      buttonText: l10n.productRegisterButton,
                       pressedFunc: _registerProduct,
                     ),
                   ),
@@ -317,12 +313,12 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
   }
 
   Widget _textField(
-    String hint,
-    TextEditingController controller, {
-    bool isNumber = false,
-    int maxLines = 1,
-    bool isEnabled = true,
-  }) {
+      String hint,
+      TextEditingController controller, {
+        bool isNumber = false,
+        int maxLines = 1,
+        bool isEnabled = true,
+      }) {
     return TextField(
       controller: controller,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
@@ -376,16 +372,16 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
           ),
           child: _thumbnailImageFile == null
               ? const Center(
-                  child: Icon(
-                    Icons.camera_alt_outlined,
-                    color: AppColors.grey,
-                    size: 40,
-                  ),
-                )
+            child: Icon(
+              Icons.camera_alt_outlined,
+              color: AppColors.grey,
+              size: 40,
+            ),
+          )
               : ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.file(_thumbnailImageFile!, fit: BoxFit.cover),
-                ),
+            borderRadius: BorderRadius.circular(12),
+            child: Image.file(_thumbnailImageFile!, fit: BoxFit.cover),
+          ),
         ),
         Positioned(
           bottom: -10,
@@ -409,6 +405,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
   }
 
   Widget _buildDetailImagePicker() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         if (_detailImages.isNotEmpty)
@@ -449,7 +446,6 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
             },
           ),
         const SizedBox(height: 16),
-
         if (_detailImages.length < 5)
           GestureDetector(
             onTap: _pickDetailImages,
@@ -460,16 +456,17 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
                 color: AppColors.optionStateList,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.add_photo_alternate_outlined,
                     color: AppColors.grey,
                     size: 30,
                   ),
-                  SizedBox(height: 4),
-                  Text('상세 이미지 추가', style: TextStyle(color: AppColors.grey)),
+                  const SizedBox(height: 4),
+                  Text(l10n.productRegisterAddDetailImage,
+                      style: const TextStyle(color: AppColors.grey)),
                 ],
               ),
             ),

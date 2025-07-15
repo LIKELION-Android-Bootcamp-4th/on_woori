@@ -25,6 +25,7 @@ class LoginPageStatus extends State<LoginPage> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   void _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     String email = emailController.text;
     String password = passwordController.text;
 
@@ -61,31 +62,35 @@ class LoginPageStatus extends State<LoginPage> {
         }
         await storage.write(key: 'USER_ROLE', value: userRole);
 
-        Fluttertoast.showToast(msg: "로그인 되었습니다.");
-        context.go('/');
+        Fluttertoast.showToast(msg: l10n.loginSuccess);
+        if (mounted) {
+          context.go('/');
+        }
       } else {
         Fluttertoast.showToast(msg: response.message);
       }
     } on DioException catch (e) {
       final int? statusCode = e.response?.statusCode;
+      String errorMessage;
 
       switch (statusCode) {
         case 400:
-          Fluttertoast.showToast(msg: "요청이 잘못되었습니다.");
+          errorMessage = l10n.loginErrorBadRequest;
           break;
         case 401:
-          Fluttertoast.showToast(msg: "이메일 또는 비밀번호가 일치하지 않습니다.");
+          errorMessage = l10n.loginErrorUnauthorized;
           break;
         case 403:
-          Fluttertoast.showToast(msg: "계정이 비활성화되었거나 인증되지 않았습니다.");
+          errorMessage = l10n.loginErrorForbidden;
           break;
         default:
-          Fluttertoast.showToast(msg: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+          errorMessage = l10n.loginErrorServer;
           break;
       }
+      Fluttertoast.showToast(msg: errorMessage);
       debugPrint("[LOGIN ERROR] ${e.message} / $statusCode");
     } catch (e) {
-      Fluttertoast.showToast(msg: "예상치 못한 오류가 발생했습니다.");
+      Fluttertoast.showToast(msg: l10n.loginErrorUnexpected);
       debugPrint("[UNEXPECTED ERROR] ${e.toString()}");
     }
   }
@@ -105,20 +110,20 @@ class LoginPageStatus extends State<LoginPage> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.4,
                   child: Image.network(
-                    "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg",
+                    l10n.dummyImage,
                     fit: BoxFit.cover,
                     width: double.infinity,
                   ),
                 ),
                 Expanded(
-                  flex: 1, // 나머지 절반
+                  flex: 1,
                   child: Container(
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          l10n.loginTitle,
+                          l10n.loginPageTitle,
                           style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -128,21 +133,21 @@ class LoginPageStatus extends State<LoginPage> {
                         const SizedBox(height: 20),
                         LoginTextField(
                           controller: emailController,
-                          labelText: l10n.loginEmailTitle,
-                          hintText: l10n.loginEmailInputHint,
+                          labelText: l10n.loginEmailLabel,
+                          hintText: l10n.loginEmailHint,
                           inputType: TextInputType.emailAddress,
                         ),
                         const SizedBox(height: 15),
                         LoginTextField(
                           controller: passwordController,
-                          labelText: l10n.loginPasswordTitle,
-                          hintText: l10n.loginPasswordInputHint,
+                          labelText: l10n.loginPasswordLabel,
+                          hintText: l10n.loginPasswordHint,
                           inputType: TextInputType.visiblePassword,
                           isPassword: true,
                         ),
                         const SizedBox(height: 15),
                         BottomButton(
-                          buttonText: l10n.loginTitle,
+                          buttonText: l10n.loginButton,
                           pressedFunc: () {
                             _submit();
                           },
@@ -150,13 +155,13 @@ class LoginPageStatus extends State<LoginPage> {
                         Row(
                           children: <Widget>[
                             const Spacer(),
-                            const Text(
-                              "온우리가 처음이신가요?  ",
-                              style: TextStyle(color: AppColors.grey),
+                            Text(
+                              l10n.loginPromptSignUp,
+                              style: const TextStyle(color: AppColors.grey),
                             ),
                             InkWell(
                               child: Text(
-                                l10n.signInTitle,
+                                l10n.signUpPageTitle,
                                 style: const TextStyle(
                                   color: AppColors.primarySub,
                                   fontWeight: FontWeight.bold,

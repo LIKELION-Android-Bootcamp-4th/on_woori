@@ -1,9 +1,11 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/data/client/seller_fundings_api_client.dart';
 import 'package:on_woori/data/client/seller_store_api.dart';
 import 'package:on_woori/data/entity/response/upload/upload_files_response.dart';
+import 'package:on_woori/l10n/app_localizations.dart';
 import '../../core/styles/app_colors.dart';
 import '../../data/client/upload_api_client.dart';
 import '../../data/entity/request/upload/upload_files_request.dart';
@@ -35,6 +37,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
     });
 
     final ImagePicker picker = ImagePicker();
+    final l10n = AppLocalizations.of(context)!;
 
     await showModalBottomSheet(
       context: context,
@@ -46,7 +49,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
             children: [
               ListTile(
                 leading: const Icon(Icons.photo_camera),
-                title: const Text('카메라로 촬영'),
+                title: Text(l10n.fundingRegisterCamera),
                 onTap: () async {
                   Navigator.pop(context);
                   final XFile? picked = await picker.pickImage(
@@ -55,9 +58,8 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile = picked != null
-                        ? File(picked.path)
-                        : _profileImageFile;
+                    _profileImageFile =
+                    picked != null ? File(picked.path) : _profileImageFile;
                     _profileImageUrl = picked != null ? null : _profileImageUrl;
                     _isPickingImage = false;
                   });
@@ -65,7 +67,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library),
-                title: const Text('갤러리에서 선택'),
+                title: Text(l10n.fundingRegisterGallery),
                 onTap: () async {
                   Navigator.pop(context);
                   final XFile? picked = await picker.pickImage(
@@ -74,9 +76,8 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile = picked != null
-                        ? File(picked.path)
-                        : _profileImageFile;
+                    _profileImageFile =
+                    picked != null ? File(picked.path) : _profileImageFile;
                     _profileImageUrl = picked != null ? null : _profileImageUrl;
                     _isPickingImage = false;
                   });
@@ -87,7 +88,6 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
         );
       },
     ).whenComplete(() {
-      // BottomSheet 닫힐 때 플래그 해제
       if (mounted) {
         setState(() {
           _isPickingImage = false;
@@ -128,15 +128,14 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
     if (storeId != null) {
       String? imageUrl = _profileImageUrl;
 
-      // 이미지 선택된 경우 업로드
       if (_profileImageFile != null) {
         try {
           final uploadClient = UploadApiClient();
           final request = UploadFilesRequest(
             files: [XFile(_profileImageFile!.path)],
           );
-          final UploadFilesResponse uploadResponse = await uploadClient
-              .uploadFiles(request);
+          final UploadFilesResponse uploadResponse =
+          await uploadClient.uploadFiles(request);
 
           if (uploadResponse.success &&
               uploadResponse.data!.files.first.url.isNotEmpty) {
@@ -172,11 +171,12 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '신규 펀딩 등록',
-          style: TextStyle(
+        title: Text(
+          l10n.fundingRegisterPageTitle,
+          style: const TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 20,
             color: Colors.black,
@@ -193,29 +193,26 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(child: _sectionTitle('대표 이미지')),
+            Center(child: _sectionTitle(l10n.fundingRegisterThumbnailLabel)),
             const SizedBox(height: 8),
             Center(child: _imageBox()),
-
             const SizedBox(height: 24),
-            _sectionTitle('펀딩명'),
+            _sectionTitle(l10n.fundingRegisterNameLabel),
             const SizedBox(height: 8),
-            _textField('(이름)', _nameController),
-
+            _textField(l10n.fundingRegisterNameHint, _nameController),
             const SizedBox(height: 16),
-            _sectionTitle('펀딩 링크'),
+            _sectionTitle(l10n.fundingRegisterLinkLabel),
             const SizedBox(height: 8),
-            _textField('https://www.', _linkController),
-
+            _textField(l10n.fundingRegisterLinkHint, _linkController),
             const SizedBox(height: 16),
           ],
         ),
       ),
-
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: BottomButton(buttonText: '펀딩 추가', pressedFunc: submit),
+          child: BottomButton(
+              buttonText: l10n.fundingRegisterButton, pressedFunc: submit),
         ),
       ),
     );
@@ -244,11 +241,13 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider),
+          borderSide:
+          const BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColors.dividerTextBoxLineDivider),
+          borderSide:
+          const BorderSide(color: AppColors.dividerTextBoxLineDivider),
         ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 12,
@@ -272,14 +271,14 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
           child: _profileImageFile == null
               ? const SizedBox.shrink()
               : ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.file(
-                    _profileImageFile!,
-                    fit: BoxFit.cover,
-                    width: 160,
-                    height: 160,
-                  ),
-                ),
+            borderRadius: BorderRadius.circular(12),
+            child: Image.file(
+              _profileImageFile!,
+              fit: BoxFit.cover,
+              width: 160,
+              height: 160,
+            ),
+          ),
         ),
         Positioned(
           bottom: -10,
@@ -290,10 +289,10 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
             child: InkWell(
               customBorder: const CircleBorder(),
               onTap: _pickImage,
-              child: SizedBox(
+              child: const SizedBox(
                 width: 44,
                 height: 44,
-                child: const Icon(Icons.add, color: Colors.black, size: 24),
+                child: Icon(Icons.add, color: Colors.black, size: 24),
               ),
             ),
           ),

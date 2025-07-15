@@ -84,8 +84,8 @@ class ProductsGridItemState extends State<ProductsGridItem> {
         setState(() {
           isFavorite = originalState;
         });
-        _showSnackBar(response.message.message);
       }
+      _showSnackBar(response.message.message);
     } catch (e) {
       setState(() {
         isFavorite = originalState;

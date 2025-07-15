@@ -40,17 +40,8 @@ Map<String, dynamic> _$ToggleMessageToJson(ToggleMessage instance) =>
       'result': instance.result.toJson(),
     };
 
-ToggleResult _$ToggleResultFromJson(Map<String, dynamic> json) => ToggleResult(
-  productId: json['productId'] as String,
-  isLiked: json['isLiked'] as bool,
-  likeCount: (json['likeCount'] as num).toInt(),
-  action: json['action'] as String,
-);
+ToggleResult _$ToggleResultFromJson(Map<String, dynamic> json) =>
+    ToggleResult(productId: json['productId'] as String);
 
 Map<String, dynamic> _$ToggleResultToJson(ToggleResult instance) =>
-    <String, dynamic>{
-      'productId': instance.productId,
-      'isLiked': instance.isLiked,
-      'likeCount': instance.likeCount,
-      'action': instance.action,
-    };
+    <String, dynamic>{'productId': instance.productId};

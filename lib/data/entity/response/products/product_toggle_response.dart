@@ -43,15 +43,9 @@ class ToggleMessage {
 @JsonSerializable()
 class ToggleResult {
   final String productId;
-  final bool isLiked;
-  final int likeCount;
-  final String action;
 
   const ToggleResult({
     required this.productId,
-    required this.isLiked,
-    required this.likeCount,
-    required this.action,
   });
 
   factory ToggleResult.fromJson(Map<String, dynamic> json) =>

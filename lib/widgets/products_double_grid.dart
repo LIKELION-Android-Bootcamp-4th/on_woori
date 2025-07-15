@@ -42,7 +42,7 @@ class ProductsNonScrollableGrid extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 15),
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         mainAxisSpacing: 15,
         crossAxisSpacing: 15,

@@ -255,14 +255,21 @@ class _SellerMyPageState extends State<SellerMyPage> {
                     size: 20,
                     color: Colors.black,
                   ),
+                  // *** MODIFIED PART START ***
+                  // context.push 호출을 'extra'를 사용하도록 변경합니다.
                   onTap: () async {
                     final result = await context.push(
-                      '/mypage/edit-buyer/${profileData?.nickName ?? ""}/${profileData?.profile.profileImage?.path ?? ""}',
+                      '/mypage/edit-buyer',
+                      extra: {
+                        'nickName': profileData?.nickName ?? '',
+                        'profileUrl': profileData?.profile.profileImage?.path ?? '',
+                      },
                     );
                     if (result == true) {
                       _refresh();
                     }
                   },
+                  // *** MODIFIED PART END ***
                 ),
 
                 ListTile(

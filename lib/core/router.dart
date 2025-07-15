@@ -72,22 +72,22 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/',
           builder: (BuildContext context, GoRouterState state) =>
-              const HomePage(),
+          const HomePage(),
         ),
         GoRoute(
           path: '/category',
           builder: (BuildContext context, GoRouterState state) =>
-              const CategoryPage(),
+          const CategoryPage(),
         ),
         GoRoute(
           path: '/wish',
           builder: (BuildContext context, GoRouterState state) =>
-              const WishPage(),
+          const WishPage(),
         ),
         GoRoute(
           path: '/mypage',
           builder: (BuildContext context, GoRouterState state) =>
-              const MyPage(),
+          const MyPage(),
         ),
         GoRoute(
           path: '/mypage/seller',
@@ -97,7 +97,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/orderlist',
           builder: (BuildContext context, GoRouterState state) =>
-              const OrderListPage(),
+          const OrderListPage(),
         ),
         GoRoute(
           path: '/orderdetail/:orderId',
@@ -106,18 +106,19 @@ final GoRouter router = GoRouter(
             return OrderDetailPage(orderId);
           },
         ),
-        // GoRoute(
-        //   path: '/mypage/edit-seller',
-        //   builder: (context, state) => const EditProfileSellerPage(),
-        // ),
+        // *** MODIFIED PART START ***
+        // 경로에서 파라미터를 제거하고, builder에서 'extra'를 사용하도록 수정합니다.
         GoRoute(
-          path: '/mypage/edit-buyer/:nickName/:profileUrl',
+          path: '/mypage/edit-buyer',
           builder: (BuildContext context, GoRouterState state) {
-            final String nickName = state.pathParameters['nickName'] ?? '';
-            final String profileUrl = state.pathParameters['profileUrl'] ?? '';
+            // state.extra에서 데이터를 안전하게 추출합니다.
+            final extraData = state.extra as Map<String, dynamic>? ?? {};
+            final String nickName = extraData['nickName'] ?? '';
+            final String profileUrl = extraData['profileUrl'] ?? '';
             return EditProfilePage(nickName: nickName, profileUrl: profileUrl);
           },
         ),
+        // *** MODIFIED PART END ***
         GoRoute(
           path: '/productslist/:categoryId',
           builder: (BuildContext context, GoRouterState state) {
@@ -135,7 +136,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/wish/cart',
           builder: (BuildContext context, GoRouterState state) =>
-              const CartPage(),
+          const CartPage(),
         ),
         GoRoute(
           path: '/mypage/password/:userId',
@@ -154,22 +155,22 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/funding/register',
           builder: (BuildContext context, GoRouterState state) =>
-              const FundingRegisterPage(),
+          const FundingRegisterPage(),
         ),
         GoRoute(
           path: '/mypage/register',
           builder: (BuildContext context, GoRouterState state) =>
-              const ProductRegisterPage(),
+          const ProductRegisterPage(),
         ),
         GoRoute(
           path: '/brand/editproduct',
           builder: (BuildContext context, GoRouterState state) =>
-              const BrandProductEditPage(),
+          const BrandProductEditPage(),
         ),
         GoRoute(
           path: '/brand/edit',
           builder: (BuildContext context, GoRouterState state) =>
-              const BrandEditPage(),
+          const BrandEditPage(),
         ),
         GoRoute(
           path: '/funding/edit/:fundingId',
@@ -195,13 +196,13 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/auth/signup',
       builder: (BuildContext context, GoRouterState state) =>
-          const UserRoleSelectionPage(),
+      const UserRoleSelectionPage(),
     ),
     GoRoute(
       path: '/auth/signup/common',
       builder: (BuildContext context, GoRouterState state) {
         final Map<String, dynamic>? extra =
-            state.extra as Map<String, dynamic>?;
+        state.extra as Map<String, dynamic>?;
         return CommonSignupPage(store: extra?['store']);
       },
     ),

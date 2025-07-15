@@ -174,10 +174,16 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                       onPressed: () async {
-                        await context.push(
-                          '/mypage/edit-buyer/${profileData?.nickName}/${profileData?.profile.profileImage}',
+                        final result = await context.push(
+                          '/mypage/edit-buyer',
+                          extra: {
+                            'nickName': profileData?.nickName ?? '',
+                            'profileUrl': profileData?.profile.profileImage?.path ?? '',
+                          },
                         );
-                        _refresh();
+                        if (result == true) {
+                          _refresh();
+                        }
                       },
                       child: Text(
                         l10n.myPageProfileEditButton,

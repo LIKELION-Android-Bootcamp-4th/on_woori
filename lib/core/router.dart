@@ -41,13 +41,10 @@ final AuthService authService = AuthService();
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
-
   redirect: (BuildContext context, GoRouterState state) async {
-    // ◀️ async 추가
     final bool loggedIn = await authService.isLoggedIn;
     final String location = state.uri.toString();
 
-    // 로그인이 필요한 경로 목록
     final List<String> protectedRoutes = <String>[
       '/wish',
       '/mypage',
@@ -62,7 +59,6 @@ final GoRouter router = GoRouter(
 
     return null;
   },
-
   routes: <RouteBase>[
     ShellRoute(
       builder: (BuildContext context, GoRouterState state, Widget child) {
@@ -94,100 +90,97 @@ final GoRouter router = GoRouter(
           builder: (BuildContext context, GoRouterState state) =>
               SellerMyPage(),
         ),
-        GoRoute(
-          path: '/orderlist',
-          builder: (BuildContext context, GoRouterState state) =>
-          const OrderListPage(),
-        ),
-        GoRoute(
-          path: '/orderdetail/:orderId',
-          builder: (BuildContext context, GoRouterState state) {
-            final String orderId = state.pathParameters['orderId'] ?? "";
-            return OrderDetailPage(orderId);
-          },
-        ),
-
-        GoRoute(
-          path: '/mypage/edit-buyer',
-          builder: (BuildContext context, GoRouterState state) {
-            // state.extra에서 데이터를 안전하게 추출합니다.
-            final extraData = state.extra as Map<String, dynamic>? ?? {};
-            final String nickName = extraData['nickName'] ?? '';
-            final String profileUrl = extraData['profileUrl'] ?? '';
-            return EditProfilePage(nickName: nickName, profileUrl: profileUrl);
-          },
-        ),
-
-        GoRoute(
-          path: '/productslist/:categoryId',
-          builder: (BuildContext context, GoRouterState state) {
-            final String categoryId = state.pathParameters['categoryId'] ?? "";
-            return ProductsListPage(categoryId: categoryId);
-          },
-        ),
-        GoRoute(
-          path: '/productdetail/:productId',
-          builder: (BuildContext context, GoRouterState state) {
-            final String productId = state.pathParameters['productId'] ?? "";
-            return ProductsDetailPage(productId);
-          },
-        ),
-        GoRoute(
-          path: '/wish/cart',
-          builder: (BuildContext context, GoRouterState state) =>
-          const CartPage(),
-        ),
-        GoRoute(
-          path: '/mypage/password/:userId',
-          builder: (BuildContext context, GoRouterState state) {
-            final String userId = state.pathParameters['userId'] ?? "";
-            return PasswordEditPage(userId: userId);
-          },
-        ),
-        GoRoute(
-          path: '/branddetail/:brandId',
-          builder: (BuildContext context, GoRouterState state) {
-            final String brandId = state.pathParameters['brandId'] ?? "";
-            return BrandDetailPage(brandId);
-          },
-        ),
-        GoRoute(
-          path: '/funding/register',
-          builder: (BuildContext context, GoRouterState state) =>
-          const FundingRegisterPage(),
-        ),
-        GoRoute(
-          path: '/mypage/register',
-          builder: (BuildContext context, GoRouterState state) =>
-          const ProductRegisterPage(),
-        ),
-        GoRoute(
-          path: '/brand/editproduct/:brandId',
-          builder: (BuildContext context, GoRouterState state) {
-            final String brandId = state.pathParameters['brandId'] ?? "";
-            return BrandProductEditPage(brandId: brandId);
-          },
-        ),
-        GoRoute(
-          path: '/brand/edit',
-          builder: (BuildContext context, GoRouterState state) =>
-          const BrandEditPage(),
-        ),
-        GoRoute(
-          path: '/funding/edit/:fundingId',
-          builder: (BuildContext context, GoRouterState state) {
-            final String fundingId = state.pathParameters['fundingId'] ?? "";
-            return FundingEditPage(fundingId: fundingId);
-          },
-        ),
-        GoRoute(
-          path: '/productedit/:productId',
-          builder: (BuildContext context, GoRouterState state) {
-            final String productId = state.pathParameters['productId'] ?? "";
-            return ProductEditPage(productId: productId);
-          },
-        ),
       ],
+    ),
+
+    GoRoute(
+      path: '/orderlist',
+      builder: (BuildContext context, GoRouterState state) =>
+      const OrderListPage(),
+    ),
+    GoRoute(
+      path: '/orderdetail/:orderId',
+      builder: (BuildContext context, GoRouterState state) {
+        final String orderId = state.pathParameters['orderId'] ?? "";
+        return OrderDetailPage(orderId);
+      },
+    ),
+    GoRoute(
+      path: '/mypage/edit-buyer',
+      builder: (BuildContext context, GoRouterState state) {
+        final extraData = state.extra as Map<String, dynamic>? ?? {};
+        final String nickName = extraData['nickName'] ?? '';
+        final String profileUrl = extraData['profileUrl'] ?? '';
+        return EditProfilePage(nickName: nickName, profileUrl: profileUrl);
+      },
+    ),
+    GoRoute(
+      path: '/productslist/:categoryId',
+      builder: (BuildContext context, GoRouterState state) {
+        final String categoryId = state.pathParameters['categoryId'] ?? "";
+        return ProductsListPage(categoryId: categoryId);
+      },
+    ),
+    GoRoute(
+      path: '/productdetail/:productId',
+      builder: (BuildContext context, GoRouterState state) {
+        final String productId = state.pathParameters['productId'] ?? "";
+        return ProductsDetailPage(productId);
+      },
+    ),
+    GoRoute(
+      path: '/wish/cart',
+      builder: (BuildContext context, GoRouterState state) => const CartPage(),
+    ),
+    GoRoute(
+      path: '/mypage/password/:userId',
+      builder: (BuildContext context, GoRouterState state) {
+        final String userId = state.pathParameters['userId'] ?? "";
+        return PasswordEditPage(userId: userId);
+      },
+    ),
+    GoRoute(
+      path: '/branddetail/:brandId',
+      builder: (BuildContext context, GoRouterState state) {
+        final String brandId = state.pathParameters['brandId'] ?? "";
+        return BrandDetailPage(brandId);
+      },
+    ),
+    GoRoute(
+      path: '/funding/register',
+      builder: (BuildContext context, GoRouterState state) =>
+      const FundingRegisterPage(),
+    ),
+    GoRoute(
+      path: '/mypage/register',
+      builder: (BuildContext context, GoRouterState state) =>
+      const ProductRegisterPage(),
+    ),
+    GoRoute(
+      path: '/brand/editproduct/:brandId',
+      builder: (BuildContext context, GoRouterState state) {
+        final String brandId = state.pathParameters['brandId'] ?? "";
+        return BrandProductEditPage(brandId: brandId);
+      },
+    ),
+    GoRoute(
+      path: '/brand/edit',
+      builder: (BuildContext context, GoRouterState state) =>
+      const BrandEditPage(),
+    ),
+    GoRoute(
+      path: '/funding/edit/:fundingId',
+      builder: (BuildContext context, GoRouterState state) {
+        final String fundingId = state.pathParameters['fundingId'] ?? "";
+        return FundingEditPage(fundingId: fundingId);
+      },
+    ),
+    GoRoute(
+      path: '/productedit/:productId',
+      builder: (BuildContext context, GoRouterState state) {
+        final String productId = state.pathParameters['productId'] ?? "";
+        return ProductEditPage(productId: productId);
+      },
     ),
 
     GoRoute(

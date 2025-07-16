@@ -22,10 +22,12 @@ class _FundingEditPageState extends State<FundingEditPage> {
   final _fundingApiClient = FundingsApiClient();
   final _fundingEditApiClient = SellerFundingsApiClient();
 
-  File? _profileImageFile;
-  String? _profileImageUrl;
+  // ---👇 [수정] 변수명 변경: profile -> thumbnail ---
+  File? _thumbnailImageFile;
+  String? _thumbnailImageUrl;
   bool _isPickingImage = false;
-  bool _isLoading = true; // ◀️ 1. 로딩 상태 관리를 위한 변수
+  bool _isLoading = true;
+  bool _isImageRemoved = false;
 
   @override
   void initState() {
@@ -33,27 +35,22 @@ class _FundingEditPageState extends State<FundingEditPage> {
     _fetchFundingDetails();
   }
 
-  // ◀️ 2. 펀딩 상세 정보 조회 함수
   Future<void> _fetchFundingDetails() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-      // 수정된 API 클라이언트 호출
       final response = await _fundingApiClient.fundingDetail(
         id: widget.fundingId,
       );
 
-      // API 응답의 success 필드와 data 존재 여부 확인
       if (response.success && response.data != null) {
-        // 💥 더 이상 .items.first 로 접근하지 않음
         final fundingItem = response.data!;
-
         setState(() {
           _nameController.text = fundingItem.title;
           _linkController.text = fundingItem.linkUrl ?? '';
-          _profileImageUrl = fundingItem.imageUrl;
+          _thumbnailImageUrl = fundingItem.thumbnailImageUrl;
         });
       } else {
         if (mounted) {
@@ -80,7 +77,6 @@ class _FundingEditPageState extends State<FundingEditPage> {
   }
 
   Future<void> _pickImage() async {
-    // ... (기존과 동일)
     if (_isPickingImage) return;
 
     setState(() {
@@ -109,8 +105,9 @@ class _FundingEditPageState extends State<FundingEditPage> {
                   if (!mounted) return;
                   setState(() {
                     if (picked != null) {
-                      _profileImageFile = File(picked.path);
-                      _profileImageUrl = null;
+                      _thumbnailImageFile = File(picked.path);
+                      _thumbnailImageUrl = null;
+                      _isImageRemoved = false; // 새 이미지 선택 시 삭제 상태 해제
                     }
                     _isPickingImage = false;
                   });
@@ -128,13 +125,28 @@ class _FundingEditPageState extends State<FundingEditPage> {
                   if (!mounted) return;
                   setState(() {
                     if (picked != null) {
-                      _profileImageFile = File(picked.path);
-                      _profileImageUrl = null;
+                      _thumbnailImageFile = File(picked.path);
+                      _thumbnailImageUrl = null;
+                      _isImageRemoved = false;
                     }
                     _isPickingImage = false;
                   });
                 },
               ),
+              if (_thumbnailImageUrl != null || _thumbnailImageFile != null)
+                ListTile(
+                  leading: const Icon(Icons.delete_outline, color: Colors.red),
+                  title: const Text('이미지 삭제', style: TextStyle(color: Colors.red)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      _thumbnailImageFile = null;
+                      _thumbnailImageUrl = null;
+                      _isImageRemoved = true;
+                      _isPickingImage = false;
+                    });
+                  },
+                ),
             ],
           ),
         );
@@ -155,14 +167,14 @@ class _FundingEditPageState extends State<FundingEditPage> {
     super.dispose();
   }
 
-  // 🔽 펀딩 수정 로직 수정
   void updateFunding() async {
     try {
       final res = await _fundingEditApiClient.editFundings(
         id: widget.fundingId,
         title: _nameController.text,
         linkUrl: _linkController.text,
-        thumbnailImage: _profileImageFile,
+        thumbnailImage: _thumbnailImageFile,
+        deleteThumbnail: _isImageRemoved,
       );
 
       if (mounted) {
@@ -208,40 +220,39 @@ class _FundingEditPageState extends State<FundingEditPage> {
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       backgroundColor: Colors.white,
-      // ◀️ 3. 로딩 상태에 따라 UI 분기 처리
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(child: _sectionTitle('대표 이미지')),
-                  const SizedBox(height: 8),
-                  Center(child: _imageBox()),
-                  const SizedBox(height: 24),
-                  _sectionTitle('펀딩명'),
-                  const SizedBox(height: 8),
-                  _textField('(이름)', _nameController),
-                  const SizedBox(height: 16),
-                  _sectionTitle('펀딩 링크'),
-                  const SizedBox(height: 8),
-                  _textField('https://www.', _linkController),
-                  const SizedBox(height: 16),
-                ],
-              ),
-            ),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: _sectionTitle('대표 이미지')),
+            const SizedBox(height: 8),
+            Center(child: _imageBox()),
+            const SizedBox(height: 24),
+            _sectionTitle('펀딩명'),
+            const SizedBox(height: 8),
+            _textField('(이름)', _nameController),
+            const SizedBox(height: 16),
+            _sectionTitle('펀딩 링크'),
+            const SizedBox(height: 8),
+            _textField('https://www.', _linkController),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
       bottomNavigationBar: _isLoading
-          ? null // 로딩 중일때는 하단 버튼 숨기기
+          ? null
           : SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: BottomButton(
-                  buttonText: '펀딩 수정',
-                  pressedFunc: updateFunding,
-                ),
-              ),
-            ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: BottomButton(
+            buttonText: '펀딩 수정',
+            pressedFunc: updateFunding,
+          ),
+        ),
+      ),
     );
   }
 
@@ -292,23 +303,16 @@ class _FundingEditPageState extends State<FundingEditPage> {
           decoration: BoxDecoration(
             color: AppColors.optionStateList,
             borderRadius: BorderRadius.circular(12),
-            image:
-                _profileImageFile == null &&
-                    (_profileImageUrl == null || _profileImageUrl!.isEmpty)
-                ? null
-                : DecorationImage(
-                    image: _profileImageFile != null
-                        ? FileImage(_profileImageFile!) as ImageProvider
-                        : NetworkImage(_profileImageUrl!),
-                    fit: BoxFit.cover,
-                  ),
+            image: _thumbnailImageFile != null
+                ? DecorationImage(image: FileImage(_thumbnailImageFile!), fit: BoxFit.cover)
+                : (_thumbnailImageUrl != null && _thumbnailImageUrl!.isNotEmpty)
+                ? DecorationImage(image: NetworkImage(_thumbnailImageUrl!), fit: BoxFit.cover)
+                : null,
           ),
-          child:
-              (_profileImageFile == null &&
-                  (_profileImageUrl == null || _profileImageUrl!.isEmpty))
+          child: (_thumbnailImageFile == null && (_thumbnailImageUrl == null || _thumbnailImageUrl!.isEmpty))
               ? const Center(
-                  child: Icon(Icons.photo, color: Colors.grey, size: 50),
-                )
+            child: Icon(Icons.photo, color: Colors.grey, size: 50),
+          )
               : null,
         ),
         Positioned(

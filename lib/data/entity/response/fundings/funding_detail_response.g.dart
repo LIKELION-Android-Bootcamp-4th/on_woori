@@ -34,6 +34,7 @@ FundingDetailData _$FundingDetailDataFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       linkUrl: json['linkUrl'] as String?,
       imageUrl: json['imageUrl'] as String?,
+      thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
@@ -48,6 +49,7 @@ Map<String, dynamic> _$FundingDetailDataToJson(FundingDetailData instance) =>
       'title': instance.title,
       'linkUrl': instance.linkUrl,
       'imageUrl': instance.imageUrl,
+      'thumbnailImageUrl': instance.thumbnailImageUrl,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
     };

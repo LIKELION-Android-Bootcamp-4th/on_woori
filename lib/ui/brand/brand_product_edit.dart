@@ -490,7 +490,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
                 index,
                 selected,
                 onChanged,
-                imageUrl: item.imageUrl,
+                imageUrl: item.thumbnailImageUrl,
               );
             },
           ),
@@ -532,7 +532,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
               id: item.id,
               deleteSelection: deleteSelection,
               onEdit: editSelection,
-              imageUrl: item.imageUrl,
+              imageUrl: item.thumbnailImageUrl,
             );
           },
         ),

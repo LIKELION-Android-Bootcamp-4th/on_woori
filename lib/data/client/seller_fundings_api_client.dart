@@ -47,19 +47,22 @@ class SellerFundingsApiClient {
     return SellerFundingResponse.fromJson(response.data);
   }
 
-  // 펀딩 수정
   Future<Response> editFundings({
     required String id,
     required String title,
     String? linkUrl,
     File? thumbnailImage,
+    bool deleteThumbnail = false, // 이미지 삭제 여부 플래그 추가
   }) async {
     final formData = FormData.fromMap({
       'title': title,
       if (linkUrl != null && linkUrl.isNotEmpty) 'linkUrl': linkUrl,
+      // deleteThumbnail이 true이면, 'thumbnailImage' 필드에 null 값을 명시적으로 전송
+      if (deleteThumbnail) 'thumbnailImage': null,
     });
 
-    if (thumbnailImage != null) {
+    // 새 이미지가 있고, 삭제 플래그가 false일 때만 파일을 추가
+    if (thumbnailImage != null && !deleteThumbnail) {
       formData.files.add(
         MapEntry(
           'thumbnailImage',

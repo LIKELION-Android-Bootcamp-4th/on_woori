@@ -42,6 +42,7 @@ class SellerFundingItem {
   final String? imageUrl;
   final String? linkUrl;
   final CompanyId? companyId;
+  final String? thumbnailImageUrl;
 
   @JsonKey(fromJson: _toInt)
   final int? targetAmount;
@@ -61,6 +62,7 @@ class SellerFundingItem {
     this.imageUrl,
     this.linkUrl,
     this.companyId,
+    this.thumbnailImageUrl, // 생성자에 추가
     this.targetAmount,
     this.currentAmount,
     this.endDate,
@@ -72,7 +74,6 @@ class SellerFundingItem {
 
   Map<String, dynamic> toJson() => _$SellerFundingItemToJson(this);
 
-  // 🔧 커스텀 파서들
   static int? _toInt(dynamic value) {
     if (value == null) return null;
     if (value is int) return value;

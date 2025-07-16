@@ -23,7 +23,6 @@ class FundingDetailResponse {
   Map<String, dynamic> toJson() => _$FundingDetailResponseToJson(this);
 }
 
-// "data" 필드의 객체 구조
 @JsonSerializable(explicitToJson: true)
 class FundingDetailData {
   @JsonKey(name: 'id')
@@ -31,17 +30,17 @@ class FundingDetailData {
   final String title;
   final String? linkUrl;
   final String? imageUrl;
+  final String? thumbnailImageUrl;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  // 필요하다면 다른 필드들도 추가할 수 있습니다.
-  // final FundingCompanyInfo? companyId;
 
   const FundingDetailData({
     required this.id,
     required this.title,
     this.linkUrl,
     this.imageUrl,
+    this.thumbnailImageUrl,
     this.createdAt,
     this.updatedAt,
   });

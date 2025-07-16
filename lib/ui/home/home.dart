@@ -86,10 +86,10 @@ class _HomePageState extends State<HomePage> {
 
           final productItems =
           (snapshot.data?.$1.data?.items ?? []).take(4).toList();
-          final fundingItems =
-          (snapshot.data?.$2.data?.items ?? []).toList();
-          final storeItems =
-          (snapshot.data?.$3.data?.items ?? []).toList();
+          final fundingItems = (snapshot.data?.$2.data?.items ?? []).toList();
+          final storeItems = (snapshot.data?.$3.data?.items ?? [])
+              .where((store) => store.owner.isWithdrawn != true)
+              .toList();
 
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -114,7 +114,8 @@ class _HomePageState extends State<HomePage> {
                   child: GridView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: fundingItems.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       mainAxisSpacing: 24,
                       crossAxisSpacing: 0,
@@ -144,7 +145,8 @@ class _HomePageState extends State<HomePage> {
                       child: GridView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: storeItems.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           mainAxisSpacing: 0,
                           crossAxisSpacing: 12,
@@ -153,39 +155,18 @@ class _HomePageState extends State<HomePage> {
                         itemBuilder: (context, index) {
                           final brand = storeItems[index];
                           return BrandGridItem(
-                            imageUrl: brand.thumbnailImageUrl ?? DefaultImage.brandThumbnail,
+                            imageUrl: brand.thumbnailImageUrl ??
+                                DefaultImage.brandThumbnail,
                             brandName: brand.name,
                             onTap: () {
-                              debugPrint('${brand.name} 클릭됨, ID: ${brand.id}');
+                              debugPrint(
+                                  '${brand.name} 클릭됨, ID: ${brand.id}');
                               context.push('/branddetail/${brand.id}');
                             },
                           );
                         },
                       ),
                     ),
-                    // GridView.builder(
-                    //   shrinkWrap: true,
-                    //   physics: const NeverScrollableScrollPhysics(),
-                    //   gridDelegate:
-                    //   const SliverGridDelegateWithFixedCrossAxisCount(
-                    //     crossAxisCount: 4,
-                    //     crossAxisSpacing: 12,
-                    //     childAspectRatio: 0.8,
-                    //   ),
-                    //   itemCount: storeItems.length,
-                    //   itemBuilder: (context, index) {
-                    //     final brand = storeItems[index];
-                    //     return BrandGridItem(
-                    //       imageUrl:
-                    //       brand.thumbnailImageUrl ?? DefaultImage.brandThumbnail,
-                    //       brandName: brand.name,
-                    //       onTap: () {
-                    //         debugPrint('${brand.name} 클릭됨, ID: ${brand.id}');
-                    //         context.push('/branddetail/${brand.id}');
-                    //       },
-                    //     );
-                    //   },
-                    // ),
                     const SizedBox(height: 20),
                   ],
                 ),

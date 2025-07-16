@@ -3,7 +3,6 @@ import 'package:on_woori/data/entity/response/products/products_response.dart';
 
 part 'stores_response.g.dart';
 
-// Helper 함수들은 그대로 유지합니다.
 Contact? _contactFromJson(dynamic json) {
   if (json is Map<String, dynamic>) {
     return Contact.fromJson(json);
@@ -86,8 +85,8 @@ class StoreItem {
   final String name;
   final String? description;
 
-  @JsonKey(fromJson: User.fromJson)
-  final User owner;
+  @JsonKey(fromJson: StoreOwner.fromJson)
+  final StoreOwner owner;
 
   final String companyId;
   final String status;
@@ -216,8 +215,10 @@ class StoreOwner {
   @JsonKey(name: 'id')
   final String id;
   final String nickName;
+  final bool? isWithdrawn;
 
-  StoreOwner({required this.id, required this.nickName});
+  StoreOwner(
+      {required this.id, required this.nickName, required this.isWithdrawn});
 
   factory StoreOwner.fromJson(Map<String, dynamic> json) =>
       _$StoreOwnerFromJson(json);
@@ -288,7 +289,6 @@ class StoreProductsResponse {
   Map<String, dynamic> toJson() => _$StoreProductsResponseToJson(this);
 }
 
-// [추가] JSON의 data 객체 구조를 담을 새로운 클래스
 @JsonSerializable(explicitToJson: true)
 class StoreProductsData {
   final List<ProductItem> items;
@@ -302,7 +302,6 @@ class StoreProductsData {
   Map<String, dynamic> toJson() => _$StoreProductsDataToJson(this);
 }
 
-// seller 조회 관련
 @JsonSerializable(explicitToJson: true)
 class SellerStoreResponse {
   final bool success;
@@ -326,7 +325,6 @@ class SellerStoreData {
   final String name;
   final String? description;
   final String? thumbnailImageUrl; //여기가 브랜드 아이콘
-  //이하 사용하지 않는 데이터도 필드 유지를 위해 받아옵니다
   final String id;
   final String? category;
   final String? status;

@@ -65,11 +65,4 @@ class AdminApiClient {
     }
   }
 
-  Future<Response> deleteProductForce({required String id}) async {
-    final response = await _adminDio.delete(
-      AdminProductEndpoints.deleteAdminProductsForce(id: id),
-    );
-    return response;
-  }
-
 }

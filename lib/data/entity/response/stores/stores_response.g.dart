@@ -55,7 +55,7 @@ StoreItem _$StoreItemFromJson(Map<String, dynamic> json) => StoreItem(
   id: json['id'] as String,
   name: json['name'] as String,
   description: json['description'] as String?,
-  owner: User.fromJson(json['owner'] as Map<String, dynamic>),
+  owner: StoreOwner.fromJson(json['owner'] as Map<String, dynamic>),
   companyId: json['companyId'] as String,
   status: json['status'] as String,
   isDeleted: json['isDeleted'] as bool,
@@ -156,11 +156,18 @@ Map<String, dynamic> _$PaginationToJson(Pagination instance) =>
       'hasPrev': instance.hasPrevPage,
     };
 
-StoreOwner _$StoreOwnerFromJson(Map<String, dynamic> json) =>
-    StoreOwner(id: json['id'] as String, nickName: json['nickName'] as String);
+StoreOwner _$StoreOwnerFromJson(Map<String, dynamic> json) => StoreOwner(
+  id: json['id'] as String,
+  nickName: json['nickName'] as String,
+  isWithdrawn: json['isWithdrawn'] as bool?,
+);
 
 Map<String, dynamic> _$StoreOwnerToJson(StoreOwner instance) =>
-    <String, dynamic>{'id': instance.id, 'nickName': instance.nickName};
+    <String, dynamic>{
+      'id': instance.id,
+      'nickName': instance.nickName,
+      'isWithdrawn': instance.isWithdrawn,
+    };
 
 StoreDetailResponse _$StoreDetailResponseFromJson(Map<String, dynamic> json) =>
     StoreDetailResponse(

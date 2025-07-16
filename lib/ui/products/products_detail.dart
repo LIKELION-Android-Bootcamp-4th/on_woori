@@ -356,15 +356,6 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               ),
               const SizedBox(height: 5),
             ],
-            if (colorOptions.isNotEmpty) ...[
-              OptionDropdown(
-                hint: l10n.productDetailColorDropdownHint,
-                value: selectedColor,
-                items: colorOptions,
-                onChanged: (value) => setState(() => selectedColor = value),
-              ),
-              const SizedBox(height: 5),
-            ],
             Container(
               color: AppColors.optionStateList,
               padding: const EdgeInsets.all(10),

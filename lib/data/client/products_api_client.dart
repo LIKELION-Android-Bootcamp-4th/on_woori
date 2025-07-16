@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:on_woori/config/endpoint/admin_product_endpoints.dart';
 import 'package:on_woori/config/endpoint/buyer/products_endpoints.dart';
 import 'package:on_woori/config/endpoint/seller/seller_products_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
@@ -57,5 +58,12 @@ class ProductsApiClient {
       data: formData,
     );
     return ProductRegisterResponse.fromJson(response.data);
+  }
+
+  Future<Response> deleteProductForce({required String id}) async {
+    final response = await _dio.delete(
+      AdminProductEndpoints.deleteAdminProductsForce(id: id),
+    );
+    return response;
   }
 }

@@ -61,7 +61,7 @@ class BrandProductEditScreen extends StatefulWidget {
 
 class BrandProductEditScreenState extends State<BrandProductEditScreen> {
   final productApiClient = ProductsApiClient();
-  final adminApiClient = AdminApiClient();
+  final adminApiClient = ProductsApiClient();
 
   bool isLoading = true;
   bool selecting = false;
@@ -106,15 +106,6 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
         backgroundColor: isError ? Colors.redAccent : Colors.green,
       ),
     );
-  }
-
-  Future<bool> _ensureAdminLogin() async {
-    final l10n = AppLocalizations.of(context)!;
-    final success = await adminApiClient.loginAsAdmin();
-    if (!success && mounted) {
-      _showSnackBar(l10n.commonAdminAuthFailed, isError: true);
-    }
-    return success;
   }
 
   void onChanged(bool? flag, int index) {
@@ -167,10 +158,6 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
     if (confirm != true) return;
 
     setState(() => isLoading = true);
-    if (await _ensureAdminLogin() == false) {
-      setState(() => isLoading = false);
-      return;
-    }
 
     for (final id in idsToDelete) {
       try {
@@ -211,11 +198,6 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
     if (confirm != true) return;
 
     setState(() => isLoading = true);
-
-    if (await _ensureAdminLogin() == false) {
-      setState(() => isLoading = false);
-      return;
-    }
 
     try {
       await adminApiClient.deleteProductForce(id: id);

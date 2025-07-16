@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/client/upload_api_client.dart';
 import 'package:on_woori/data/entity/request/upload/upload_files_request.dart';
@@ -290,7 +291,9 @@ class _ProductEditPageState extends State<ProductEditPage> {
                   _sectionTitle(l10n.productRegisterPriceLabel),
                   const SizedBox(height: 8),
                   _textField(_priceController,
-                      hint: l10n.productRegisterPriceHint, isNumber: true),
+                      hint: l10n.productRegisterPriceHint,
+                      isNumber: true,
+                      onChanged: (_) => setState(() {})),
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterDiscountLabel),
                   const SizedBox(height: 8),
@@ -298,14 +301,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     _discountController,
                     hint: l10n.productRegisterDiscountHint,
                     isNumber: true,
+                    onChanged: (_) => setState(() {}),
                   ),
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterDisplayPriceLabel),
                   const SizedBox(height: 8),
-                  _textField(
-                    TextEditingController(text: '$displayPrice'),
-                    isEnabled: false,
-                  ),
+                  _displayField(displayPrice),
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterDescriptionLabel),
                   const SizedBox(height: 8),
@@ -396,9 +397,11 @@ class _ProductEditPageState extends State<ProductEditPage> {
         bool isNumber = false,
         int maxLines = 1,
         bool isEnabled = true,
+        void Function(String)? onChanged,
       }) {
     return TextField(
       controller: controller,
+      onChanged: onChanged,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       maxLines: maxLines,
       enabled: isEnabled,
@@ -432,6 +435,31 @@ class _ProductEditPageState extends State<ProductEditPage> {
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 16,
+        ),
+      ),
+    );
+  }
+
+  Widget _displayField(int price) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 16,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: AppColors.dividerTextBoxLineDivider,
+        ),
+      ),
+      child: Text(
+        NumberFormat('#,###').format(price),
+        style: const TextStyle(
+          fontWeight: FontWeight.w400,
+          fontSize: 16,
+          color: Colors.black,
         ),
       ),
     );

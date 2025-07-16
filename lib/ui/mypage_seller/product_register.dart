@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:on_woori/data/client/products_api_client.dart';
 import 'package:on_woori/data/entity/request/products/product_register_request.dart';
 import 'package:on_woori/data/client/upload_api_client.dart';
@@ -217,21 +218,20 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterPriceLabel),
                   const SizedBox(height: 8),
+                  // ---👇 [수정] onChanged 콜백 추가 ---
                   _textField(l10n.productRegisterPriceHint, _priceController,
-                      isNumber: true),
+                      isNumber: true, onChanged: (_) => setState(() {})),
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterDiscountLabel),
                   const SizedBox(height: 8),
+                  // ---👇 [수정] onChanged 콜백 추가 ---
                   _textField(l10n.productRegisterDiscountHint, _discountController,
-                      isNumber: true),
+                      isNumber: true, onChanged: (_) => setState(() {})),
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterDisplayPriceLabel),
                   const SizedBox(height: 8),
-                  _textField(
-                    l10n.productRegisterDisplayPriceHint,
-                    TextEditingController(text: '$displayPrice'),
-                    isEnabled: false,
-                  ),
+                  // ---👇 [수정] 비활성화된 텍스트 필드를 별도 위젯으로 교체 ---
+                  _displayField(displayPrice),
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterDescriptionLabel),
                   const SizedBox(height: 8),
@@ -316,15 +316,18 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
     );
   }
 
+  // ---👇 [수정] onChanged 파라미터 추가 ---
   Widget _textField(
       String hint,
       TextEditingController controller, {
         bool isNumber = false,
         int maxLines = 1,
         bool isEnabled = true,
+        void Function(String)? onChanged,
       }) {
     return TextField(
       controller: controller,
+      onChanged: onChanged,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       maxLines: maxLines,
       enabled: isEnabled,
@@ -358,6 +361,32 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 16,
+        ),
+      ),
+    );
+  }
+
+  // ---👇 [추가] 최종 판매가를 표시하기 위한 별도 위젯 ---
+  Widget _displayField(int price) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 16,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: AppColors.dividerTextBoxLineDivider,
+        ),
+      ),
+      child: Text(
+        NumberFormat('#,###').format(price),
+        style: const TextStyle(
+          fontWeight: FontWeight.w400,
+          fontSize: 16,
+          color: Colors.black,
         ),
       ),
     );

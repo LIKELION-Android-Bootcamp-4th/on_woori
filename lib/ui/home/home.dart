@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                       final item = fundingItems[index];
                       return FundingListItem(
                         id: item.id,
-                        imageUrl: item.imageUrl ?? l10n.dummyImage,
+                        imageUrl: item.thumbnailImageUrl ?? l10n.dummyImage,
                         fundingName: item.title,
                         brandName: item.companyId?.name ?? l10n.homePageNoBrand,
                         description: item.description ?? item.linkUrl ?? '',

@@ -40,6 +40,7 @@ class SellerFundingItem {
   final String title;
   final String? imageUrl;
   final String? linkUrl;
+  final String? thumbnailImageUrl;
   final String? description;
   final CompanyId? companyId;
   final DateTime? createdAt;
@@ -51,6 +52,7 @@ class SellerFundingItem {
     required this.title,
     this.imageUrl,
     this.linkUrl,
+    this.thumbnailImageUrl,
     this.description,
     this.companyId,
     this.createdAt,

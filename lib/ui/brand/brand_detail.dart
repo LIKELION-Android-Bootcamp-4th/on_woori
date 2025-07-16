@@ -281,7 +281,7 @@ class BrandFundingSectionState extends State<BrandFundingSection> {
           children: data.map((item) {
             return FundingListItem(
               id: item.id,
-              imageUrl: item.imageUrl ?? '',
+              imageUrl: item.thumbnailImageUrl ?? '',
               fundingName: item.title,
               brandName: item.companyId?.name ?? l10n.homePageNoBrand,
               description: item.description ?? item.linkUrl ?? '',

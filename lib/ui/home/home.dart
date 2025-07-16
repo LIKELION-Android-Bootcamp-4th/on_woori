@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/default_image.dart';
@@ -86,9 +87,9 @@ class _HomePageState extends State<HomePage> {
           final productItems =
           (snapshot.data?.$1.data?.items ?? []).take(4).toList();
           final fundingItems =
-          (snapshot.data?.$2.data?.items ?? []).take(3).toList();
+          (snapshot.data?.$2.data?.items ?? []).toList();
           final storeItems =
-          (snapshot.data?.$3.data?.items ?? []).take(8).toList();
+          (snapshot.data?.$3.data?.items ?? []).toList();
 
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -108,22 +109,29 @@ class _HomePageState extends State<HomePage> {
                 ProductsNonScrollableGrid(productItems.take(4).toList()),
                 const SizedBox(height: 12),
                 _buildSectionHeader(title: l10n.homeOngoingFunding),
-                ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: fundingItems.length,
-                  itemBuilder: (context, index) {
-                    final item = fundingItems[index];
-                    return FundingListItem(
-                      id: item.id,
-                      imageUrl: item.imageUrl ?? l10n.dummyImage,
-                      fundingName: item.title,
-                      brandName: item.companyId?.name ?? l10n.homePageNoBrand,
-                      description: item.description ?? item.linkUrl ?? '',
-                      linkUrl: item.linkUrl ?? '',
-                    );
-                  },
+                SizedBox(
+                  height: 230,
+                  child: GridView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: fundingItems.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 24,
+                      crossAxisSpacing: 0,
+                      childAspectRatio: 0.23,
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = fundingItems[index];
+                      return FundingListItem(
+                        id: item.id,
+                        imageUrl: item.imageUrl ?? l10n.dummyImage,
+                        fundingName: item.title,
+                        brandName: item.companyId?.name ?? l10n.homePageNoBrand,
+                        description: item.description ?? item.linkUrl ?? '',
+                        linkUrl: item.linkUrl ?? '',
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(height: 32),
                 _buildSectionHeader(title: l10n.homeBrandList),
@@ -137,10 +145,10 @@ class _HomePageState extends State<HomePage> {
                         scrollDirection: Axis.horizontal,
                         itemCount: storeItems.length,
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // 두 줄
-                          mainAxisSpacing: 0, // 아이템 간 세로 간격
-                          crossAxisSpacing: 12, // 아이템 간 가로 간격
-                          childAspectRatio: 1, // 아이템 비율 (조정 가능)
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 0,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 1,
                         ),
                         itemBuilder: (context, index) {
                           final brand = storeItems[index];

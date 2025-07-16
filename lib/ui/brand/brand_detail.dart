@@ -223,7 +223,7 @@ class BrandProductScreenState extends State<BrandProductScreen> {
               ],
             ),
             const SizedBox(height: 10),
-            const BrandFundingSection(),
+            BrandFundingSection(brandId: widget.id),
             const SizedBox(height: 10),
             const Divider(color: AppColors.dividerTextBoxLineDivider),
             CategoryHorizontalScroll(getFilteredItem: getFilteredItem),
@@ -242,7 +242,8 @@ class BrandProductScreenState extends State<BrandProductScreen> {
 }
 
 class BrandFundingSection extends StatefulWidget {
-  const BrandFundingSection({super.key});
+  String brandId;
+  BrandFundingSection({super.key, required this.brandId});
 
   @override
   State<StatefulWidget> createState() {
@@ -273,7 +274,7 @@ class BrandFundingSectionState extends State<BrandFundingSection> {
         if (!snapshot.hasData) {
           return const SizedBox.shrink();
         }
-        final data = snapshot.data?.data?.items.take(3).toList() ?? [];
+        final data = snapshot.data?.data?.items.where((item) => item.storeId?.id == widget.brandId).toList() ?? [];
         if (data.isEmpty) {
           return Center(child: Text(l10n.brandDetailNoOngoingFunding));
         }

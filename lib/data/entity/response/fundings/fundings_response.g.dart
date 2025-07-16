@@ -43,6 +43,9 @@ SellerFundingItem _$SellerFundingItemFromJson(Map<String, dynamic> json) =>
       linkUrl: json['linkUrl'] as String?,
       thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
       description: json['description'] as String?,
+      storeId: json['storeId'] == null
+          ? null
+          : StoreId.fromJson(json['storeId'] as Map<String, dynamic>),
       companyId: json['companyId'] == null
           ? null
           : CompanyId.fromJson(json['companyId'] as Map<String, dynamic>),
@@ -63,6 +66,7 @@ Map<String, dynamic> _$SellerFundingItemToJson(SellerFundingItem instance) =>
       'linkUrl': instance.linkUrl,
       'thumbnailImageUrl': instance.thumbnailImageUrl,
       'description': instance.description,
+      'storeId': instance.storeId?.toJson(),
       'companyId': instance.companyId?.toJson(),
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),

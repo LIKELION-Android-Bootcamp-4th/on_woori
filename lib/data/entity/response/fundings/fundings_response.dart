@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:on_woori/data/entity/response/seller/fundings/seller_funding_response.dart';
 
 part 'fundings_response.g.dart';
 
@@ -42,6 +43,7 @@ class SellerFundingItem {
   final String? linkUrl;
   final String? thumbnailImageUrl;
   final String? description;
+  final StoreId? storeId;
   final CompanyId? companyId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -54,6 +56,7 @@ class SellerFundingItem {
     this.linkUrl,
     this.thumbnailImageUrl,
     this.description,
+    this.storeId,
     this.companyId,
     this.createdAt,
     this.updatedAt,

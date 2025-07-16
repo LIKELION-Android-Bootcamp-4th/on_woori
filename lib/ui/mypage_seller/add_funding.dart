@@ -4,12 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/data/client/seller_fundings_api_client.dart';
-import 'package:on_woori/data/client/seller_store_api.dart';
-import 'package:on_woori/data/entity/response/upload/upload_files_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import '../../core/styles/app_colors.dart';
-import '../../data/client/upload_api_client.dart';
-import '../../data/entity/request/upload/upload_files_request.dart';
 import '../../widgets/bottom_button.dart';
 
 class FundingRegisterPage extends StatefulWidget {
@@ -23,9 +19,10 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
   final _nameController = TextEditingController();
   final _linkController = TextEditingController();
   final fundingApiClient = SellerFundingsApiClient();
-  File? _profileImageFile;
-  String? _profileImageUrl;
+
+  File? _thumbnailImageFile;
   bool _isPickingImage = false;
+  bool _isSubmitting = false;
 
   Future<void> _pickImage() async {
     if (_isPickingImage) {
@@ -59,11 +56,9 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile = picked != null
-                        ? File(picked.path)
-                        : _profileImageFile;
-                    _profileImageUrl = picked != null ? null : _profileImageUrl;
-                    _isPickingImage = false;
+                    if (picked != null) {
+                      _thumbnailImageFile = File(picked.path);
+                    }
                   });
                 },
               ),
@@ -78,11 +73,9 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile = picked != null
-                        ? File(picked.path)
-                        : _profileImageFile;
-                    _profileImageUrl = picked != null ? null : _profileImageUrl;
-                    _isPickingImage = false;
+                    if (picked != null) {
+                      _thumbnailImageFile = File(picked.path);
+                    }
                   });
                 },
               ),
@@ -107,6 +100,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
   }
 
   void _showSnackBar(String message, {bool isError = true}) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -117,55 +111,50 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
 
   void submit() async {
     final l10n = AppLocalizations.of(context)!;
-    String? imageUrl = _profileImageUrl;
 
     if (_nameController.text.isEmpty || _linkController.text.isEmpty) {
       _showSnackBar(l10n.validatorRequired);
       return;
     }
 
-    if (_profileImageFile != null) {
-      try {
-        final uploadClient = UploadApiClient();
-        final request = UploadFilesRequest(
-          files: [XFile(_profileImageFile!.path)],
-        );
-        final UploadFilesResponse uploadResponse = await uploadClient
-            .uploadFiles(request);
-
-        if (uploadResponse.success &&
-            uploadResponse.data!.files.first.url.isNotEmpty) {
-          imageUrl = uploadResponse.data?.files.first.url;
-          debugPrint('업로드된 이미지 URL: $imageUrl');
-        } else {
-          debugPrint('파일 업로드 실패 또는 URL 없음');
-          return;
-        }
-      } catch (e) {
-        debugPrint('이미지 업로드 중 오류 발생: $e');
-        return;
-      }
-    } else {
+    if (_thumbnailImageFile == null) {
       _showSnackBar(l10n.productRegisterErrorNoThumbnail);
       return;
     }
 
-    final res = await fundingApiClient.createFunding(
-      title: _nameController.text,
-      linkUrl: _linkController.text,
-      imageUrl: imageUrl,
-    );
-
     setState(() {
-      if (res.success) {
-        debugPrint('펀딩 생성 성공!');
-        // 추가로 생성된 펀딩 목록 갱신 등 작업
-        Navigator.of(context).pop(true);
-        _showSnackBar(l10n.fundingRegisterPageTitle, isError: false);
-      } else {
-        debugPrint('생성 실패: ${res.message}');
-      }
+      _isSubmitting = true;
     });
+
+    try {
+      final res = await fundingApiClient.createFunding(
+        title: _nameController.text,
+        linkUrl: _linkController.text,
+        thumbnailImage: _thumbnailImageFile,
+      );
+
+      if (mounted) {
+        if (res.statusCode == 201 || res.statusCode == 200) {
+          _showSnackBar("펀딩을 등록했습니다.", isError: false);
+          context.pop(true); // 성공 시 true 반환
+        } else {
+          final errorMessage = (res.data is Map<String, dynamic>)
+              ? res.data['message'] ?? '알 수 없는 오류가 발생했습니다.'
+              : res.statusMessage ?? '펀딩 생성에 실패했습니다.';
+          _showSnackBar('생성 실패: $errorMessage');
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        _showSnackBar('오류가 발생했습니다: $e');
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
   }
 
   @override
@@ -187,32 +176,41 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(child: _sectionTitle(l10n.fundingRegisterThumbnailLabel)),
-            const SizedBox(height: 8),
-            Center(child: _imageBox()),
-            const SizedBox(height: 24),
-            _sectionTitle(l10n.fundingRegisterNameLabel),
-            const SizedBox(height: 8),
-            _textField(l10n.fundingRegisterNameHint, _nameController),
-            const SizedBox(height: 16),
-            _sectionTitle(l10n.fundingRegisterLinkLabel),
-            const SizedBox(height: 8),
-            _textField(l10n.fundingRegisterLinkHint, _linkController),
-            const SizedBox(height: 16),
-          ],
-        ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(child: _sectionTitle(l10n.fundingRegisterThumbnailLabel)),
+                const SizedBox(height: 8),
+                Center(child: _imageBox()),
+                const SizedBox(height: 24),
+                _sectionTitle(l10n.fundingRegisterNameLabel),
+                const SizedBox(height: 8),
+                _textField(l10n.fundingRegisterNameHint, _nameController),
+                const SizedBox(height: 16),
+                _sectionTitle(l10n.fundingRegisterLinkLabel),
+                const SizedBox(height: 8),
+                _textField(l10n.fundingRegisterLinkHint, _linkController),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+          if (_isSubmitting)
+            Container(
+              color: Colors.black.withOpacity(0.5),
+              child: const Center(child: CircularProgressIndicator()),
+            )
+        ],
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: BottomButton(
             buttonText: l10n.fundingRegisterButton,
-            pressedFunc: submit,
+            pressedFunc: _isSubmitting ? null : submit,
           ),
         ),
       ),
@@ -271,17 +269,17 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
             color: AppColors.optionStateList,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: _profileImageFile == null
-              ? const SizedBox.shrink()
+          child: _thumbnailImageFile == null
+              ? const Center(child: Icon(Icons.camera_alt_outlined, color: Colors.grey, size: 40))
               : ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.file(
-                    _profileImageFile!,
-                    fit: BoxFit.cover,
-                    width: 160,
-                    height: 160,
-                  ),
-                ),
+            borderRadius: BorderRadius.circular(12),
+            child: Image.file(
+              _thumbnailImageFile!,
+              fit: BoxFit.cover,
+              width: 160,
+              height: 160,
+            ),
+          ),
         ),
         Positioned(
           bottom: -10,

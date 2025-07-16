@@ -19,25 +19,34 @@ class SellerFundingsApiClient {
     return SellerFundingResponse.fromJson(response.data);
   }
 
-  Future<CreateFundingRequest> createFunding({
+  Future<Response> createFunding({
     required String title,
-    // String storeId,
     String? linkUrl,
-    String? imageUrl,
+    File? thumbnailImage,
   }) async {
     final FormData formData = FormData.fromMap(<String, dynamic>{
       'title': title,
       if (linkUrl != null && linkUrl.isNotEmpty) 'linkUrl': linkUrl,
-      if (imageUrl != null && imageUrl.isNotEmpty) 'imageUrl': imageUrl,
     });
+
+    if (thumbnailImage != null) {
+      formData.files.add(
+        MapEntry(
+          'thumbnailImage',
+          await MultipartFile.fromFile(
+            thumbnailImage.path,
+            filename: thumbnailImage.path.split('/').last,
+          ),
+        ),
+      );
+    }
 
     final response = await _dio.post(
       SellerFundingEndpoints.getFunding,
       data: formData,
-      options: Options(contentType: 'multipart/form-data'),
     );
 
-    return CreateFundingRequest.fromJson(response.data);
+    return response;
   }
 
   Future<SellerFundingResponse> fundingDetail({required String id}) async {

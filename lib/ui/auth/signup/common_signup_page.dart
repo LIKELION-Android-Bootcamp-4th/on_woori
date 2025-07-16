@@ -90,7 +90,7 @@ class _CommonSignupPageState extends State<CommonSignupPage> {
         Fluttertoast.showToast(msg: l10n.signUpSuccess);
 
         if (mounted) {
-          context.go('/');
+          context.go('/auth/signup/completed');
         }
       } else {
         Fluttertoast.showToast(msg: response.message);

@@ -141,8 +141,16 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
       ProductItem product,
       List<String> sizeOptions,
       List<String> colorOptions,
+      int unitPrice,
+      int? discountRate,
       ) async {
     final l10n = AppLocalizations.of(context)!;
+
+    if (unitPrice <= 0) {
+      _showSnackBar("가격을 확인할 수 없는 상품은 담을 수 없습니다.");
+      return;
+    }
+
     final accessToken = await storage.read(key: 'ACCESS_TOKEN');
     if (accessToken == null) {
       _showLoginDialog();
@@ -158,20 +166,23 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
       return;
     }
 
-    // *** MODIFIED PART START ***
-    // 사용자가 선택한 사이즈와 컬러로 CartOptions 객체를 생성합니다.
     final cartOptions = CartOptions(
       size: selectedSize,
       color: selectedColor,
     );
 
+    CartDiscount? cartDiscount;
+    if (discountRate != null && discountRate > 0) {
+      cartDiscount = CartDiscount(type: 'percent', amount: discountRate);
+    }
+
     final request = CartRegisterRequest(
       productId: product.id,
       quantity: quantity,
-      unitPrice: product.price,
-      options: cartOptions, // 수정된 cartOptions를 전달합니다.
+      unitPrice: unitPrice,
+      options: cartOptions,
+      discount: cartDiscount,
     );
-    // *** MODIFIED PART END ***
 
     try {
       final response = await cartApiClient.addToCart(request: request);
@@ -218,7 +229,33 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
 
         final product = snapshot.data!.data!;
 
-        // 엔티티에서 파싱된 데이터를 직접 사용합니다.
+        int finalPrice = product.price;
+        int? discountRate;
+
+        if (product.discount != null && product.discount!.isNotEmpty) {
+          try {
+            final parsedRate = int.tryParse(product.discount!);
+            if (parsedRate != null && parsedRate > 0) {
+              finalPrice = (product.price * (100 - parsedRate) / 100).round();
+              discountRate = parsedRate; // 할인율 저장
+            }
+          } catch (e) {
+            try {
+              final discountData = jsonDecode(product.discount!);
+              if (discountData['value'] is int) {
+                final rate = discountData['value'] as int;
+                if (rate > 0) {
+                  finalPrice = (product.price * (100 - rate) / 100).round();
+                  discountRate = rate; // 할인율 저장
+                }
+              }
+            } catch (e2) {
+              // 할인 정보 파싱 실패 시 원본 가격 유지
+            }
+          }
+        }
+
+        // 옵션 목록 파싱
         List<String> sizeOptions = [];
         List<String> colorOptions = [];
         if (product.options != null) {
@@ -232,7 +269,7 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
           }
         }
 
-        final totalPrice = product.price * quantity;
+        final totalPrice = finalPrice * quantity;
 
         return ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -399,7 +436,8 @@ class _ProductsDetailScreenState extends State<ProductsDetailScreen> {
               width: double.infinity,
               height: 50,
               child: TextButton(
-                onPressed: () => _addToCart(product, sizeOptions, colorOptions),
+                onPressed: () => _addToCart(
+                    product, sizeOptions, colorOptions, finalPrice, discountRate),
                 style: TextButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -497,9 +535,9 @@ class ProductsNameSection extends StatelessWidget {
           final discountData = jsonDecode(product.discount!);
           if (discountData['value'] is int) {
             rate = discountData['value'];
-            if (rate != null && rate! > 0) {
+            if (rate != null && rate > 0) {
               hasDiscount = true;
-              finalPrice = (product.price * (100 - rate!) / 100).round();
+              finalPrice = (product.price * (100 - rate) / 100).round();
             }
           }
         } catch (e2) {
@@ -541,14 +579,15 @@ class ProductsNameSection extends StatelessWidget {
           const SizedBox(height: 2),
           Row(
             children: [
-              Text(
-                l10n.productDetailDiscountPercent(discountRate.toString()),
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
+              if (discountRate != null)
+                Text(
+                  l10n.productDetailDiscountPercent(discountRate.toString()),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
               const SizedBox(width: 5),
               Text(
                 l10n.currencyFormat(NumberFormat('#,###').format(discountedPrice)),

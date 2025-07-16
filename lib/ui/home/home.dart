@@ -131,29 +131,53 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 24),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 0.8,
+                    SizedBox(
+                      height: 185, // 한 줄당 약 120씩 여유 잡기
+                      child: GridView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: storeItems.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // 두 줄
+                          mainAxisSpacing: 0, // 아이템 간 세로 간격
+                          crossAxisSpacing: 12, // 아이템 간 가로 간격
+                          childAspectRatio: 1, // 아이템 비율 (조정 가능)
+                        ),
+                        itemBuilder: (context, index) {
+                          final brand = storeItems[index];
+                          return BrandGridItem(
+                            imageUrl: brand.thumbnailImageUrl ?? DefaultImage.brandThumbnail,
+                            brandName: brand.name,
+                            onTap: () {
+                              debugPrint('${brand.name} 클릭됨, ID: ${brand.id}');
+                              context.push('/branddetail/${brand.id}');
+                            },
+                          );
+                        },
                       ),
-                      itemCount: storeItems.length,
-                      itemBuilder: (context, index) {
-                        final brand = storeItems[index];
-                        return BrandGridItem(
-                          imageUrl:
-                          brand.thumbnailImageUrl ?? DefaultImage.brandThumbnail,
-                          brandName: brand.name,
-                          onTap: () {
-                            debugPrint('${brand.name} 클릭됨, ID: ${brand.id}');
-                            context.push('/branddetail/${brand.id}');
-                          },
-                        );
-                      },
                     ),
+                    // GridView.builder(
+                    //   shrinkWrap: true,
+                    //   physics: const NeverScrollableScrollPhysics(),
+                    //   gridDelegate:
+                    //   const SliverGridDelegateWithFixedCrossAxisCount(
+                    //     crossAxisCount: 4,
+                    //     crossAxisSpacing: 12,
+                    //     childAspectRatio: 0.8,
+                    //   ),
+                    //   itemCount: storeItems.length,
+                    //   itemBuilder: (context, index) {
+                    //     final brand = storeItems[index];
+                    //     return BrandGridItem(
+                    //       imageUrl:
+                    //       brand.thumbnailImageUrl ?? DefaultImage.brandThumbnail,
+                    //       brandName: brand.name,
+                    //       onTap: () {
+                    //         debugPrint('${brand.name} 클릭됨, ID: ${brand.id}');
+                    //         context.push('/branddetail/${brand.id}');
+                    //       },
+                    //     );
+                    //   },
+                    // ),
                     const SizedBox(height: 20),
                   ],
                 ),

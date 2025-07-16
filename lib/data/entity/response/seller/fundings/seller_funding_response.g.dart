@@ -43,9 +43,15 @@ SellerFundingItem _$SellerFundingItemFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       imageUrl: json['imageUrl'] as String?,
       linkUrl: json['linkUrl'] as String?,
+      userId: json['userId'] == null
+          ? null
+          : UserId.fromJson(json['userId'] as Map<String, dynamic>),
       companyId: json['companyId'] == null
           ? null
           : CompanyId.fromJson(json['companyId'] as Map<String, dynamic>),
+      storeId: json['storeId'] == null
+          ? null
+          : StoreId.fromJson(json['storeId'] as Map<String, dynamic>),
       thumbnailImageUrl: json['thumbnailImageUrl'] as String?,
       targetAmount: SellerFundingItem._toInt(json['targetAmount']),
       currentAmount: SellerFundingItem._toInt(json['currentAmount']),
@@ -59,7 +65,9 @@ Map<String, dynamic> _$SellerFundingItemToJson(SellerFundingItem instance) =>
       'title': instance.title,
       'imageUrl': instance.imageUrl,
       'linkUrl': instance.linkUrl,
+      'userId': instance.userId,
       'companyId': instance.companyId,
+      'storeId': instance.storeId,
       'thumbnailImageUrl': instance.thumbnailImageUrl,
       'targetAmount': instance.targetAmount,
       'currentAmount': instance.currentAmount,
@@ -67,11 +75,27 @@ Map<String, dynamic> _$SellerFundingItemToJson(SellerFundingItem instance) =>
       'createdAt': instance.createdAt?.toIso8601String(),
     };
 
+UserId _$UserIdFromJson(Map<String, dynamic> json) =>
+    UserId(email: json['email'] as String, id: json['id'] as String);
+
+Map<String, dynamic> _$UserIdToJson(UserId instance) => <String, dynamic>{
+  'email': instance.email,
+  'id': instance.id,
+};
+
 CompanyId _$CompanyIdFromJson(Map<String, dynamic> json) =>
     CompanyId(name: json['name'] as String);
 
 Map<String, dynamic> _$CompanyIdToJson(CompanyId instance) => <String, dynamic>{
   'name': instance.name,
+};
+
+StoreId _$StoreIdFromJson(Map<String, dynamic> json) =>
+    StoreId(name: json['name'] as String, id: json['id'] as String);
+
+Map<String, dynamic> _$StoreIdToJson(StoreId instance) => <String, dynamic>{
+  'name': instance.name,
+  'id': instance.id,
 };
 
 Pagination _$PaginationFromJson(Map<String, dynamic> json) => Pagination(

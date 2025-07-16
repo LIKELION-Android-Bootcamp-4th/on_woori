@@ -373,7 +373,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
       final response = await fundingApiClient.sellerFunding();
       if (mounted && response.success) {
         setState(() {
-          fundingList = response.data?.items.where((item) => item.companyId == widget.brandId).toList() ?? [];
+          fundingList = response.data?.items.where((item) => item.userId?.id == widget.brandId).toList() ?? [];
           selectionList = List.filled(fundingList.length, false);
         });
       }

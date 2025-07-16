@@ -41,7 +41,9 @@ class SellerFundingItem {
   final String title;
   final String? imageUrl;
   final String? linkUrl;
+  final UserId? userId;
   final CompanyId? companyId;
+  final StoreId? storeId;
   final String? thumbnailImageUrl;
 
   @JsonKey(fromJson: _toInt)
@@ -61,7 +63,9 @@ class SellerFundingItem {
     required this.title,
     this.imageUrl,
     this.linkUrl,
+    this.userId,
     this.companyId,
+    this.storeId,
     this.thumbnailImageUrl, // 생성자에 추가
     this.targetAmount,
     this.currentAmount,
@@ -89,6 +93,18 @@ class SellerFundingItem {
 }
 
 @JsonSerializable()
+class UserId {
+  final String email;
+  final String id;
+
+  const UserId({required this.email, required this.id});
+
+  factory UserId.fromJson(Map<String, dynamic> json) =>
+      _$UserIdFromJson(json);
+  Map<String, dynamic> joJson() => _$UserIdToJson(this);
+}
+
+@JsonSerializable()
 class CompanyId {
   final String name;
 
@@ -98,6 +114,18 @@ class CompanyId {
       _$CompanyIdFromJson(json);
 
   Map<String, dynamic> toJson() => _$CompanyIdToJson(this);
+}
+
+@JsonSerializable()
+class StoreId {
+  final String name;
+  final String id;
+
+  const StoreId({required this.name, required this.id});
+
+  factory StoreId.fromJson(Map<String, dynamic> json) =>
+      _$StoreIdFromJson(json);
+  Map<String, dynamic> toJson() => _$StoreIdToJson(this);
 }
 
 @JsonSerializable()

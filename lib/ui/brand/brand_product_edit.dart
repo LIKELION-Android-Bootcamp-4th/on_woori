@@ -79,8 +79,12 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
     try {
       final response = await productApiClient.sellerProducts();
       if (mounted && response.success && response.data?.items != null) {
+        final filteredList = response.data!.items!
+            .where((item) => item.isDeleted != true)
+            .toList();
+
         setState(() {
-          productList = response.data!.items!;
+          productList = filteredList; // 필터링된 리스트를 사용합니다.
           selectionList = List.filled(productList.length, false);
         });
       }

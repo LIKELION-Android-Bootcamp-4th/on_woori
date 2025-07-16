@@ -127,6 +127,7 @@ class ProductItem {
   @JsonKey(fromJson: _discountToStringJson)
   final String? discount;
   final String? status;
+  final bool? isDeleted;
   final StoreData? store;
   final ThumbnailImage? thumbnailImage;
   final String? category;
@@ -134,7 +135,6 @@ class ProductItem {
   @JsonKey(fromJson: _imagesFromJson)
   final Images? images;
 
-  // 수정된 파싱 함수를 적용합니다.
   @JsonKey(fromJson: _optionsListFromJson)
   final List<ProductOptionGroup>? options;
 
@@ -148,6 +148,7 @@ class ProductItem {
     this.stockType,
     this.discount,
     this.status,
+    this.isDeleted,
     this.store,
     this.thumbnailImage,
     this.images,

@@ -45,6 +45,7 @@ ProductItem _$ProductItemFromJson(Map<String, dynamic> json) => ProductItem(
   stockType: json['stockType'] as String?,
   discount: _discountToStringJson(json['discount']),
   status: json['status'] as String?,
+  isDeleted: json['isDeleted'] as bool?,
   store: json['store'] == null
       ? null
       : StoreData.fromJson(json['store'] as Map<String, dynamic>),
@@ -67,6 +68,7 @@ Map<String, dynamic> _$ProductItemToJson(ProductItem instance) =>
       'stockType': instance.stockType,
       'discount': instance.discount,
       'status': instance.status,
+      'isDeleted': instance.isDeleted,
       'store': instance.store?.toJson(),
       'thumbnailImage': instance.thumbnailImage?.toJson(),
       'category': instance.category,

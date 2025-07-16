@@ -70,6 +70,47 @@
   "passwordEditErrorFailed": "비밀번호 변경에 실패했습니다. 다시 시도해주세요.",
   "passwordEditErrorUnexpected": "알 수 없는 오류가 발생했습니다.",
 
+  "editProfilePageTitle": "프로필 수정",
+  "editProfileCamera": "카메라로 촬영",
+  "editProfileGallery": "갤러리에서 선택",
+  "editProfileNicknameLabel": "닉네임",
+  "editProfileNicknameHint": "닉네임을 입력해주세요",
+  "editProfileSaveButton": "저장",
+  "editProfileImagePicking": "이미 이미지 선택 중입니다.",
+
+  "editProfileSellerPageTitle": "프로필 수정",
+  "editProfileSellerManagerLabel": "담당자명",
+  "editProfileSellerManagerHint": "담당자명을 입력해주세요",
+  "editProfileSellerPhoneLabel": "전화번호",
+  "editProfileSellerPhoneHint": "전화번호를 입력해주세요",
+  "editProfileSellerZipcodeLabel": "우편번호",
+  "editProfileSellerZipcodeHint": "우편번호를 입력해주세요",
+  "editProfileSellerZipcodeInvalid": "우편번호는 5자리 숫자로 입력해주세요",
+  "editProfileSellerAddressLabel": "주소",
+  "editProfileSellerAddressHint": "주소를 입력해주세요",
+  "editProfileSellerDetailAddressLabel": "상세주소",
+  "editProfileSellerDetailAddressHint": "상세주소를 입력해주세요",
+  "editProfileSellerSaveButton": "저장",
+
+  "brandEditPageTitle": "브랜드 수정",
+  "brandEditImagePicking": "이미 이미지 선택 중입니다.",
+  "brandEditCamera": "카메라로 촬영",
+  "brandEditGallery": "갤러리에서 선택",
+  "brandEditUpdateFailed": "수정 실패: {error}",
+  "@brandEditUpdateFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "brandEditFetchError": "오류 발생: {error}",
+  "@brandEditFetchError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "brandEditNoData": "데이터가 없습니다.",
+  "brandEditNameLabel": "브랜드 이름",
+  "brandEditNameHint": "(이름)",
+  "brandEditDescriptionLabel": "브랜드 소개",
+  "brandEditDescriptionHint": "(소개글) (최대 nn자)",
+  "brandEditSaveButton": "저장",
+
   "myPageDefaultUserName": "사용자",
   "myPageUserSuffix": "고객님",
   "myPageSellerSuffix": "판매자님",

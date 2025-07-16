@@ -188,6 +188,106 @@ class AppLocalizationsKo extends AppLocalizations {
   String get passwordEditErrorUnexpected => '알 수 없는 오류가 발생했습니다.';
 
   @override
+  String get editProfilePageTitle => '프로필 수정';
+
+  @override
+  String get editProfileCamera => '카메라로 촬영';
+
+  @override
+  String get editProfileGallery => '갤러리에서 선택';
+
+  @override
+  String get editProfileNicknameLabel => '닉네임';
+
+  @override
+  String get editProfileNicknameHint => '닉네임을 입력해주세요';
+
+  @override
+  String get editProfileSaveButton => '저장';
+
+  @override
+  String get editProfileImagePicking => '이미 이미지 선택 중입니다.';
+
+  @override
+  String get editProfileSellerPageTitle => '프로필 수정';
+
+  @override
+  String get editProfileSellerManagerLabel => '담당자명';
+
+  @override
+  String get editProfileSellerManagerHint => '담당자명을 입력해주세요';
+
+  @override
+  String get editProfileSellerPhoneLabel => '전화번호';
+
+  @override
+  String get editProfileSellerPhoneHint => '전화번호를 입력해주세요';
+
+  @override
+  String get editProfileSellerZipcodeLabel => '우편번호';
+
+  @override
+  String get editProfileSellerZipcodeHint => '우편번호를 입력해주세요';
+
+  @override
+  String get editProfileSellerZipcodeInvalid => '우편번호는 5자리 숫자로 입력해주세요';
+
+  @override
+  String get editProfileSellerAddressLabel => '주소';
+
+  @override
+  String get editProfileSellerAddressHint => '주소를 입력해주세요';
+
+  @override
+  String get editProfileSellerDetailAddressLabel => '상세주소';
+
+  @override
+  String get editProfileSellerDetailAddressHint => '상세주소를 입력해주세요';
+
+  @override
+  String get editProfileSellerSaveButton => '저장';
+
+  @override
+  String get brandEditPageTitle => '브랜드 수정';
+
+  @override
+  String get brandEditImagePicking => '이미 이미지 선택 중입니다.';
+
+  @override
+  String get brandEditCamera => '카메라로 촬영';
+
+  @override
+  String get brandEditGallery => '갤러리에서 선택';
+
+  @override
+  String brandEditUpdateFailed(String error) {
+    return '수정 실패: $error';
+  }
+
+  @override
+  String brandEditFetchError(String error) {
+    return '오류 발생: $error';
+  }
+
+  @override
+  String get brandEditNoData => '데이터가 없습니다.';
+
+  @override
+  String get brandEditNameLabel => '브랜드 이름';
+
+  @override
+  String get brandEditNameHint => '(이름)';
+
+  @override
+  String get brandEditDescriptionLabel => '브랜드 소개';
+
+  @override
+  String get brandEditDescriptionHint => '(소개글) (최대 nn자)';
+
+  @override
+  String get brandEditSaveButton => '저장';
+
+  @override
   String get myPageDefaultUserName => '사용자';
 
   @override

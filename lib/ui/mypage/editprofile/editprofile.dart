@@ -5,13 +5,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/data/client/mypage_api_client.dart';
 import 'package:on_woori/data/entity/response/mypage/mypage_response.dart';
+import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 
 class EditProfilePage extends StatefulWidget {
-  String nickName;
-  String profileUrl;
+  final String nickName;
+  final String profileUrl;
 
-  EditProfilePage({
+  const EditProfilePage({
     super.key,
     required this.nickName,
     required this.profileUrl,
@@ -29,7 +30,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController _zipcodeController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _detailAddressController =
-      TextEditingController();
+  TextEditingController();
 
   File? _profileImageFile;
   String? _profileImageUrl;
@@ -64,8 +65,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> _pickImage() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_isPickingImage) {
-      debugPrint('이미 이미지 선택 중입니다.');
+      debugPrint(l10n.editProfileImagePicking);
       return;
     }
 
@@ -85,7 +87,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             children: [
               ListTile(
                 leading: const Icon(Icons.photo_camera),
-                title: const Text('카메라로 촬영'),
+                title: Text(l10n.editProfileCamera),
                 onTap: () async {
                   Navigator.pop(context);
                   final XFile? picked = await picker.pickImage(
@@ -94,9 +96,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile = picked != null
-                        ? File(picked.path)
-                        : _profileImageFile;
+                    _profileImageFile =
+                    picked != null ? File(picked.path) : _profileImageFile;
                     _profileImageUrl = picked != null ? null : _profileImageUrl;
                     _isPickingImage = false;
                   });
@@ -104,7 +105,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library),
-                title: const Text('갤러리에서 선택'),
+                title: Text(l10n.editProfileGallery),
                 onTap: () async {
                   Navigator.pop(context);
                   final XFile? picked = await picker.pickImage(
@@ -113,9 +114,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   );
                   if (!mounted) return;
                   setState(() {
-                    _profileImageFile = picked != null
-                        ? File(picked.path)
-                        : _profileImageFile;
+                    _profileImageFile =
+                    picked != null ? File(picked.path) : _profileImageFile;
                     _profileImageUrl = picked != null ? null : _profileImageUrl;
                     _isPickingImage = false;
                   });
@@ -126,7 +126,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         );
       },
     ).whenComplete(() {
-      // BottomSheet 닫힐 때 플래그 해제
       if (mounted) {
         setState(() {
           _isPickingImage = false;
@@ -171,12 +170,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
-          '프로필 수정',
-          style: TextStyle(
+        title: Text(
+          l10n.editProfilePageTitle,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 24,
             color: Colors.black,
@@ -202,17 +202,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       backgroundImage: _profileImageFile != null
                           ? FileImage(_profileImageFile!)
                           : (_profileImageUrl != null
-                                    ? NetworkImage(_profileImageUrl!)
-                                    : null)
-                                as ImageProvider?,
-                      child:
-                          (_profileImageFile == null &&
-                              _profileImageUrl == null)
+                          ? NetworkImage(_profileImageUrl!)
+                          : null)
+                      as ImageProvider?,
+                      child: (_profileImageFile == null &&
+                          _profileImageUrl == null)
                           ? const Icon(
-                              Icons.person,
-                              size: 48,
-                              color: AppColors.grey,
-                            )
+                        Icons.person,
+                        size: 48,
+                        color: AppColors.grey,
+                      )
                           : null,
                     ),
                     Positioned(
@@ -221,7 +220,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       child: InkWell(
                         onTap: _pickImage,
                         child: Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: AppColors.primarySub,
                             shape: BoxShape.circle,
                           ),
@@ -238,11 +237,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
               ),
               const SizedBox(height: 24),
-              _buildLabel('닉네임'),
+              _buildLabel(l10n.editProfileNicknameLabel),
               const SizedBox(height: 5),
               _buildTextFormField(
                 _nicknameController,
-                validatorText: '닉네임을 입력해주세요',
+                validatorText: l10n.editProfileNicknameHint,
               ),
               const SizedBox(height: 32),
             ],
@@ -252,7 +251,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: BottomButton(buttonText: '저장', pressedFunc: _submit),
+          child: BottomButton(
+              buttonText: l10n.editProfileSaveButton, pressedFunc: _submit),
         ),
       ),
     );
@@ -270,11 +270,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _buildTextFormField(
-    TextEditingController controller, {
-    TextInputType keyboardType = TextInputType.text,
-    String? validatorText,
-    String? Function(String?)? validator,
-  }) {
+      TextEditingController controller, {
+        TextInputType keyboardType = TextInputType.text,
+        String? validatorText,
+        String? Function(String?)? validator,
+      }) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         const SizedBox(height: 4),
@@ -311,11 +312,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
           ),
-          validator:
-              validator ??
-              (value) {
+          validator: validator ??
+                  (value) {
                 if (value == null || value.isEmpty) {
-                  return validatorText ?? '내용을 입력해주세요';
+                  return validatorText ?? l10n.validatorRequired;
                 }
                 return null;
               },

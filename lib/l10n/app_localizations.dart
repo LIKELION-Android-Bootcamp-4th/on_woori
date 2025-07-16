@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_en.dart';
 import 'app_localizations_ko.dart';
 
 // ignore_for_file: type=lint
@@ -92,7 +93,10 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('ko')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('ko'),
+  ];
 
   /// No description provided for @appTitle.
   ///
@@ -447,6 +451,198 @@ abstract class AppLocalizations {
   /// In ko, this message translates to:
   /// **'알 수 없는 오류가 발생했습니다.'**
   String get passwordEditErrorUnexpected;
+
+  /// No description provided for @editProfilePageTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'프로필 수정'**
+  String get editProfilePageTitle;
+
+  /// No description provided for @editProfileCamera.
+  ///
+  /// In ko, this message translates to:
+  /// **'카메라로 촬영'**
+  String get editProfileCamera;
+
+  /// No description provided for @editProfileGallery.
+  ///
+  /// In ko, this message translates to:
+  /// **'갤러리에서 선택'**
+  String get editProfileGallery;
+
+  /// No description provided for @editProfileNicknameLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'닉네임'**
+  String get editProfileNicknameLabel;
+
+  /// No description provided for @editProfileNicknameHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'닉네임을 입력해주세요'**
+  String get editProfileNicknameHint;
+
+  /// No description provided for @editProfileSaveButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get editProfileSaveButton;
+
+  /// No description provided for @editProfileImagePicking.
+  ///
+  /// In ko, this message translates to:
+  /// **'이미 이미지 선택 중입니다.'**
+  String get editProfileImagePicking;
+
+  /// No description provided for @editProfileSellerPageTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'프로필 수정'**
+  String get editProfileSellerPageTitle;
+
+  /// No description provided for @editProfileSellerManagerLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'담당자명'**
+  String get editProfileSellerManagerLabel;
+
+  /// No description provided for @editProfileSellerManagerHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'담당자명을 입력해주세요'**
+  String get editProfileSellerManagerHint;
+
+  /// No description provided for @editProfileSellerPhoneLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'전화번호'**
+  String get editProfileSellerPhoneLabel;
+
+  /// No description provided for @editProfileSellerPhoneHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'전화번호를 입력해주세요'**
+  String get editProfileSellerPhoneHint;
+
+  /// No description provided for @editProfileSellerZipcodeLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'우편번호'**
+  String get editProfileSellerZipcodeLabel;
+
+  /// No description provided for @editProfileSellerZipcodeHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'우편번호를 입력해주세요'**
+  String get editProfileSellerZipcodeHint;
+
+  /// No description provided for @editProfileSellerZipcodeInvalid.
+  ///
+  /// In ko, this message translates to:
+  /// **'우편번호는 5자리 숫자로 입력해주세요'**
+  String get editProfileSellerZipcodeInvalid;
+
+  /// No description provided for @editProfileSellerAddressLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'주소'**
+  String get editProfileSellerAddressLabel;
+
+  /// No description provided for @editProfileSellerAddressHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'주소를 입력해주세요'**
+  String get editProfileSellerAddressHint;
+
+  /// No description provided for @editProfileSellerDetailAddressLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'상세주소'**
+  String get editProfileSellerDetailAddressLabel;
+
+  /// No description provided for @editProfileSellerDetailAddressHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'상세주소를 입력해주세요'**
+  String get editProfileSellerDetailAddressHint;
+
+  /// No description provided for @editProfileSellerSaveButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get editProfileSellerSaveButton;
+
+  /// No description provided for @brandEditPageTitle.
+  ///
+  /// In ko, this message translates to:
+  /// **'브랜드 수정'**
+  String get brandEditPageTitle;
+
+  /// No description provided for @brandEditImagePicking.
+  ///
+  /// In ko, this message translates to:
+  /// **'이미 이미지 선택 중입니다.'**
+  String get brandEditImagePicking;
+
+  /// No description provided for @brandEditCamera.
+  ///
+  /// In ko, this message translates to:
+  /// **'카메라로 촬영'**
+  String get brandEditCamera;
+
+  /// No description provided for @brandEditGallery.
+  ///
+  /// In ko, this message translates to:
+  /// **'갤러리에서 선택'**
+  String get brandEditGallery;
+
+  /// No description provided for @brandEditUpdateFailed.
+  ///
+  /// In ko, this message translates to:
+  /// **'수정 실패: {error}'**
+  String brandEditUpdateFailed(String error);
+
+  /// No description provided for @brandEditFetchError.
+  ///
+  /// In ko, this message translates to:
+  /// **'오류 발생: {error}'**
+  String brandEditFetchError(String error);
+
+  /// No description provided for @brandEditNoData.
+  ///
+  /// In ko, this message translates to:
+  /// **'데이터가 없습니다.'**
+  String get brandEditNoData;
+
+  /// No description provided for @brandEditNameLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'브랜드 이름'**
+  String get brandEditNameLabel;
+
+  /// No description provided for @brandEditNameHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'(이름)'**
+  String get brandEditNameHint;
+
+  /// No description provided for @brandEditDescriptionLabel.
+  ///
+  /// In ko, this message translates to:
+  /// **'브랜드 소개'**
+  String get brandEditDescriptionLabel;
+
+  /// No description provided for @brandEditDescriptionHint.
+  ///
+  /// In ko, this message translates to:
+  /// **'(소개글) (최대 nn자)'**
+  String get brandEditDescriptionHint;
+
+  /// No description provided for @brandEditSaveButton.
+  ///
+  /// In ko, this message translates to:
+  /// **'저장'**
+  String get brandEditSaveButton;
 
   /// No description provided for @myPageDefaultUserName.
   ///
@@ -1486,7 +1682,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['ko'].contains(locale.languageCode);
+      <String>['en', 'ko'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1495,6 +1691,8 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'en':
+      return AppLocalizationsEn();
     case 'ko':
       return AppLocalizationsKo();
   }

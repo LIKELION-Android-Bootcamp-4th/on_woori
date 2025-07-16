@@ -218,7 +218,9 @@ class _SellerMyPageState extends State<SellerMyPage> {
                     size: 20,
                     color: Colors.black,
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    context.push('/orderlist');
+                  },
                 ),
 
                 const Divider(
@@ -255,8 +257,6 @@ class _SellerMyPageState extends State<SellerMyPage> {
                     size: 20,
                     color: Colors.black,
                   ),
-                  // *** MODIFIED PART START ***
-                  // context.push 호출을 'extra'를 사용하도록 변경합니다.
                   onTap: () async {
                     final result = await context.push(
                       '/mypage/edit-buyer',
@@ -269,7 +269,6 @@ class _SellerMyPageState extends State<SellerMyPage> {
                       _refresh();
                     }
                   },
-                  // *** MODIFIED PART END ***
                 ),
 
                 ListTile(

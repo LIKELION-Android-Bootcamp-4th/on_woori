@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:on_woori/config/endpoint/admin_product_endpoints.dart';
 import 'package:on_woori/config/endpoint/auth_endpoints.dart';
 import 'package:on_woori/data/api_client.dart';
 import 'package:on_woori/data/entity/request/auth/login_request.dart';
@@ -60,5 +61,21 @@ class AuthApiClient {
   Future<LogoutResponse> authLogout() async {
     final response = await _dio.post(AuthEndpoints.postAuthLogout);
     return LogoutResponse.fromJson(response.data);
+  }
+
+  // 비밀번호 변경
+  Future<Response> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final response = await _dio.patch(
+      AdminProductEndpoints.changeAuthUserPassword(),
+      data: {
+        'isForceChange': false,
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+      },
+    );
+    return response;
   }
 }

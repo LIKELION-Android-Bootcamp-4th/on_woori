@@ -4,6 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:on_woori/core/styles/app_colors.dart';
 import 'package:on_woori/data/admin_api_client.dart';
+import 'package:on_woori/data/api_client.dart';
+import 'package:on_woori/data/client/auth_api_client.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/bottom_button.dart';
 
@@ -26,7 +28,7 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
   final TextEditingController confirmPasswordController =
   TextEditingController();
 
-  final AdminApiClient _adminApiClient = AdminApiClient();
+  final AuthApiClient _apiClient = AuthApiClient();
 
   bool _obscureCurrent = true;
   bool _obscureNew = true;
@@ -91,10 +93,8 @@ class _PasswordEditPageState extends State<PasswordEditPage> {
     });
 
     try {
-      await _adminApiClient.loginAsAdmin();
 
-      await _adminApiClient.changePassword(
-        id: widget.userId,
+      await _apiClient.changePassword(
         currentPassword: currentPasswordController.text,
         newPassword: newPasswordController.text,
       );

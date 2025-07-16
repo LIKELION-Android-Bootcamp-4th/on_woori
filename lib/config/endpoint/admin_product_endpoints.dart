@@ -6,7 +6,7 @@ abstract class AdminProductEndpoints {
   }
 
   // 비밀번호 변경(관리자용)
-  static String changeAuthUserPassword({required String userId}) {
-    return '/api/auth/users/$userId/change-password';
+  static String changeAuthUserPassword() {
+    return '/api/mypage/change-password';
   }
 }

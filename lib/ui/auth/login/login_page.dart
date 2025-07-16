@@ -174,7 +174,6 @@ class LoginPageStatus extends State<LoginPage> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 50),
                       ],
                     ),
                   ),

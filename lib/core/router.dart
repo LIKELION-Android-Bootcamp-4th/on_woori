@@ -106,8 +106,7 @@ final GoRouter router = GoRouter(
             return OrderDetailPage(orderId);
           },
         ),
-        // *** MODIFIED PART START ***
-        // 경로에서 파라미터를 제거하고, builder에서 'extra'를 사용하도록 수정합니다.
+
         GoRoute(
           path: '/mypage/edit-buyer',
           builder: (BuildContext context, GoRouterState state) {
@@ -118,7 +117,7 @@ final GoRouter router = GoRouter(
             return EditProfilePage(nickName: nickName, profileUrl: profileUrl);
           },
         ),
-        // *** MODIFIED PART END ***
+
         GoRoute(
           path: '/productslist/:categoryId',
           builder: (BuildContext context, GoRouterState state) {
@@ -163,9 +162,11 @@ final GoRouter router = GoRouter(
           const ProductRegisterPage(),
         ),
         GoRoute(
-          path: '/brand/editproduct',
-          builder: (BuildContext context, GoRouterState state) =>
-          const BrandProductEditPage(),
+          path: '/brand/editproduct/:brandId',
+          builder: (BuildContext context, GoRouterState state) {
+            final String brandId = state.pathParameters['brandId'] ?? "";
+            return BrandProductEditPage(brandId: brandId);
+          },
         ),
         GoRoute(
           path: '/brand/edit',

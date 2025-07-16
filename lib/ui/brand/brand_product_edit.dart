@@ -10,7 +10,8 @@ import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/brand_product_edit_item.dart';
 
 class BrandProductEditPage extends StatelessWidget {
-  const BrandProductEditPage({super.key});
+  String brandId;
+  BrandProductEditPage({super.key, required this.brandId});
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +42,8 @@ class BrandProductEditPage extends StatelessWidget {
             ),
           ),
         ),
-        body: const TabBarView(
-          children: [BrandProductEditScreen(), BrandFundingEditScreen()],
+        body: TabBarView(
+          children: [BrandProductEditScreen(), BrandFundingEditScreen(brandId: brandId,)],
         ),
       ),
     );
@@ -257,7 +258,10 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
       children: [
         Row(
           children: [
-            Text(l10n.productSelectedCount(selectionList.where((e) => e).length)),
+            Text(
+              l10n.productSelectedCount(selectionList.where((e) => e).length),
+              style: const TextStyle(fontSize: 16, color: AppColors.grey),
+            ),
             const Spacer(),
             TextButton(
               onPressed: toggleSelectAll,
@@ -298,7 +302,10 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
       children: [
         Row(
           children: [
-            Text(l10n.productOnSaleCount(productList.length)),
+            Text(
+              l10n.productOnSaleCount(productList.length),
+              style: const TextStyle(fontSize: 16, color: AppColors.grey),
+            ),
             const Spacer(),
             TextButton(
               onPressed: () => setState(() => selecting = true),
@@ -329,7 +336,8 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
 }
 
 class BrandFundingEditScreen extends StatefulWidget {
-  const BrandFundingEditScreen({super.key});
+  String brandId;
+  BrandFundingEditScreen({super.key, required this.brandId});
 
   @override
   State<StatefulWidget> createState() {
@@ -365,7 +373,7 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
       final response = await fundingApiClient.sellerFunding();
       if (mounted && response.success) {
         setState(() {
-          fundingList = response.data?.items ?? [];
+          fundingList = response.data?.items.where((item) => item.companyId == widget.brandId).toList() ?? [];
           selectionList = List.filled(fundingList.length, false);
         });
       }

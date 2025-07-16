@@ -351,7 +351,7 @@ class _SellerMyPageState extends State<SellerMyPage> {
                     color: Colors.black,
                   ),
                   onTap: () {
-                    context.push('/brand/editproduct');
+                    context.push('/brand/editproduct/${profileData?.id}');
                   },
                 ),
                 ListTile(

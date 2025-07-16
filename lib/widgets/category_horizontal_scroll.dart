@@ -13,7 +13,7 @@ class CategoryHorizontalScroll extends StatefulWidget {
 
 class CategoryHorizontalScrollState extends State<CategoryHorizontalScroll> {
   int selectedIndex = 0;
-  List<String> categories = ["전체", "상의", "하의", "아우터", "신발", "악세사리"];
+  List<String> categories = ["전체", "상의", "하의", "아우터", "잡화"];
 
   @override
   Widget build(BuildContext context) {

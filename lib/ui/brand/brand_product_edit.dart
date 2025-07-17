@@ -98,6 +98,10 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
     }
   }
 
+  void _refreshData() {
+    _loadProducts();
+  }
+
   void _showSnackBar(String message, {bool isError = false}) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -213,9 +217,12 @@ class BrandProductEditScreenState extends State<BrandProductEditScreen> {
     }
   }
 
-  void editSelection(String id) {
+  void editSelection(String id) async {
     debugPrint("수정할 상품 ID: $id");
-    context.push('/productedit/$id');
+    final result = await context.push('/productedit/$id');
+    if (result == true) {
+      _refreshData();
+    }
   }
 
   @override
@@ -423,9 +430,12 @@ class BrandFundingEditScreenState extends State<BrandFundingEditScreen> {
     });
   }
 
-  void editSelection(String id) {
+  void editSelection(String id) async {
     debugPrint("수정할 펀딩 ID: $id");
-    context.push('/funding/edit/$id');
+    final result = await context.push('/funding/edit/$id');
+    if (result == true) {
+      _refreshData();
+    }
   }
 
   @override

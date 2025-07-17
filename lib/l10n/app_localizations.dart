@@ -374,6 +374,12 @@ abstract class AppLocalizations {
   /// **'잘못된 이메일 형식입니다'**
   String get validatorEmailInvalid;
 
+  /// No description provided for @validatorUrlInvalid.
+  ///
+  /// In ko, this message translates to:
+  /// **'잘못된 URL 형식입니다'**
+  String get validatorUrlInvalid;
+
   /// No description provided for @passwordEditPageTitle.
   ///
   /// In ko, this message translates to:

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -42,6 +43,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   File? _thumbnailImageFile;
   String? _existingThumbnailUrl;
   final List<XFile> _detailImages = [];
+  final List<String> _existingDetailImageUrls = [];
 
   bool _isFetching = true;
   bool _isSaving = false;
@@ -130,29 +132,32 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   Future<void> _pickDetailImages() async {
     final l10n = AppLocalizations.of(context)!;
-    if (_detailImages.length >= 5) {
+    final totalImageCount =
+        _existingDetailImageUrls.length + _detailImages.length;
+    if (totalImageCount >= 5) {
       _showSnackBar(l10n.productRegisterErrorMaxImages);
       return;
     }
     final ImagePicker picker = ImagePicker();
-    final List<XFile> pickedImages = await picker.pickMultiImage();
+    final List<XFile> pickedImages = await picker.pickMultiImage(
+      limit: 5 - totalImageCount,
+    );
     if (pickedImages.isNotEmpty) {
-      final combinedImages = _detailImages + pickedImages;
       setState(() {
-        if (combinedImages.length > 5) {
-          _detailImages.clear();
-          _detailImages.addAll(combinedImages.take(5));
-          _showSnackBar(l10n.productRegisterErrorMaxImages);
-        } else {
-          _detailImages.addAll(pickedImages);
-        }
+        _detailImages.addAll(pickedImages);
       });
     }
   }
 
-  void _removeDetailImage(int index) {
+  void _removeNewDetailImage(int index) {
     setState(() {
       _detailImages.removeAt(index);
+    });
+  }
+
+  void _removeExistingDetailImage(int index) {
+    setState(() {
+      _existingDetailImageUrls.removeAt(index);
     });
   }
 
@@ -170,7 +175,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     setState(() => _isSaving = true);
 
     try {
-      List<String> detailImageUrls = [];
+      List<String> newDetailImageUrls = [];
       if (_detailImages.isNotEmpty) {
         final uploadRequest = UploadFilesRequest(files: _detailImages);
         final uploadResponse = await UploadApiClient().uploadFiles(
@@ -178,7 +183,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         );
 
         if (uploadResponse.success && uploadResponse.data != null) {
-          detailImageUrls =
+          newDetailImageUrls =
               uploadResponse.data!.files.map((file) => file.url).toList();
         } else {
           _showSnackBar(
@@ -188,19 +193,21 @@ class _ProductEditPageState extends State<ProductEditPage> {
         }
       }
 
+      final allDetailImageUrls = _existingDetailImageUrls + newDetailImageUrls;
+
       final Map<String, List<String>> optionsMap = {
         'size': _selectedSizes.toList(),
         'color': ['기본'],
       };
 
-      final imagesJson = {"detail": detailImageUrls};
+      final imagesJson = {"detail": allDetailImageUrls};
 
       final formData = FormData.fromMap({
         'name': _nameController.text,
         'price': int.tryParse(_priceController.text) ?? 0,
         'description': _descriptionController.text,
         'category': _selectedCategory ?? _categories[0],
-        'options': optionsMap,
+        'options': jsonEncode(optionsMap),
         'discount': int.tryParse(_discountController.text),
         'images': jsonEncode(imagesJson),
       });
@@ -214,14 +221,18 @@ class _ProductEditPageState extends State<ProductEditPage> {
         );
       }
 
-      await ProductsApiClient().productUpdate(
+      final response = await ProductsApiClient().productUpdate(
         id: widget.productId,
         formData: formData,
       );
 
       if (mounted) {
-        _showSnackBar(l10n.productEditSuccess, isError: false);
-        context.pop(true);
+        if (response.success) {
+          _showSnackBar(l10n.productEditSuccess, isError: false);
+          context.pop(true);
+        } else {
+          _showSnackBar(response.message);
+        }
       }
     } catch (e) {
       _showSnackBar(l10n.productEditErrorUpdateFailed(e.toString()));
@@ -233,6 +244,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   void _showSnackBar(String message, {bool isError = true}) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -280,20 +292,25 @@ class _ProductEditPageState extends State<ProductEditPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _centeredSectionTitle(l10n.productRegisterThumbnailImageLabel),
+                  _centeredSectionTitle(
+                      l10n.productRegisterThumbnailImageLabel),
                   const SizedBox(height: 8),
                   Center(child: _thumbnailImageBox()),
                   const SizedBox(height: 24),
                   _sectionTitle(l10n.productRegisterNameLabel),
                   const SizedBox(height: 8),
-                  _textField(_nameController, hint: l10n.productRegisterNameHint),
+                  _textField(_nameController,
+                      hint: l10n.productRegisterNameHint),
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterPriceLabel),
                   const SizedBox(height: 8),
-                  _textField(_priceController,
-                      hint: l10n.productRegisterPriceHint,
-                      isNumber: true,
-                      onChanged: (_) => setState(() {})),
+                  _textField(
+                    _priceController,
+                    hint: l10n.productRegisterPriceHint,
+                    isNumber: true,
+                    onChanged: (_) => setState(() {}),
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  ),
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterDiscountLabel),
                   const SizedBox(height: 8),
@@ -301,7 +318,21 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     _discountController,
                     hint: l10n.productRegisterDiscountHint,
                     isNumber: true,
-                    onChanged: (_) => setState(() {}),
+                    onChanged: (value) {
+                      if (value.isNotEmpty) {
+                        final intValue = int.tryParse(value);
+                        if (intValue != null && intValue > 100) {
+                          _discountController.text = '100';
+                          _discountController.selection =
+                              TextSelection.fromPosition(
+                                TextPosition(
+                                    offset: _discountController.text.length),
+                              );
+                        }
+                      }
+                      setState(() {});
+                    },
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   ),
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterDisplayPriceLabel),
@@ -398,11 +429,13 @@ class _ProductEditPageState extends State<ProductEditPage> {
         int maxLines = 1,
         bool isEnabled = true,
         void Function(String)? onChanged,
+        List<TextInputFormatter>? inputFormatters,
       }) {
     return TextField(
       controller: controller,
       onChanged: onChanged,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      inputFormatters: inputFormatters,
       maxLines: maxLines,
       enabled: isEnabled,
       decoration: InputDecoration(
@@ -520,9 +553,11 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   Widget _buildDetailImagePicker() {
     final l10n = AppLocalizations.of(context)!;
+    final totalImageCount =
+        _existingDetailImageUrls.length + _detailImages.length;
     return Column(
       children: [
-        if (_detailImages.isNotEmpty)
+        if (totalImageCount > 0)
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -531,18 +566,31 @@ class _ProductEditPageState extends State<ProductEditPage> {
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
             ),
-            itemCount: _detailImages.length,
+            itemCount: totalImageCount,
             itemBuilder: (context, index) {
+              final bool isExistingImage =
+                  index < _existingDetailImageUrls.length;
+              final Widget imageWidget;
+              if (isExistingImage) {
+                imageWidget = Image.network(_existingDetailImageUrls[index],
+                    fit: BoxFit.cover);
+              } else {
+                imageWidget = Image.file(
+                    File(_detailImages[index - _existingDetailImageUrls.length]
+                        .path),
+                    fit: BoxFit.cover);
+              }
+
               return Stack(
                 clipBehavior: Clip.none,
                 children: [
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: FileImage(File(_detailImages[index].path)),
-                        fit: BoxFit.cover,
-                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: imageWidget,
                     ),
                   ),
                   Positioned(
@@ -550,7 +598,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
                     right: -12,
                     child: IconButton(
                       icon: const Icon(Icons.remove_circle),
-                      onPressed: () => _removeDetailImage(index),
+                      onPressed: () => isExistingImage
+                          ? _removeExistingDetailImage(index)
+                          : _removeNewDetailImage(
+                          index - _existingDetailImageUrls.length),
                       color: Colors.redAccent,
                       iconSize: 28,
                     ),
@@ -560,7 +611,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
             },
           ),
         const SizedBox(height: 16),
-        if (_detailImages.length < 5)
+        if (totalImageCount < 5)
           GestureDetector(
             onTap: _pickDetailImages,
             child: Container(

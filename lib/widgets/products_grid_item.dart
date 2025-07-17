@@ -20,19 +20,23 @@ class ProductsGridItemState extends State<ProductsGridItem> {
   final storage = const FlutterSecureStorage();
 
   late int price;
+  late int discount;
   late String productName;
   late String brandName;
   late String imageUrl;
   late bool isFavorite;
+
+  static const String defaultProductThumbnail = DefaultImage.productThumbnail;
 
   @override
   void initState() {
     super.initState();
 
     price = widget.item.price;
+    discount = int.tryParse(widget.item.discount ?? '') ?? 0;
     productName = widget.item.name;
     brandName = widget.item.store?.name ?? "브랜드";
-    imageUrl = widget.item.thumbnailImage?.url ?? DefaultImage.productThumbnail;
+    imageUrl = widget.item.thumbnailImage?.url ?? defaultProductThumbnail;
     isFavorite = widget.item.isFavorite ?? false;
   }
 
@@ -96,6 +100,8 @@ class ProductsGridItemState extends State<ProductsGridItem> {
 
   @override
   Widget build(BuildContext context) {
+    final discountedPrice = price * (1 - discount / 100);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -114,7 +120,7 @@ class ProductsGridItemState extends State<ProductsGridItem> {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.network(
-                        DefaultImage.productThumbnail,
+                        defaultProductThumbnail,
                         fit: BoxFit.cover,
                       );
                     },
@@ -140,44 +146,88 @@ class ProductsGridItemState extends State<ProductsGridItem> {
           ],
         ),
         const SizedBox(height: 5),
-        GestureDetector(
-          onTap: () {
-            context.push('/productdetail/${widget.item.id}');
-          },
-          behavior: HitTestBehavior.translucent,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${NumberFormat('#,###').format(price)}원',
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
+        Flexible(
+          child: GestureDetector(
+            onTap: () {
+              context.push('/productdetail/${widget.item.id}');
+            },
+            behavior: HitTestBehavior.translucent,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (discount > 0)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            '$discount%',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              '${NumberFormat('#,###').format(discountedPrice)}원',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        '${NumberFormat('#,###').format(price)}원',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Color(0xff7D7D7D),
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  Text(
+                    '${NumberFormat('#,###').format(price)}원',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                const SizedBox(height: 4),
+                Text(
+                  brandName,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Color(0xff7D7D7D),
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-              Text(
-                brandName,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: Color(0xff7D7D7D),
-                  fontWeight: FontWeight.w400,
+                Text(
+                  productName,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Color(0xff7D7D7D),
+                    fontWeight: FontWeight.w400,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              Text(
-                productName,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: Color(0xff7D7D7D),
-                  fontWeight: FontWeight.w400,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
     );
   }
 }
+

@@ -55,6 +55,7 @@
   "validatorPasswordMismatch": "입력한 비밀번호가 서로 다릅니다",
   "validatorPasswordInvalid": "8자 이상, 숫자/대문자/소문자/특수문자를 포함해야 합니다",
   "validatorEmailInvalid": "잘못된 이메일 형식입니다",
+  "validatorUrlInvalid": "잘못된 URL 형식입니다",
 
   "passwordEditPageTitle": "비밀번호 수정",
   "passwordEditCurrentPasswordLabel": "현재 비밀번호",

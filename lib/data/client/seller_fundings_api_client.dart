@@ -61,12 +61,11 @@ class SellerFundingsApiClient {
     required String title,
     String? linkUrl,
     File? thumbnailImage,
-    bool deleteThumbnail = false, // 이미지 삭제 여부 플래그 추가
+    bool deleteThumbnail = false,
   }) async {
     final formData = FormData.fromMap({
       'title': title,
       if (linkUrl != null && linkUrl.isNotEmpty) 'linkUrl': linkUrl,
-      // deleteThumbnail이 true이면, 'thumbnailImage' 필드에 null 값을 명시적으로 전송
       if (deleteThumbnail) 'thumbnailImage': null,
     });
 

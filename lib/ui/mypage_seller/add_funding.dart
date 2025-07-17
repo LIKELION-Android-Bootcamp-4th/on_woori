@@ -117,6 +117,14 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
       return;
     }
 
+    final urlPattern =
+        r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$';
+    final urlRegExp = RegExp(urlPattern, caseSensitive: false);
+    if (!urlRegExp.hasMatch(_linkController.text)) {
+      _showSnackBar(l10n.validatorUrlInvalid);
+      return;
+    }
+
     if (_thumbnailImageFile == null) {
       _showSnackBar(l10n.productRegisterErrorNoThumbnail);
       return;
@@ -136,7 +144,7 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
       if (mounted) {
         if (res.statusCode == 201 || res.statusCode == 200) {
           _showSnackBar("펀딩을 등록했습니다.", isError: false);
-          context.pop(true); // 성공 시 true 반환
+          context.pop(true);
         } else {
           final errorMessage = (res.data is Map<String, dynamic>)
               ? res.data['message'] ?? '알 수 없는 오류가 발생했습니다.'
@@ -193,7 +201,11 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
                 const SizedBox(height: 16),
                 _sectionTitle(l10n.fundingRegisterLinkLabel),
                 const SizedBox(height: 8),
-                _textField(l10n.fundingRegisterLinkHint, _linkController),
+                _textField(
+                  l10n.fundingRegisterLinkHint,
+                  _linkController,
+                  keyboardType: TextInputType.url,
+                ),
                 const SizedBox(height: 16),
               ],
             ),
@@ -228,9 +240,11 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
     );
   }
 
-  Widget _textField(String hint, TextEditingController controller) {
+  Widget _textField(String hint, TextEditingController controller,
+      {TextInputType keyboardType = TextInputType.text}) {
     return TextField(
       controller: controller,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
@@ -270,7 +284,9 @@ class _FundingRegisterPageState extends State<FundingRegisterPage> {
             borderRadius: BorderRadius.circular(12),
           ),
           child: _thumbnailImageFile == null
-              ? const Center(child: Icon(Icons.camera_alt_outlined, color: Colors.grey, size: 40))
+              ? const Center(
+              child:
+              Icon(Icons.camera_alt_outlined, color: Colors.grey, size: 40))
               : ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.file(

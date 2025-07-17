@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -94,7 +95,7 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
 
   Future<void> _registerProduct() async {
     final l10n = AppLocalizations.of(context)!;
-    // 1단계 유효성 검사
+
     if (_thumbnailImageFile == null) {
       _showSnackBar(l10n.productRegisterErrorNoThumbnail);
       return;
@@ -218,24 +219,44 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterPriceLabel),
                   const SizedBox(height: 8),
-                  // ---👇 [수정] onChanged 콜백 추가 ---
-                  _textField(l10n.productRegisterPriceHint, _priceController,
-                      isNumber: true, onChanged: (_) => setState(() {})),
+                  _textField(
+                    l10n.productRegisterPriceHint,
+                    _priceController,
+                    isNumber: true,
+                    onChanged: (_) => setState(() {}),
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  ),
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterDiscountLabel),
                   const SizedBox(height: 8),
-                  // ---👇 [수정] onChanged 콜백 추가 ---
-                  _textField(l10n.productRegisterDiscountHint, _discountController,
-                      isNumber: true, onChanged: (_) => setState(() {})),
+                  _textField(
+                    l10n.productRegisterDiscountHint,
+                    _discountController,
+                    isNumber: true,
+                    onChanged: (value) {
+                      if (value.isNotEmpty) {
+                        final intValue = int.tryParse(value);
+                        if (intValue != null && intValue > 100) {
+                          _discountController.text = '100';
+                          _discountController.selection =
+                              TextSelection.fromPosition(
+                                TextPosition(offset: _discountController.text.length),
+                              );
+                        }
+                      }
+                      setState(() {});
+                    },
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  ),
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterDisplayPriceLabel),
                   const SizedBox(height: 8),
-                  // ---👇 [수정] 비활성화된 텍스트 필드를 별도 위젯으로 교체 ---
                   _displayField(displayPrice),
                   const SizedBox(height: 16),
                   _sectionTitle(l10n.productRegisterDescriptionLabel),
                   const SizedBox(height: 8),
-                  _textField(l10n.productRegisterDescriptionHint, _descriptionController,
+                  _textField(
+                      l10n.productRegisterDescriptionHint, _descriptionController,
                       maxLines: 3),
                   const SizedBox(height: 24),
                   _sectionTitle(l10n.productRegisterSizeOptionLabel),
@@ -316,7 +337,6 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
     );
   }
 
-  // ---👇 [수정] onChanged 파라미터 추가 ---
   Widget _textField(
       String hint,
       TextEditingController controller, {
@@ -324,11 +344,13 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
         int maxLines = 1,
         bool isEnabled = true,
         void Function(String)? onChanged,
+        List<TextInputFormatter>? inputFormatters,
       }) {
     return TextField(
       controller: controller,
       onChanged: onChanged,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      inputFormatters: inputFormatters,
       maxLines: maxLines,
       enabled: isEnabled,
       decoration: InputDecoration(
@@ -366,7 +388,6 @@ class _ProductRegisterPageState extends State<ProductRegisterPage> {
     );
   }
 
-  // ---👇 [추가] 최종 판매가를 표시하기 위한 별도 위젯 ---
   Widget _displayField(int price) {
     return Container(
       width: double.infinity,

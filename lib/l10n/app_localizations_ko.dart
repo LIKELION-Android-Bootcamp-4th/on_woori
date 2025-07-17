@@ -149,6 +149,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get validatorEmailInvalid => '잘못된 이메일 형식입니다';
 
   @override
+  String get validatorUrlInvalid => '잘못된 URL 형식입니다';
+
+  @override
   String get passwordEditPageTitle => '비밀번호 수정';
 
   @override

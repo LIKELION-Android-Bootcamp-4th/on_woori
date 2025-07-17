@@ -153,6 +153,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get validatorEmailInvalid => 'Invalid email format.';
 
   @override
+  String get validatorUrlInvalid => 'Invalid url format.';
+
+  @override
   String get passwordEditPageTitle => 'Edit Password';
 
   @override

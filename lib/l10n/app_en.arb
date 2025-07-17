@@ -55,6 +55,8 @@
   "validatorPasswordMismatch": "Passwords do not match",
   "validatorPasswordInvalid": "Must be 8+ characters with uppercase, lowercase, number, and special character.",
   "validatorEmailInvalid": "Invalid email format.",
+  "validatorUrlInvalid": "Invalid url format.",
+
 
   "passwordEditPageTitle": "Edit Password",
   "passwordEditCurrentPasswordLabel": "Current Password",

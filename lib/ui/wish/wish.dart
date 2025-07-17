@@ -1,68 +1,131 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:on_woori/data/client/wishes_api_client.dart';
+import 'package:on_woori/data/entity/response/products/products_response.dart'
+as P;
+import 'package:on_woori/data/entity/response/mypage/wish_response.dart';
 import 'package:on_woori/l10n/app_localizations.dart';
 import 'package:on_woori/widgets/category_horizontal_scroll.dart';
-import 'package:on_woori/widgets/category_horizontal_scroll_item.dart';
 import 'package:on_woori/widgets/list_toolbar.dart';
-import 'package:on_woori/widgets/products_grid_item.dart';
+import 'package:on_woori/widgets/products_double_grid.dart';
 
-class WishPage extends StatelessWidget {
+class WishPage extends StatefulWidget {
   const WishPage({super.key});
+
+  @override
+  State<WishPage> createState() => _WishPageState();
+}
+
+class _WishPageState extends State<WishPage> {
+  late Future<WishResponse> _apiDataFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _apiDataFuture = _initializeData();
+  }
+
+  Future<WishResponse> _initializeData() async {
+    return await WishesApiClient().getWishList();
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    int itemCount = 10;
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          l10n.bottomNavigationBarWish,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          l10n.navBarWish,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+            color: Colors.black,
+          ),
         ),
         actions: [
           IconButton(
             onPressed: () {
-              context.go('/wish/cart');
+              context.push('/wish/cart');
             },
-            icon: Icon(Icons.shopping_bag_outlined),
+            icon: const Icon(Icons.shopping_bag_outlined),
           ),
         ],
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CategoryHorizontalScroll(),
-          ListToolbar(itemCount),
-          Expanded(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                width: 360,
-                child: GridView.builder(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 15,
-                    crossAxisSpacing: 15,
-                    childAspectRatio: 1 / 1.7,
-                  ),
-                  itemCount: itemCount,
-                  itemBuilder: (context, index) {
-                    return ProductsGridItem(
-                      "상품명",
-                      "브랜드명",
-                      "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg",
-                      false,
-                      price: 16800,
-                    );
-                  },
+      body: FutureBuilder<WishResponse>(
+        future: _apiDataFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.go('/auth/login');
+              debugPrint('오류 발생: ${snapshot.error}');
+            });
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData ||
+              (snapshot.data!.data?.items?.isEmpty ?? true)) {
+            return Center(child: Text(l10n.wishlistEmpty));
+          }
+
+          final wishListItems = snapshot.data!.data!.items!;
+
+          final List<P.ProductItem> productList = wishListItems
+              .map((wishItem) {
+            final productEntity = wishItem.entity;
+            if (productEntity == null) {
+              return null;
+            }
+
+            P.ThumbnailImage? thumbnail;
+            final detailImages = productEntity.images?.detail;
+            if (detailImages != null && detailImages.isNotEmpty) {
+              thumbnail = P.ThumbnailImage(
+                id: productEntity.id,
+                url: productEntity.thumbnailImage?.url ?? l10n.dummyImage,
+              );
+            }
+
+            return P.ProductItem(
+              id: productEntity.id,
+              name: productEntity.name,
+              description: "",
+              price: productEntity.price,
+              isFavorite: true,
+              stock: null,
+              stockType: null,
+              discount: null,
+              status: null,
+              store: wishItem.store != null
+                  ? P.StoreData(name: wishItem.store!.name)
+                  : null,
+              thumbnailImage: thumbnail,
+              images: productEntity.images,
+            );
+          })
+              .whereType<P.ProductItem>()
+              .toList();
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 30,),
+                Expanded(
+                  child: productList.isEmpty
+                      ? Center(child: Text(l10n.wishlistNoItemsToDisplay))
+                      : ProductsDoubleGrid(productList),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

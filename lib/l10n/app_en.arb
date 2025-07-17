@@ -1,0 +1,401 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "On-Woori",
+
+  "navBarHome": "Home",
+  "navBarCategory": "Category",
+  "navBarWish": "Wishlist",
+  "navBarMyPage": "My Page",
+
+  "homeSlogan": "Today's Hanbok for Me",
+  "homeRecommendedProducts": "Recommended Products",
+  "homeOngoingFunding": "Ongoing Funding",
+  "homeBrandList": "Browse Brands",
+  "homePageError": "Error: {error}",
+  "@homePageError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "homePageNoData": "No data available.",
+  "homePageNoBrand": "No Brand",
+
+  "loginPageTitle": "Login",
+  "loginEmailLabel": "Email",
+  "loginEmailHint": "Enter your email address",
+  "loginPasswordLabel": "Password",
+  "loginPasswordHint": "Enter your password",
+  "loginPasswordReset": "Reset Password",
+  "loginButton": "Login",
+  "loginPromptSignUp": "First time here? ",
+  "loginSuccess": "Logged in successfully.",
+  "loginErrorBadRequest": "Invalid request.",
+  "loginErrorUnauthorized": "Incorrect email or password.",
+  "loginErrorForbidden": "Account is disabled or not verified.",
+  "loginErrorServer": "A server error occurred. Please try again later.",
+  "loginErrorUnexpected": "An unexpected error occurred.",
+
+  "signUpPageTitle": "Sign Up",
+  "signUpPageSubtitle": "What type of user are you?",
+  "signUpPageSubtitleCommon": "Common",
+  "signUpUserTypeConsumer": "Buyer",
+  "signUpUserTypeSeller": "Seller",
+  "signUpSuccess": "Sign-up and login successful.",
+  "signUpErrorServer": "A server error occurred. Please try again later.",
+  "signUpErrorBadRequest": "Please check your input.",
+  "signUpErrorConflict": "This email is already registered.",
+  "signUpErrorUnexpected": "An unknown error occurred. Please contact support.",
+  "signUpNicknameLabel": "Nickname",
+  "signUpNicknameHint": "Enter your nickname",
+  "signUpPasswordLabel": "Password",
+  "signUpPasswordHint": "Enter your password",
+  "signUpPasswordConfirmLabel": "Confirm Password",
+  "signUpPasswordConfirmHint": "Enter your password again",
+
+  "validatorRequired": "This field is required",
+  "validatorPasswordMismatch": "Passwords do not match",
+  "validatorPasswordInvalid": "Must be 8+ characters with uppercase, lowercase, number, and special character.",
+  "validatorEmailInvalid": "Invalid email format.",
+  "validatorUrlInvalid": "Invalid url format.",
+
+
+  "passwordEditPageTitle": "Edit Password",
+  "passwordEditCurrentPasswordLabel": "Current Password",
+  "passwordEditNewPasswordLabel": "New Password",
+  "passwordEditConfirmPasswordLabel": "Confirm Password",
+  "passwordEditHint": "Enter password",
+  "passwordEditButton": "Change Password",
+  "passwordEditErrorLength": "New password must be at least 6 characters long.",
+  "passwordEditErrorSameAsCurrent": "New password must be different from the current one.",
+  "passwordEditErrorMismatch": "New passwords do not match.",
+  "passwordEditErrorInvalidUser": "Invalid user information.",
+  "passwordEditSuccess": "Password changed successfully.",
+  "passwordEditErrorFailed": "Failed to change password. Please try again.",
+  "passwordEditErrorUnexpected": "An unknown error occurred.",
+
+  "editProfilePageTitle": "Edit Profile",
+  "editProfileCamera": "Take a photo",
+  "editProfileGallery": "Choose from gallery",
+  "editProfileNicknameLabel": "Nickname",
+  "editProfileNicknameHint": "Enter your nickname",
+  "editProfileSaveButton": "Save",
+  "editProfileImagePicking": "Already picking an image.",
+
+  "editProfileSellerPageTitle": "Edit Profile",
+  "editProfileSellerManagerLabel": "Manager Name",
+  "editProfileSellerManagerHint": "Enter manager's name",
+  "editProfileSellerPhoneLabel": "Phone Number",
+  "editProfileSellerPhoneHint": "Enter phone number",
+  "editProfileSellerZipcodeLabel": "Zip Code",
+  "editProfileSellerZipcodeHint": "Enter zip code",
+  "editProfileSellerZipcodeInvalid": "Zip code must be 5 digits.",
+  "editProfileSellerAddressLabel": "Address",
+  "editProfileSellerAddressHint": "Enter address",
+  "editProfileSellerDetailAddressLabel": "Detailed Address",
+  "editProfileSellerDetailAddressHint": "Enter detailed address",
+  "editProfileSellerSaveButton": "Save",
+
+  "brandEditPageTitle": "Edit Brand",
+  "brandEditImagePicking": "Already picking an image.",
+  "brandEditCamera": "Take a photo",
+  "brandEditGallery": "Choose from gallery",
+  "brandEditUpdateFailed": "Update failed: {error}",
+  "@brandEditUpdateFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "brandEditFetchError": "Error: {error}",
+  "@brandEditFetchError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "brandEditNoData": "No data available.",
+  "brandEditNameLabel": "Brand Name",
+  "brandEditNameHint": "(Name)",
+  "brandEditDescriptionLabel": "Brand Introduction",
+  "brandEditDescriptionHint": "(Introduction) (max nn chars)",
+  "brandEditSaveButton": "Save",
+
+  "myPageDefaultUserName": "User",
+  "myPageUserSuffix": "",
+  "myPageSellerSuffix": "(Seller)",
+  "myPageProfileEditButton": "Edit Profile",
+  "myPageBrandEditButton": "Edit Brand",
+  "myPageSectionShopping": "Shopping",
+  "myPageSectionOrder": "Orders",
+  "myPageOrderHistory": "Order History",
+  "myPageWishlist": "Wishlist",
+  "myPageSectionMyInfo": "My Info",
+  "myPageChangePassword": "Change Password",
+  "myPageRegisterProduct": "Register Product",
+  "myPageRegisterFunding": "Register Funding",
+  "myPageManageItems": "Manage Items/Fundings",
+  "myPageLogout": "Logout",
+  "myPageLogoutSuccess": "Logged out successfully.",
+  "myPageLogoutFailed": "Logout failed: {message}",
+  "@myPageLogoutFailed": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "myPageLogoutError": "Error during logout: {error}",
+  "@myPageLogoutError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "myPageNoData": "No data available.",
+
+  "productRegisterPageTitle": "Register New Product",
+  "productRegisterThumbnailImageLabel": "Thumbnail Image",
+  "productRegisterNameLabel": "Product Name",
+  "productRegisterNameHint": "(Name)",
+  "productRegisterPriceLabel": "Product Price (Original)",
+  "productRegisterPriceHint": "200.00",
+  "productRegisterDiscountLabel": "Discount Rate (0% if blank)",
+  "productRegisterDiscountHint": "Ex: 10",
+  "productRegisterDisplayPriceLabel": "Display Price (After Discount)",
+  "productRegisterDisplayPriceHint": "Ex: 180.00",
+  "productRegisterDescriptionLabel": "Product Description",
+  "productRegisterDescriptionHint": "(Description)",
+  "productRegisterSizeOptionLabel": "Size Options",
+  "productRegisterCategoryLabel": "Category",
+  "productRegisterDetailImageLabel": "Product Images (Optional)",
+  "productRegisterButton": "Register Product",
+  "productRegisterAddDetailImage": "Add Detail Images",
+  "productRegisterErrorMaxImages": "You can register up to 5 images.",
+  "productRegisterErrorNoThumbnail": "Please register a thumbnail image.",
+  "productRegisterErrorNoNamePrice": "Product name and price are required.",
+  "productRegisterErrorNoSize": "Please select at least one size option.",
+  "productRegisterErrorImageUploadFailed": "Failed to upload detail images: {message}",
+  "productRegisterErrorLength": "Product name must be at least 2 characters long.",
+  "@productRegisterErrorImageUploadFailed": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "productRegisterSuccess": "Product registered successfully.",
+  "productRegisterErrorFailed": "Failed to register product: {message}",
+  "@productRegisterErrorFailed": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "productRegisterErrorUnexpected": "An error occurred during product registration: {error}",
+  "@productRegisterErrorUnexpected": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "productEditPageTitle": "Edit Product",
+  "productEditButton": "Update Product",
+  "productEditFetchError": "Failed to load product information: {error}",
+  "@productEditFetchError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "productEditSuccess": "Product updated successfully.",
+  "productEditErrorUpdateFailed": "An error occurred while updating the product: {error}",
+  "@productEditErrorUpdateFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "fundingRegisterPageTitle": "Register New Funding",
+  "fundingRegisterCamera": "Take a photo",
+  "fundingRegisterGallery": "Choose from gallery",
+  "fundingRegisterThumbnailLabel": "Thumbnail Image",
+  "fundingRegisterNameLabel": "Funding Name",
+  "fundingRegisterNameHint": "(Name)",
+  "fundingRegisterLinkLabel": "Funding Link",
+  "fundingRegisterLinkHint": "https://www.",
+  "fundingRegisterButton": "Add Funding",
+
+  "productListPageError": "Error: {error}",
+  "@productListPageError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "productListPageNoData": "No data available.",
+  "productListPageEmpty": "No products to display.",
+  "productListPageProcessingError": "An error occurred while processing data: {error}",
+  "@productListPageProcessingError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "productDetailPageTitle": "Product Details",
+  "productDetailTotalPrice": "Total Amount",
+  "productDetailAddToCartButton": "Add to Cart",
+  "productDetailOrderButton": "Order Now",
+  "productDetailLoginRequiredTitle": "Login Required",
+  "productDetailLoginRequiredContent": "This feature requires login. Would you like to go to the login page?",
+  "productDetailToggleFavoriteError": "An error occurred. Please try again.",
+  "productDetailSelectSizePrompt": "Please select a size.",
+  "productDetailSelectColorPrompt": "Please select a color.",
+  "productDetailAddToCartSuccess": "Added to cart.",
+  "productDetailAddToCartFailed": "Failed to add to cart: {error}",
+  "@productDetailAddToCartFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "productDetailAddToCartError": "An error occurred: {error}",
+  "@productDetailAddToCartError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "productDetailFetchError": "Error: {error}",
+  "@productDetailFetchError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "productDetailNoData": "Product information not found.",
+  "productDetailNoBrand": "No brand information",
+  "productDetailDefaultCategory": "Category",
+  "productDetailSizeDropdownHint": "Select Size",
+  "productDetailColorDropdownHint": "Select Color",
+  "productDetailSelectedOptionSize": "Size: {size}",
+  "@productDetailSelectedOptionSize": {
+    "placeholders": { "size": { "type": "String" } }
+  },
+  "productDetailSelectedOptionColor": "Color: {color}",
+  "@productDetailSelectedOptionColor": {
+    "placeholders": { "color": { "type": "String" } }
+  },
+  "productDetailDiscountPercent": "{rate}% OFF",
+  "@productDetailDiscountPercent": {
+    "placeholders": { "rate": { "type": "String" } }
+  },
+
+  "orderDetailPageTitle": "Order Details",
+  "orderDetailPageError": "An error occurred: {error}",
+  "@orderDetailPageError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "orderDetailPageNoData": "Order information not found.",
+  "orderDetailSectionProducts": "Ordered Products",
+  "orderDetailSectionPayment": "Payment Information",
+  "orderDetailHeaderNumber": "Order No. {orderNumber}",
+  "@orderDetailHeaderNumber": {
+    "placeholders": { "orderNumber": { "type": "String" } }
+  },
+  "orderDetailProductOptions": "{options} | Qty: {quantity}",
+  "@orderDetailProductOptions": {
+    "placeholders": {
+      "options": { "type": "String" },
+      "quantity": { "type": "int" }
+    }
+  },
+  "orderDetailTotalProductAmount": "Total Product Amount",
+  "orderDetailShippingFee": "Total Shipping Fee",
+  "orderDetailTotalPayment": "Total Payment",
+
+  "productManagementPageTitle": "Product Management",
+  "productManagementProductTab": "Products",
+  "productManagementFundingTab": "Fundings",
+
+  "brandDetailPageError": "Error: {error}",
+  "@brandDetailPageError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "brandDetailPageNoData": "No data available.",
+  "brandDetailDefaultName": "Brand Name",
+  "brandDetailDefaultDescription": "Brand Introduction",
+  "brandDetailProductsError": "Failed to load products.",
+  "brandDetailProductsNoData": "No product data.",
+  "brandDetailNoRecommendedProducts": "No recommended products.",
+  "brandDetailNoOngoingFunding": "No ongoing fundings.",
+
+  "cartPageTitle": "Cart",
+  "cartItemDeletedSuccess": "Item removed from cart.",
+  "cartItemDeleteFailed": "Failed to remove item: {error}",
+  "@cartItemDeleteFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "cartEmptyError": "No items in cart.",
+  "cartCheckoutSuccess": "Order created successfully.",
+  "cartCheckoutFailed": "Failed to create order: {message}",
+  "@cartCheckoutFailed": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "cartCheckoutError": "An error occurred during checkout: {error}",
+  "@cartCheckoutError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "cartGenericError": "An error occurred.\n{error}",
+  "@cartGenericError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+  "cartEmptyMessage": "Your cart is empty.",
+  "cartCheckoutButton": "Checkout for ${price}",
+  "@cartCheckoutButton": {
+    "placeholders": { "price": { "type": "String" } }
+  },
+
+  "wishlistEmpty": "No items in your wishlist.",
+  "wishlistNoItemsToDisplay": "No products to display.",
+
+  "commonEdit": "Edit",
+  "commonMore": "More",
+  "commonCancel": "Cancel",
+  "commonDelete": "Delete",
+  "commonMultiSelect": "Multi-select",
+  "commonSelectAll": "Select All",
+  "commonDeselectAll": "Deselect All",
+  "commonDeleteSelected": "Delete Selected",
+  "commonAdminAuthFailed": "Admin authentication failed.",
+  "commonSelectItemToDelete": "Please select items to delete.",
+  "commonDeleteFailed": "Failed to delete: {error}",
+  "@commonDeleteFailed": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "productDeleteTitle": "Delete Product",
+  "productDeleteConfirm": "Are you sure you want to delete this product?",
+  "productDeleteSuccess": "Product deleted successfully.",
+  "productBulkDeleteTitle": "Bulk Delete Products",
+  "productBulkDeleteConfirm": "Are you sure you want to delete {count} products?",
+  "@productBulkDeleteConfirm": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "productBulkDeleteFailed": "Failed to delete some products.",
+  "productBulkDeleteSuccess": "{count} products have been deleted.",
+  "@productBulkDeleteSuccess": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "productSelectedCount": "{count} products selected",
+  "@productSelectedCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "productOnSaleCount": "{count} products on sale",
+  "@productOnSaleCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "fundingSelectedCount": "{count} fundings selected",
+  "@fundingSelectedCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "fundingRegisteredCount": "{count} fundings registered",
+  "@fundingRegisteredCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "categoryOuter": "Outerwear",
+  "categoryOuter_coat": "Coat",
+  "categoryOuter_jacket": "Jacket",
+  "categoryOuter_vest": "Vest",
+  "categoryOuter_etc": "Cardigan, etc.",
+  "categoryTop": "Tops",
+  "categoryTop_sleeveless": "Sleeveless",
+  "categoryTop_shortSleeve": "Short Sleeve",
+  "categoryTop_longSleeve": "Long Sleeve",
+  "categoryTop_shirt": "Shirt",
+  "categoryTop_etc": "T-shirt, etc.",
+  "categoryBottom": "Bottoms",
+  "categoryBottom_skirt": "Skirt",
+  "categoryBottom_underSkirt": "Underskirt",
+  "categoryBottom_longSkirt": "Long Skirt",
+  "categoryBottom_miniSkirt": "Mini Skirt",
+  "categoryBottom_etcSkirt": "Other Skirts",
+  "categoryBottom_pants": "Pants",
+  "categoryBottom_underPants": "Underpants",
+  "categoryBottom_shortPants": "Shorts",
+  "categoryBottom_longPants": "Long Pants",
+  "categoryBottom_etcPants": "Other Pants",
+  "categoryGoods": "Accessories",
+  "categoryGoods_head": "Headwear",
+  "categoryGoods_norigae": "Norigae",
+  "categoryGoods_bag": "Bag",
+  "categoryGoods_neck": "Necklace",
+  "categoryGoods_ear": "Earrings",
+  "categoryGoods_ring": "Ring",
+  "categoryGoods_etc": "Other Goods",
+
+  "currencyFormat": "${price}",
+  "@currencyFormat": {
+    "placeholders": { "price": { "type": "String" } }
+  },
+  "dummyImage": "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg"
+}

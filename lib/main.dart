@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:on_woori/core/router.dart';
@@ -16,8 +17,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('ko'),
+      supportedLocales: const [
+        Locale('ko'),
+        Locale('en'),
+      ],
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -30,10 +33,7 @@ class MyApp extends StatelessWidget {
 class MainPage extends StatelessWidget {
   final Widget child;
 
-  const MainPage({
-    super.key,
-    required this.child,
-  });
+  const MainPage({super.key, required this.child});
 
   // 현재 경로(location)를 기반으로 BottomNavigationBar의 인덱스를 계산하는 함수
   int _locationToTabIndex(String location) {
@@ -42,18 +42,34 @@ class MainPage extends StatelessWidget {
     } else if (location.startsWith('/wish')) {
       return 2;
     } else if (location.startsWith('/mypage')) {
+      // '/mypage'와 '/mypage/seller' 모두 3번 탭으로 인식
       return 3;
     } else {
       return 0; // 그 외 모든 경로는 홈(0번 탭)으로 간주
     }
   }
 
+  void _navigateToMyPageBasedOnRole(BuildContext context) async {
+    const storage = FlutterSecureStorage();
+    final userRole = await storage.read(key: 'USER_ROLE');
+
+    if (userRole == 'seller') {
+      context.go('/mypage/seller');
+    } else {
+      context.go('/mypage');
+    }
+  }
+
+  // ---------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: child,
       bottomNavigationBar: AppBottomNavigationBar(
-        selectedIndex: _locationToTabIndex(GoRouterState.of(context).uri.toString()),
+        selectedIndex: _locationToTabIndex(
+          GoRouterState.of(context).uri.toString(),
+        ),
         onItemTapped: (index) {
           switch (index) {
             case 0:
@@ -66,7 +82,7 @@ class MainPage extends StatelessWidget {
               context.go('/wish');
               break;
             case 3:
-              context.go('/mypage');
+              _navigateToMyPageBasedOnRole(context);
               break;
           }
         },

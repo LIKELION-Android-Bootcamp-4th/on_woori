@@ -1,42 +1,97 @@
 import 'package:flutter/material.dart';
-import 'package:on_woori/core/styles/app_colors.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:on_woori/core/styles/default_image.dart';
+import 'package:on_woori/data/client/products_api_client.dart';
+import 'package:on_woori/data/entity/response/products/products_response.dart';
 
 class ProductsGridItem extends StatefulWidget {
-  int price;
-  String productName;
-  String brandName;
-  String imageUrl;
-  bool isFavorite;
+  final ProductItem item;
 
-  ProductsGridItem(
-    this.productName,
-    this.brandName,
-    this.imageUrl,
-    this.isFavorite, {
-    super.key,
-    this.price = 0,
-  });
+  const ProductsGridItem(this.item, {super.key});
 
   @override
   State<StatefulWidget> createState() => ProductsGridItemState();
 }
 
 class ProductsGridItemState extends State<ProductsGridItem> {
+  final apiClient = ProductsApiClient();
+  final storage = const FlutterSecureStorage();
+
   late int price;
   late String productName;
   late String brandName;
   late String imageUrl;
   late bool isFavorite;
-  var icon = Icons.circle;
 
   @override
   void initState() {
     super.initState();
-    price = widget.price;
-    productName = widget.productName;
-    brandName = widget.brandName;
-    isFavorite = widget.isFavorite;
-    imageUrl = widget.imageUrl;
+
+    price = widget.item.price;
+    productName = widget.item.name;
+    brandName = widget.item.store?.name ?? "브랜드";
+    imageUrl = widget.item.thumbnailImage?.url ?? DefaultImage.productThumbnail;
+    isFavorite = widget.item.isFavorite ?? false;
+  }
+
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
+    );
+  }
+
+  Future<void> _toggleFavorite() async {
+    final accessToken = await storage.read(key: 'ACCESS_TOKEN');
+    if (accessToken == null) {
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('로그인 필요'),
+          content: const Text('로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('취소'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                context.push('/auth/login');
+              },
+              child: const Text('로그인'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    final originalState = isFavorite;
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+
+    try {
+      final response = await apiClient.toggleFavorite(
+        productId: widget.item.id,
+      );
+
+      if (!response.success) {
+        setState(() {
+          isFavorite = originalState;
+        });
+      }
+      _showSnackBar(response.message.message);
+    } catch (e) {
+      setState(() {
+        isFavorite = originalState;
+      });
+      _showSnackBar('오류가 발생했습니다. 다시 시도해주세요.');
+    }
   }
 
   @override
@@ -46,52 +101,80 @@ class ProductsGridItemState extends State<ProductsGridItem> {
       children: [
         Stack(
           children: [
-            SizedBox(
-              width: 170,
-              height: 220,
-              child: Image(image: NetworkImage(imageUrl), fit: BoxFit.cover),
+            InkWell(
+              onTap: () {
+                context.push('/productdetail/${widget.item.id}');
+              },
+              child: SizedBox(
+                width: 170,
+                child: AspectRatio(
+                  aspectRatio: 0.8,
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.network(
+                        DefaultImage.productThumbnail,
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  ),
+                ),
+              ),
             ),
             Positioned(
               right: 5,
               top: 5,
               child: GestureDetector(
-                child: Icon(icon),
-                onTap: () {
-                  setState(() {
-                    isFavorite = !isFavorite;
-                    if (isFavorite) {
-                      icon = Icons.circle_outlined;
-                    } else {
-                      icon = Icons.circle;
-                    }
-                  });
-                },
+                onTap: _toggleFavorite,
+                child: Container(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
+                    size: 24,
+                  ),
+                ),
               ),
             ),
           ],
         ),
-        Text(
-          "$price",
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        Text(
-          brandName,
-          style: TextStyle(
-            fontSize: 13,
-            color: Color(0xff7D7D7D),
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        Text(
-          productName,
-          style: TextStyle(
-            fontSize: 13,
-            color: Color(0xff7D7D7D),
-            fontWeight: FontWeight.w400,
+        const SizedBox(height: 5),
+        GestureDetector(
+          onTap: () {
+            context.push('/productdetail/${widget.item.id}');
+          },
+          behavior: HitTestBehavior.translucent,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${NumberFormat('#,###').format(price)}원',
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                brandName,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Color(0xff7D7D7D),
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              Text(
+                productName,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Color(0xff7D7D7D),
+                  fontWeight: FontWeight.w400,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
         ),
       ],

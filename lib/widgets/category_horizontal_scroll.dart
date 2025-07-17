@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'category_horizontal_scroll_item.dart';
 
 class CategoryHorizontalScroll extends StatefulWidget {
-  const CategoryHorizontalScroll({super.key});
+  Function(String category)? getFilteredItem;
+
+  CategoryHorizontalScroll({super.key, this.getFilteredItem});
 
   @override
   State<StatefulWidget> createState() => CategoryHorizontalScrollState();
@@ -11,7 +13,7 @@ class CategoryHorizontalScroll extends StatefulWidget {
 
 class CategoryHorizontalScrollState extends State<CategoryHorizontalScroll> {
   int selectedIndex = 0;
-  List<String> categories = ["전체", "상의", "하의", "아우터", "신발", "악세사리"];
+  List<String> categories = ["전체", "상의", "하의", "아우터", "잡화"];
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,9 @@ class CategoryHorizontalScrollState extends State<CategoryHorizontalScroll> {
               setState(() {
                 selectedIndex = index;
               });
+              if (widget.getFilteredItem != null) {
+                widget.getFilteredItem!(categories[index]);
+              }
             },
           );
         }),

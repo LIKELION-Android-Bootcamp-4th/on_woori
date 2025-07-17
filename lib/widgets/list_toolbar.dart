@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class ListToolbar extends StatelessWidget {
   int itemCount;
 
-  ListToolbar(this.itemCount);
+  ListToolbar(this.itemCount, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(24, 0, 24, 15),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

@@ -108,6 +108,55 @@ graph LR
     B2 --> C
 ```
 
+### 디자인
+
+| 로그인 | 회원가입 |
+| - | - |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/3086944a-3817-45a1-8832-01fe89b097bc" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/f43847c0-eb3c-41a2-9b41-8c50b1ca6845" /> |
+
+| 회원가입 - 판매자 회원가입 | 회원가입 - 공통 회원가입 |
+| - | - |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/9e08ff34-6f15-4467-afd2-7740c6ab0d63" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/9d86c4dd-71c4-4685-bc37-568feeab4ba0" /> |
+
+| 회원가입 - 회원가입 완료 | 메인 홈 |
+| - | - |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/187532c4-9682-4005-a34e-239f89c3b969" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/6c64c4e1-9723-4835-b7fd-7a088f58fc48" /> |
+
+| 카테고리 | 카테고리 - 선택 |
+| - | - |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/c813a43b-0ba8-4b94-8b15-5e2d60b1448c" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/284cd279-7036-4767-832a-03244fc91bf2" /> |
+
+| 위시리스트 | 장바구니 |
+| - | - |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/acac0c1e-9c30-4869-a6b8-117bc37c4d9f" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/a4bdda0b-3053-49c5-9630-55a52265573f" /> |
+
+| 구매자 마이페이지 | 판매자 마이페이지 |
+| - | - |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/d977eb5f-0d77-45ea-b1d2-e7d991eddd36" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/cdd96f09-5e4c-4972-af40-e624d0201f8c" /> |
+
+| 상품 상세 | 브랜드 상세 |
+| - | - |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/810c3eb2-0774-41f5-9c18-fd0109a01022" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/51942c64-2828-4717-9db0-f1eef3a3c8ba" /> |
+
+| 주문 목록 | 주문 상세 |
+| - | - |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/5058d3f7-af39-4c07-9d5d-aa2a2e29663f" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/f1b8b09d-9f9d-4eb2-9f75-0b4dd9163a73" /> |
+
+| 프로필 수정 | 브랜드 수정 | 비밀번호 변경 |
+| - | - | - |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/b1b07770-e789-4a00-959c-7f3ded4460a4" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/f3cac7f9-1e18-41dd-889a-568e641df929" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/aa6c0047-b439-4877-a073-458d7c270a62" /> | 
+
+| 상품 관리 | 펀딩 관리 |
+| - | - |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/e163ba9e-a26d-4620-b8cc-0ae2840bf9fc" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/9482d9db-5268-41c9-a4b3-6136c1959618" /> |
+
+| 상품 등록 | 펀딩 등록 |
+| - | - |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/99f13d64-eb59-4515-840c-970d4461b804" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/dc0711aa-1d27-4350-9b63-5fc54addf76a" /> |
+
+| 상품 수정 | 펀딩 수정 |
+| - | - |
+| <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/2745443a-cce3-4026-af61-04f67580a501" /> | <img width="1080" height="2400" alt="image" src="https://github.com/user-attachments/assets/d3a296d3-b7a7-48c0-901e-9760956f5e7d" /> |
 
 ---
 

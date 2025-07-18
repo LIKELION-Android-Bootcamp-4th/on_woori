@@ -20,12 +20,12 @@
 ## 🧑‍💻 팀원 소개
 
 **멋쟁이사자처럼 앱 스쿨 : 안드로이드 4기 2조 (안동찜닭)**
-| 이름 | 역할 |
-| :---: | :--- |
-| <a href="https://github.com/SHINSEOJIN"><img src="https://avatars.githubusercontent.com/u/204878326?v=4" width="100"></a><br><p align="center">신서진</p> | <p align="center">👑<br>팀장<br></p> 
-| <a href="https://github.com/HaeBun"><img src="https://avatars.githubusercontent.com/u/62525605?v=4" width="100"></a><br><p align="center">김인태</p> | <p align="center">부팀장<br></p> 
-| <a href="https://github.com/EunaJ99"><img src="https://avatars.githubusercontent.com/u/83498457?v=4" width="100"></a><br><p align="center">정가은</p> | <p align="center">팀원<br></p>
-| <a href="https://github.com/h1jn2"><img src="https://avatars.githubusercontent.com/u/139345734?v=4" width="100"></a><br><p align="center">안현진</p> | <p align="center">팀원<br></p>
+| 이름 | 역할 | 후기 |
+| :--- | :--- | :--- |
+| <a href="https://github.com/SHINSEOJIN"><img src="https://avatars.githubusercontent.com/u/204878326?v=4" width="100"></a><br><p align="center">신서진</p> | <p align="center">👑<br>팀장<br></p> | 처음 조장을 맡게 됐을때는 정말 걱정이 많았습니다. 비전공자인 제가 팀에 도움이 될까 두려움도 있었습니다.<br><br>하지만 팀원들은 <b>"함께 배워가면 된다"</b>는 마음으로 편하게 마음먹을 수 있도록 해주셨고, 그 부분은 저에게 큰 위로와 자신감이 되었습니다.<br><br>개발 과정에서 문제가 생겼을때도, 팀원들이 서로를 믿고 소통하며 해결해 나갔습니다. 이번 프로젝트를 통해 단순히 기술만 배운 것이 아니라, <b>"함께 일하는 법"과 "완벽하지 않아도 괜찮다"는 협업의 본질을 배웠습니다.</b><br><br>부족한 팀장이였지만 저를 믿고 따라와준 팀원분들에게 다시 한번 감사드립니다. 저희의 함께한 노력과 시간들이 여러분의 기억에 오래도록 좋은 경험으로 남았으면 좋겠습니다. |
+| <a href="https://github.com/HaeBun"><img src="https://avatars.githubusercontent.com/u/62525605?v=4" width="100"></a><br><p align="center">김인태</p> | <p align="center">부팀장<br></p> | 짧은 시간에 결과물을 만들어야 해서 부담이 컸습니다.<br>이상적 구조와 현실적인 속도 사이에서 균형을 잡는 게 가장 어려웠습니다.<br><br>하지만 팀원들이 함께 빠르게 문제를 공유하고 해결하면서 좋은 경험을 쌓을 수 있었어요.<br><br>이번 프로젝트를 통해, 팀원들과 함께 성장하는 개발자가 되고 싶다는 목표를 다시 세우게 되었습니다. |
+| <a href="https://github.com/EunaJ99"><img src="https://avatars.githubusercontent.com/u/83498457?v=4" width="100"></a><br><p align="center">정가은</p> | <p align="center">팀원<br></p> | 처음 Flutter(플러터)를 접했을 때 어려움이 많았습니다. 하지만 다른 팀원들이 적극적으로 도와준 덕분에 빠르게 적응할 수 있었어요.<br><br>특히 팀의 좋은 분위기 덕분에 끝까지 즐겁게 작업할 수 있었습니다.<br><br>이번 프로젝트를 계기로 협업의 중요성을 다시 한번 배웠습니다. |
+| <a href="https://github.com/h1jn2"><img src="https://avatars.githubusercontent.com/u/139345734?v=4" width="100"></a><br><p align="center">안현진</p> | <p align="center">팀원<br></p> | 처음에는 앱 개발에 막막함을 느꼈지만, 프로젝트를 진행하며 자신감이 붙었습니다.<br><br>생소한 개념들도 팀원들과 함께라서 즐겁게 배우고 해결할 수 있었어요.<br><br>팀원들의 적극적인 소통과 협력 덕분에 부담없이 좋은 결과물을 만들 수 있었습니다. |
 
 
 ---
@@ -108,7 +108,7 @@ graph LR
     B2 --> C
 ```
 
-## 📱 디자인
+## 🎨 디자인
 
 | 로그인 | 회원가입 |
 | - | - |
